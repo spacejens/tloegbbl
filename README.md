@@ -26,6 +26,16 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Preparation
+
+First, install NodeJS from <a href="https://nodejs.org/en">the NodeJS home page</a> and make sure it (node, npm, ...) is on your command line path.
+
+Install the PNPM package manager and NestJS:
+```bash
+$ npm install -g pnpm
+$ npm install -g @nestjs/cli
+```
+
 ## Installation
 
 ```bash
