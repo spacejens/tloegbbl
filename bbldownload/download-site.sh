@@ -7,4 +7,4 @@ fi
 
 SITE=$1
 
-wget --config=wget.ini --recursive --page-requisites --convert-links --wait=3 --directory-prefix=bbl-site/ $SITE
+wget --config=wget.ini --recursive --level=inf --page-requisites --convert-links --wait=3 --directory-prefix=bbl-site/ $SITE
