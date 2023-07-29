@@ -27,5 +27,6 @@ wget \
     --output-file=bbl-site/$SITE/output-wget.log \
     $SITE
 
-# TODO Copy (cp -a) output directory to a time-stamped version of it
-# TODO Create time-stamped ZIP archive of output folder (zip -r stuff.zip folder)
+TIMESTAMP=`date '+%Y%m%d%H%M%S'`
+cp -a bbl-site/$SITE bbl-site/$SITE-$TIMESTAMP
+zip -r bbl-site/$SITE-$TIMESTAMP.zip bbl-site/$SITE-$TIMESTAMP
