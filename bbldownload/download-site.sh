@@ -21,7 +21,6 @@ wget \
     --recursive \
     --level=inf \
     --page-requisites \
-    --convert-links \
     --wait=3 \
     --directory-prefix=bbl-site/ \
     --output-file=bbl-site/$SITE/output-wget.log \
