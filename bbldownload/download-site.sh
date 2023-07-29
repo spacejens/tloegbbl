@@ -8,7 +8,6 @@ fi
 SITE=$1
 mkdir -p bbl-site/$SITE
 
-# TODO Use --no-clobber to avoid downloading files again (unless manually deleted first)
 # TODO Ensure that redirects are followed to required depth, see https://stackoverflow.com/questions/20030148/wget-doesnt-download-recursively-after-following-a-redirect and https://unix.stackexchange.com/questions/409804/wget-not-working-for-downloading-all-links-from-a-webpage
 # TODO Unusual characters in URLs, e.g. Rösereds Idrottspack linked as default.asp?p=tm&t=rös ends up as https://tloeg.bbleague.se/default.asp?p=tm&t=r%F6s
 # TODO Perhaps --local-encoding=UTF-8 and/or --remote-encoding=UTF-8 helps, see https://superuser.com/questions/1621693/how-to-archive-urls-with-special-chars-with-wget-on-windows
@@ -18,6 +17,7 @@ mkdir -p bbl-site/$SITE
 # TODO Verify that all files have been downloaded
 wget \
     --config=wget.ini \
+    --no-clobber \
     --recursive \
     --level=inf \
     --page-requisites \
