@@ -19,7 +19,6 @@ echo $SITE > bbl-site/$SITE/wget-input-$TIMESTAMP.txt
 # Increment loop counter, run loop until input is empty
 
 # TODO Solution sketch for finding all href in all files
-# Need to remove links to external sites (every link starting with http?)
 # Need to remove links to action URLs: team.asp?t=wes&slet= team.asp?t=wes&old= oldbulletins.asp?t=vor&slet= front.asp?slet=
 # Is this dynamically used URL also an action URL? default.asp?p=tm&t=
 # Need to add default.asp for all links that are just query strings (i.e. starting with ?)
@@ -29,6 +28,7 @@ grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" b
     | sed 's/^href=//g' \
     | sed 's/"//g' \
     | sed "s/'//g" \
+    | grep -v "^http" \
     | sort -u \
     > bbl-site/$SITE/wget-href-$TIMESTAMP.txt
 
