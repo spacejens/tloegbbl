@@ -19,7 +19,6 @@ echo $SITE > bbl-site/$SITE/wget-input-$TIMESTAMP.txt
 # Increment loop counter, run loop until input is empty
 
 # TODO Solution sketch for finding all href in all files
-# Need to add default.asp for all links that are just query strings (i.e. starting with ?)
 # Need to add hostname for all links
 
 grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" bbl-site/$SITE/* \
@@ -28,6 +27,7 @@ grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" b
     | sed "s/'//g" \
     | grep -v "^http" \
     | grep -v "=$" \
+    | sed 's/^\?/default.asp\?/g' \
     | sort -u \
     > bbl-site/$SITE/wget-href-$TIMESTAMP.txt
 
