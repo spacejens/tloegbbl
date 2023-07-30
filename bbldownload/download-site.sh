@@ -27,6 +27,10 @@ echo $SITE > bbl-site/$SITE/wget-input-$TIMESTAMP.txt
 # Need to add default.asp for all links that are just query strings (i.e. starting with ?)
 # Need to add hostname for all links
 
+grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" bbl-site/$SITE/* \
+    | sort -u \
+    > bbl-site/$SITE/wget-href-$TIMESTAMP.txt
+
 # TODO Ensure that redirects are followed to required depth, see https://stackoverflow.com/questions/20030148/wget-doesnt-download-recursively-after-following-a-redirect and https://unix.stackexchange.com/questions/409804/wget-not-working-for-downloading-all-links-from-a-webpage
 # TODO Don't think it's needed, but may want to try --content-disposition, see https://www.reddit.com/r/linuxquestions/comments/zws6ei/wget_issues_with_special_characters_in_deb_url/
 # TODO Wget doesn't follow onclick script setting href, will need to grep for those and loop until no new such links are found. Try: grep "href='?.*'" *
