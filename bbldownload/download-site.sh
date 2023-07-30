@@ -19,7 +19,7 @@ wget \
     --recursive \
     --level=inf \
     --page-requisites \
-    --wait=3 \
+    --wait=1 \
     --remote-encoding=UTF-8 \
     --directory-prefix=bbl-site/ \
     --output-file=bbl-site/$SITE/output-wget.log \
