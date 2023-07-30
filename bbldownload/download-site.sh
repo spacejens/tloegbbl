@@ -8,6 +8,23 @@ fi
 SITE=$1
 mkdir -p bbl-site/$SITE
 
+# TODO Solution sketch for downloading every href in all files, recursively:
+# Use --input-file instead of SITE argument, have it contain both the root URL and default.asp
+# Make all input/output filenames start with wget, to make them easy to find
+# Have a loop, with a counter variable numbering the input file (e.g. wget-input-1.txt)
+# After running wget in the loop, grep to find all href in all files, put this in another file (e.g. wget-href-1.txt)
+# Compare current and previous hrefs to create next input file (containing every new file)
+# Increment loop counter, run loop until input is empty
+
+# TODO Solution sketch for finding all href in all files
+# grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" *
+# Need to remove the href="" and href='' parts, to remove (only) href use: sed -n -e 's/^href=//p'
+# Need to remove links to external sites (every link starting with http?)
+# Need to remove links to action URLs: team.asp?t=wes&slet= team.asp?t=wes&old= oldbulletins.asp?t=vor&slet= front.asp?slet=
+# Is this dynamically used URL also an action URL? default.asp?p=tm&t=
+# Need to add default.asp for all links that are just query strings (i.e. starting with ?)
+# Need to add hostname for all links
+
 # TODO Ensure that redirects are followed to required depth, see https://stackoverflow.com/questions/20030148/wget-doesnt-download-recursively-after-following-a-redirect and https://unix.stackexchange.com/questions/409804/wget-not-working-for-downloading-all-links-from-a-webpage
 # TODO Don't think it's needed, but may want to try --content-disposition, see https://www.reddit.com/r/linuxquestions/comments/zws6ei/wget_issues_with_special_characters_in_deb_url/
 # TODO Wget doesn't follow onclick script setting href, will need to grep for those and loop until no new such links are found. Try: grep "href='?.*'" *
