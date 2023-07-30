@@ -18,9 +18,6 @@ echo $SITE > bbl-site/$SITE/wget-input-$TIMESTAMP.txt
 # Compare current and previous hrefs to create next input file (containing every new file)
 # Increment loop counter, run loop until input is empty
 
-# TODO Solution sketch for finding all href in all files
-# Need to add hostname for all links
-
 grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" bbl-site/$SITE/* \
     | sed 's/^href=//g' \
     | sed 's/"//g' \
@@ -28,6 +25,7 @@ grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" b
     | grep -v "^http" \
     | grep -v "=$" \
     | sed 's/^\?/default.asp\?/g' \
+    | sed "s/^/$SITE\//g" \
     | sort -u \
     > bbl-site/$SITE/wget-href-$TIMESTAMP.txt
 
