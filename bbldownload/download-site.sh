@@ -9,8 +9,10 @@ SITE=$1
 mkdir -p bbl-site/$SITE
 TIMESTAMP=`date '+%Y%m%d%H%M%S'`
 
+echo $SITE > bbl-site/$SITE/wget-input-$TIMESTAMP.txt
+# TODO Also add other entry points (e.g. default.asp) to the initial input file
+
 # TODO Solution sketch for downloading every href in all files, recursively:
-# Use --input-file instead of SITE argument, have it contain both the root URL and default.asp
 # Have a loop, with a counter variable numbering the input file (e.g. wget-input-1.txt)
 # After running wget in the loop, grep to find all href in all files, put this in another file (e.g. wget-href-1.txt)
 # Compare current and previous hrefs to create next input file (containing every new file)
@@ -39,7 +41,7 @@ wget \
     --remote-encoding=UTF-8 \
     --directory-prefix=bbl-site/ \
     --output-file=bbl-site/$SITE/wget-output-$TIMESTAMP.log \
-    $SITE
+    --input-file=bbl-site/$SITE/wget-input-$TIMESTAMP.txt
 
 cp -a bbl-site/$SITE bbl-site/$SITE-$TIMESTAMP
 zip -r bbl-site/$SITE-$TIMESTAMP.zip bbl-site/$SITE-$TIMESTAMP
