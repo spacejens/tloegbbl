@@ -11,6 +11,7 @@ mkdir -p bbl-site/$SITE
 # TODO Solution sketch for downloading every href in all files, recursively:
 # Use --input-file instead of SITE argument, have it contain both the root URL and default.asp
 # Make all input/output filenames start with wget, to make them easy to find
+# Make all input/output filenames contain the timestamp, since --no-clobber makes it so we could have several in the same directory
 # Have a loop, with a counter variable numbering the input file (e.g. wget-input-1.txt)
 # After running wget in the loop, grep to find all href in all files, put this in another file (e.g. wget-href-1.txt)
 # Compare current and previous hrefs to create next input file (containing every new file)
