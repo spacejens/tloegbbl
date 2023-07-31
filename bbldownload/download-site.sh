@@ -23,6 +23,7 @@ do
         | sed 's/^href=//g' \
         | sed 's/"//g' \
         | sed "s/'//g" \
+        | sed 's/#.*$//g' \
         | grep -v "^http" \
         | grep -v "=$" \
         | sed 's/^\?/default.asp\?/g' \
