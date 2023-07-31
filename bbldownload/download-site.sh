@@ -18,6 +18,7 @@ echo $SITE > bbl-site/$SITE/wget-input-$TIMESTAMP.txt
 # Compare current and previous hrefs to create next input file (containing every new file)
 # Increment loop counter, run loop until input is empty
 
+# TODO Should this only find JavaScript hrefs, or A-hrefs as well? Finding all makes it work for resuming previous run (e.g. to reload deleted files), but adds more hrefs (that wget will ignore due to --no-clobber)
 grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" bbl-site/$SITE/* \
     | sed 's/^href=//g' \
     | sed 's/"//g' \
