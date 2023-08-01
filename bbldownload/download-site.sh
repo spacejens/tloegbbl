@@ -60,3 +60,5 @@ done
 
 cp -a bbl-site/$SITE bbl-site/$SITE-$TIMESTAMP
 zip -r bbl-site/$SITE-$TIMESTAMP.zip bbl-site/$SITE-$TIMESTAMP
+
+# TODO Print resulting status (number of files in directory, grep for HTTP response codes, suggestion to run again to ensure nothing was missed)
