@@ -57,6 +57,7 @@ do
     fi
 
     # Download all requested input files of this generation, and their linked files recursively (avoiding duplicate downloads)
+    # TODO Some downloaded files are reported as binary files by grep, e.g. default.asp?p=ro&t=vil   Maybe --local-encoding=UTF-8 would help?
     wget \
         --config=wget.ini \
         --no-clobber \
