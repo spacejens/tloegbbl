@@ -73,4 +73,14 @@ done
 cp -a bbl-site/$SITE bbl-site/$SITE-$TIMESTAMP
 zip -r bbl-site/$SITE-$TIMESTAMP.zip bbl-site/$SITE-$TIMESTAMP
 
-# TODO Print resulting status (number of files in directory, grep for HTTP response codes, suggestion to run again to ensure nothing was missed)
+# Print some status information after the completed execution
+echo
+echo Download of $SITE completed!
+echo
+echo Number of files in output directory bbl-site/$SITE-$TIMESTAMP
+find bbl-site/$SITE-$TIMESTAMP -type f | wc -l
+echo
+echo Failed downloads such as broken links or server problems, should be investigated!
+grep "HTTP request sent" bbl-site/$SITE-$TIMESTAMP/wget-output-$TIMESTAMP-*.log | grep -v "200 OK" | sort -u
+echo
+echo You may want to run the script again to ensure nothing was missed
