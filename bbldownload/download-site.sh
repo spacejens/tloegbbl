@@ -86,7 +86,7 @@ echo
 echo Number of files in output directory bbl-site/$SITE-$TIMESTAMP
 find bbl-site/$SITE-$TIMESTAMP -type f | wc -l
 echo
-echo Failed downloads such as broken links or server problems, should be investigated!
+echo Failed downloads such as broken links or server problems below this line, should be investigated if any are present!
 grep "HTTP request sent" bbl-site/$SITE-$TIMESTAMP/wget-output-$TIMESTAMP-*.log | grep -v "200 OK" | sort -u
 echo
 echo You may want to run the script again to ensure nothing was missed
