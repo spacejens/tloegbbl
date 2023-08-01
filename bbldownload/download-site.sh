@@ -37,6 +37,7 @@ do
         | grep -v "^http" \
         | grep -v "=$" \
         | sed 's/^\?/default.asp\?/g' \
+        | sed 's/^\///g' \
         | sed "s/^/$SITE\//g" \
         | sort -u \
         > bbl-site/$SITE/wget-href-$TIMESTAMP-$ITERATION.txt
