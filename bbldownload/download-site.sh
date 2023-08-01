@@ -27,7 +27,9 @@ do
     # Find all hrefs in all downloaded files, either <a href=...> or self.location.href=... from JavaScript onclick events
     # The <a href=...> should have been downloaded by the recursive wget anyway, but including them here allows resuming failed runs
     # Ignore anchor (#) parts of hrefs, we download the whole pages anyway
-    # Drop hrefs that refer to other hosts, or that are dynamically used from within JavaScript (typically action URLs other than view)
+    # Drop hrefs that refer to other hosts
+    # Drop hrefs for action URLs, e.g. ending with = (that a JavaScript adds an ID to) or the expensive mistakes action (exmiact)
+    # Drop hrefs that are the expensive mistakes (exmiact), redraft (rdt), or journeyman (jm) actions
     # Process the hrefs to make them all on the same format, host/file?query
     grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" bbl-site/$SITE/* \
         | sed 's/^href=//g' \
@@ -36,6 +38,9 @@ do
         | sed 's/#.*$//g' \
         | grep -v "^http" \
         | grep -v "=$" \
+        | grep -v "p=exmiact&" \
+        | grep -v "p=rdt&" \
+        | grep -v "p=jm&" \
         | sed 's/^\?/default.asp\?/g' \
         | sed 's/^\///g' \
         | sed "s/^/$SITE\//g" \
