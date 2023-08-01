@@ -14,7 +14,7 @@ TIMESTAMP=`date '+%Y%m%d%H%M%S'`
 
 # Provide starting input for first loop iteration
 echo $SITE > bbl-site/$SITE/wget-input-$TIMESTAMP-1.txt
-# TODO Also add other entry points (e.g. default.asp) to the initial input file
+echo $SITE/default.asp >> bbl-site/$SITE/wget-input-$TIMESTAMP-1.txt
 
 # Empty list of hrefs for non-existing first iteration, to avoid need for special first iteration logic in loop
 touch bbl-site/$SITE/wget-href-$TIMESTAMP-0.txt
