@@ -27,7 +27,7 @@ do
     # The <a href=...> should have been downloaded by the recursive wget anyway, but including them here allows resuming failed runs
     # Ignore anchor (#) parts of hrefs, we download the whole pages anyway
     # Drop hrefs that refer to other hosts
-    # Drop hrefs for action URLs, e.g. ending with = (that a JavaScript adds an ID to) or the expensive mistakes action (exmiact)
+    # Drop hrefs for URLs ending with = that a JavaScript adds an ID to (typically these are action URLs)
     # Drop hrefs that are the expensive mistakes (exmiact), redraft (rdt), or journeyman (jm) actions
     # Process the hrefs to make them all on the same format, host/file?query
     grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" bbl-site/$SITE/* \
