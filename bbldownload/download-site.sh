@@ -30,7 +30,7 @@ do
     # Drop hrefs for URLs ending with = that a JavaScript adds an ID to (typically these are action URLs)
     # Drop hrefs that are the expensive mistakes (exmiact), redraft (rdt), or journeyman (jm) actions
     # Process the hrefs to make them all on the same format, host/file?query
-    grep --directories=skip --no-filename --only-matching "href=['\"][^'\"]*['\"]" bbl-site/$SITE/* \
+    grep --directories=skip --binary-files=text --no-filename --only-matching "href=['\"][^'\"]*['\"]" bbl-site/$SITE/* \
         | sed 's/^href=//g' \
         | sed 's/"//g' \
         | sed "s/'//g" \
@@ -56,7 +56,6 @@ do
     fi
 
     # Download all requested input files of this generation, and their linked files recursively (avoiding duplicate downloads)
-    # TODO Some downloaded files are reported as binary files by grep, e.g. default.asp?p=ro&t=vil   Maybe --local-encoding=UTF-8 would help?
     wget \
         --config=wget.ini \
         --no-clobber \
@@ -89,3 +88,5 @@ echo Failed downloads such as broken links or server problems below this line, s
 grep "HTTP request sent" bbl-site/$SITE-$TIMESTAMP/wget-output-$TIMESTAMP-*.log | grep -v "200 OK" | sort -u
 echo
 echo You may want to run the script again to ensure nothing was missed
+echo
+echo When viewing the files, you may have to use "grep --binary-files=text" to prevent files containing non-standard characters from being detected as binary
