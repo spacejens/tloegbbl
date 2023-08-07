@@ -7,6 +7,7 @@ export type BblTeamReference = {
 
 // TODO Add more data points about each team
 export type BblTeam = BblTeamReference & {
+    name: string;
 }
 
 @Injectable()
@@ -20,10 +21,12 @@ export class TeamsService {
             teamList.querySelectorAll('.trlist').forEach(teamRow => {
                 const teamOnclick = teamRow.rawAttributes.onclick ?? teamRow.querySelectorAll('td')[1].rawAttributes.onclick;
                 const teamId = this.fileReaderService.findQueryParamInOnclick('t', teamOnclick);
-                // TODO Extract team data from team list row (coach, logo filename, team name)
-                // TODO Extract more team data from team page (team type, trophies)
+                const teamName = teamRow.querySelectorAll('td')[1].innerText;
+                // TODO Extract team data from team list row (coach, small logo filename)
+                // TODO Extract more team data from team page (large logo filename, team type, trophies)
                 teams.push({
                     id: teamId,
+                    name: teamName,
                 });
             });
         });
