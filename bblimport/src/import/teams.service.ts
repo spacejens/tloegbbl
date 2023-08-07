@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
+import { BblCoachReference } from './coaches.service';
 
 export type BblTeamReference = {
     id: string;
@@ -8,6 +9,7 @@ export type BblTeamReference = {
 // TODO Add more data points about each team
 export type BblTeam = BblTeamReference & {
     name: string;
+    coaches: BblCoachReference[];
 }
 
 @Injectable()
@@ -22,11 +24,18 @@ export class TeamsService {
                 const teamOnclick = teamRow.rawAttributes.onclick ?? teamRow.querySelectorAll('td')[1].rawAttributes.onclick;
                 const teamId = this.fileReaderService.findQueryParamInOnclick('t', teamOnclick);
                 const teamName = teamRow.querySelectorAll('td')[1].innerText;
-                // TODO Extract team data from team list row (coach, small logo filename)
+                const teamCoaches = Array<BblCoachReference>();
+                teamRow.querySelectorAll('td')[3].innerText.split('&').forEach(coach => {
+                    teamCoaches.push({
+                        name: coach.trim(),
+                    });
+                });
+                // TODO Extract team data from team list row (small logo filename)
                 // TODO Extract more team data from team page (large logo filename, team type, trophies)
                 teams.push({
                     id: teamId,
                     name: teamName,
+                    coaches: teamCoaches,
                 });
             });
         });
