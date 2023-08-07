@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 
+export type BblCoach = {
+    name: string;
+}
+
 @Injectable()
 export class CoachesService {
     constructor(private readonly fileReaderService: FileReaderService) {}
 
-    // TODO Return array of specific data type instead
-    getCoaches(): String[] {
-        const coaches = new Set<String>();
+    getCoaches(): BblCoach[] {
+        const coaches = new Set<string>();
         const teamListFile = this.fileReaderService.readFile('default.asp?p=te');
         teamListFile.querySelectorAll('.tblist').forEach(teamList => {
             teamList.querySelectorAll('.trlist').forEach(teamRow => {
@@ -17,6 +20,8 @@ export class CoachesService {
                 });
             });
         });
-        return [...coaches].sort();
+        return [...coaches].sort().map(coach => ({
+            name: coach,
+        }));
     }
 }
