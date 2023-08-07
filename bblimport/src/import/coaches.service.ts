@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 
-export type BblCoach = {
+export type BblCoachReference = {
     name: string;
 }
+
+// BBL has no more data points for coaches
+export type BblCoach = BblCoachReference
 
 @Injectable()
 export class CoachesService {
