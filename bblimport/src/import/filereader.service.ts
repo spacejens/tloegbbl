@@ -10,4 +10,20 @@ export class FileReaderService {
         const filepath = join(process.cwd(), directory, filename);
         return parse(readFileSync(filepath).toString());
     }
+
+    findQueryParamInOnclick(queryParam: string, onclick: string): string {
+        return this.findQueryParamInHref(queryParam, onclick.substring("self.location.href='".length, onclick.length - 2));
+    }
+
+    findQueryParamInHref(queryParam: string, href: string): string {
+        const queryString = href.substring(href.indexOf('?') + 1);
+        let value: string = undefined;
+        queryString.split('&').forEach(queryPart => {
+            const param = queryPart.substring(0, queryPart.indexOf('='));
+            if (param == queryParam) {
+                value = queryPart.substring(queryPart.indexOf('=') + 1);
+            }
+        });
+        return value;
+    }
 }
