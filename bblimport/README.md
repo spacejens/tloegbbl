@@ -1,6 +1,6 @@
 ## Description
 
-This module transforms data downloaded by [bbldownload](../bbldownload/README.md) and imports it into the [backend](../backend/README.md).
+This module transforms data downloaded by [bbldownload](../bbldownload) and imports it into the [backend](../backend).
 
 Since this was a one-time operation and this module operates by parsing downloaded HTML files, it might no longer perform as expected if used at a future date.
 
