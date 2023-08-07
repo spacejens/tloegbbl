@@ -24,4 +24,9 @@ export class CoachesService {
             name: coach,
         }));
     }
+
+    uploadCoaches(coaches: BblCoach[]): void {
+        // TODO Upload coaches to backend
+        console.log(coaches);
+    }
 }
