@@ -4,6 +4,8 @@ tLoEG is a [Blood Bowl](https://www.bloodbowl.com/) club league based in Gothenb
 
 [backend](backend/README.md) is the heart of the system. It stores the data and performs various operations on it.
 
+[bbldownload](bbldownload/README.md) performs a one-time download of data from a previous system, so it can be imported.
+
 ## Preparation
 
 First, install NodeJS from <a href="https://nodejs.org/en">the NodeJS home page</a> and make sure it (node, npm, ...) is on your command line path.
