@@ -1,0 +1,20 @@
+version: "1"
+
+services:
+  tloegbbl-backend:
+    image: tloegbbl-backend
+    container_name: tloegbbl-backend
+    build:
+      dockerfile: Dockerfile
+      context: ./backend
+      target: deploy
+      args:
+        PORT: 3000
+    restart: on-failure:10
+    networks:
+      - tloegbbl-network
+    ports:
+      - 3000:3000
+
+networks:
+  tloegbbl-network:
