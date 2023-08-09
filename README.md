@@ -17,3 +17,17 @@ Install the PNPM package manager and NestJS:
 $ npm install -g pnpm
 $ npm install -g @nestjs/cli
 ```
+
+In order to deploy the system locally, you also need to install [Docker Desktop](https://docs.docker.com/desktop/).
+
+## Deploying locally
+
+This command will build and deploy all deployable modules of the system:
+```bash
+$ docker compose up --build
+```
+
+To undeploy, use the following command:
+```bash
+$ docker compose down
+```
