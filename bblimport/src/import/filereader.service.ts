@@ -12,7 +12,7 @@ export class FileReaderService {
     }
 
     findQueryParamInOnclick(queryParam: string, onclick: string): string {
-        return this.findQueryParamInHref(queryParam, onclick.substring("self.location.href='".length, onclick.length - 2));
+        return this.findQueryParamInHref(queryParam, onclick.substring("self.location.href='".length, onclick.length - "';".length));
     }
 
     findQueryParamInHref(queryParam: string, href: string): string {
