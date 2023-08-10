@@ -12,6 +12,7 @@ export class FileReaderService {
     }
 
     findQueryParamInOnclick(queryParam: string, onclick: string): string {
+        // TODO Verify that the onclick attribute has the expected format (prefix, suffic), otherwise fail (to prevent incorrect data being imported)
         return this.findQueryParamInHref(queryParam, onclick.substring("self.location.href='".length, onclick.length - "';".length));
     }
 
