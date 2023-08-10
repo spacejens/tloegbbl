@@ -15,6 +15,23 @@ services:
       - tloegbbl-network
     ports:
       - 3000:3000
+  postgres-database:
+    image: postgres
+    container_name: tloegbbl-postgres
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=tloegbbl
+    volumes:
+      - tloegbbl-postgres:/var/lib/postgresql/data:rw
+    ports:
+      - "3001:5432"
+    networks:
+      - tloegbbl-network
+
+volumes:
+  tloegbbl-postgres:
+    driver: local
 
 networks:
   tloegbbl-network:

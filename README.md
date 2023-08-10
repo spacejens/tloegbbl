@@ -20,6 +20,8 @@ $ npm install -g @nestjs/cli
 
 In order to deploy the system locally, you also need to install [Docker Desktop](https://docs.docker.com/desktop/).
 
+In order to access the local database, you will need to install a Postgres client (e.g. psql).
+
 ## Deploying locally
 
 This command will build and deploy all deployable modules of the system:
@@ -30,4 +32,11 @@ $ docker compose up --build
 To undeploy, use the following command:
 ```bash
 $ docker compose down
+```
+
+## Accessing the local database
+
+To connect to the local database, use the following command (and provide the test password):
+```bash
+$ psql -h localhost -p 3001 -U test tloegbbl
 ```
