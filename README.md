@@ -40,3 +40,12 @@ To connect to the local database, use the following command (and provide the tes
 ```bash
 $ psql -h localhost -p 3001 -U test tloegbbl
 ```
+
+## Database development with Prisma
+
+All data model and database structure changes are driven through [Prisma](https://www.prisma.io/docs), using the following steps:
+- Edit the [schema.prisma](backend/prisma/schema.prisma) file to modify the model.
+- Update the generated source code using `npx prisma generate`
+- Develop and unit test functionality as normal
+- To generate SQL changes and update the database, use `npx prisma migrate dev --name <name of the change>`
+- Commit schema, generated code, and (ideally) your own code together to clarify the relationship between them
