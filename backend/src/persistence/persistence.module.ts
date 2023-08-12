@@ -5,6 +5,6 @@ import { CountController } from './count.controller';
 
 @Module({
   providers: [PrismaService, CoachService],
-  controllers: [CountController]
+  controllers: [CountController],
 })
 export class PersistenceModule {}

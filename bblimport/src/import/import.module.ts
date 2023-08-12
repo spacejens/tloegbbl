@@ -5,7 +5,7 @@ import { CoachesService } from './coaches.service';
 import { TeamsService } from './teams.service';
 
 @Module({
-    providers: [ImportService, FileReaderService, CoachesService, TeamsService],
-    exports: [ImportService],
+  providers: [ImportService, FileReaderService, CoachesService, TeamsService],
+  exports: [ImportService],
 })
 export class ImportModule {}

@@ -9,9 +9,7 @@ describe('CountController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        { provide: CoachService, useValue: mock<CoachService>() },
-      ],
+      providers: [{ provide: CoachService, useValue: mock<CoachService>() }],
       controllers: [CountController],
     }).compile();
 
