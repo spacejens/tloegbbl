@@ -4,6 +4,8 @@ services:
   tloegbbl-backend:
     image: tloegbbl-backend
     container_name: tloegbbl-backend
+    environment:
+      - DATABASE_URL=postgresql://test:test@postgres-database:5432/tloegbbl?schema=public
     build:
       dockerfile: Dockerfile
       context: ./backend
