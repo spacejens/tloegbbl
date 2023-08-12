@@ -6,3 +6,19 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Coach {
+  id                      Int                       @default(autoincrement()) @id
+  name                    String
+  externalId              ExternalCoachId[]
+}
+
+model ExternalCoachId {
+  id                      Int                       @default(autoincrement()) @id
+  externalId              String
+  externalSystem          String
+  coach                   Coach                     @relation(fields: [coachId], references: [id])
+  coachId                 Int
+
+  @@unique([externalId, externalSystem])
+}
