@@ -38,7 +38,7 @@ $ docker compose down
 
 To connect to the local database, use the following command (and provide the test password):
 ```bash
-$ psql -h localhost -p 3001 -U test tloegbbl
+$ PGOPTIONS="--search-path=tloegbbl" psql -h localhost -p 3001 -U test tloegbbl
 ```
 
 ## Database development with Prisma

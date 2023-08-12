@@ -11,14 +11,18 @@ model Coach {
   id                      Int                       @default(autoincrement()) @id
   name                    String
   externalId              ExternalCoachId[]
+
+  @@map("coach")
 }
 
 model ExternalCoachId {
   id                      Int                       @default(autoincrement()) @id
-  externalId              String
-  externalSystem          String
+  externalId              String                    @map("external_id")
+  externalSystem          String                    @map("external_system")
   coach                   Coach                     @relation(fields: [coachId], references: [id])
-  coachId                 Int
+  coachId                 Int                       @map("coach_id")
 
   @@unique([externalId, externalSystem])
+
+  @@map("external_coach_id")
 }
