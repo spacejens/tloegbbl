@@ -4,7 +4,7 @@ export enum ImportRequestDirective {
   // TODO Add directive for bulk importing (which should e.g. not trigger statistics calculation for each API call)
 }
 
-export class ImportRequestEnvelope<T> {
+export class ImportRequestEnvelope<T extends ImportData> {
   directives?: ImportRequestDirective[];
   data: T;
 }
@@ -16,7 +16,7 @@ export enum ImportResponseStatus {
 }
 
 // TODO Compare against standard envelope for e.g. failures, class here should cover both success and failure if possible
-export class ImportResponseEnvelope<T> {
+export class ImportResponseEnvelope<T extends ImportData> {
   status: ImportResponseStatus;
   data?: T;
 }
@@ -26,6 +26,8 @@ export class ImportExternalId {
   externalId: string;
   externalSystem: string;
 }
+
+export type ImportData = ImportCoach;
 
 export class ImportCoach {
   id?: number;
