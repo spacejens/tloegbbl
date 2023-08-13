@@ -75,6 +75,7 @@ export class CoachService {
   }
 
   async updateCoach(input: Coach): Promise<Coach> {
+    // TODO Need to enforce that input has an ID, otherwise this might update all coaches?
     const updated = await this.prisma.coach.update({
       where: {
         id: input.id,
