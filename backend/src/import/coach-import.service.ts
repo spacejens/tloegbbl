@@ -14,13 +14,9 @@ export class CoachImportService {
   async importCoach(
     request: ImportRequestEnvelope<Coach>,
   ): Promise<ImportResponseEnvelope<Coach>> {
-    const found: Coach = await this.coachService.findCoachByReference({
-      id: request.data.id,
-      externalIds: request.data.externalIds.map((reqExtId) => ({
-        externalId: reqExtId.externalId,
-        externalSystem: reqExtId.externalSystem,
-      })),
-    });
+    const found: Coach = await this.coachService.findCoachByReference(
+      request.data,
+    );
     // TODO If existing coach found, update it (directives would control if existing data points get overwritten or not)
     // TODO If no existing coach, create new using the input
     // TODO Return the resulting updated/new state of the coach
