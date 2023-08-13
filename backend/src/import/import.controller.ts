@@ -1,8 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import {
-  ImportRequestEnvelope,
-  ImportResponseEnvelope,
-} from './import.interface';
+import { ImportRequestEnvelope, ImportResponseEnvelope } from './envelopes';
 import { CoachImportService } from './coach-import.service';
 import { Coach } from '../dtos';
 

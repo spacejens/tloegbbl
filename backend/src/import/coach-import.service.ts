@@ -3,7 +3,7 @@ import {
   ImportRequestEnvelope,
   ImportResponseEnvelope,
   ImportResponseStatus,
-} from './import.interface';
+} from './envelopes';
 import { Coach } from '../dtos';
 
 @Injectable()
