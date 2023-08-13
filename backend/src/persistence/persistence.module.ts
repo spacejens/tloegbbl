@@ -7,5 +7,6 @@ import { RawDataController } from './raw-data.controller';
 @Module({
   providers: [PrismaService, CoachService],
   controllers: [CountController, RawDataController],
+  exports: [CoachService],
 })
 export class PersistenceModule {}
