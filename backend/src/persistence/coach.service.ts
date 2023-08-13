@@ -49,7 +49,7 @@ export class CoachService {
   }
 
   async findCoachByReference(reference: CoachReference): Promise<Coach> {
-    // TODO When finding by multiple references, check if references are contradictory (i.e. refer to different records)
+    // TODO When finding by multiple references, check if references are contradictory (i.e. refer to different records) or dead (i.e. missing record)
     if (reference.id) {
       return this.findCoachById(reference.id);
     } else {
