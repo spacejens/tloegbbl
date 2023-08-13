@@ -5,13 +5,22 @@ import {
   ImportResponseStatus,
 } from './envelopes';
 import { Coach } from '../dtos';
+import { CoachService } from '../persistence/coach.service';
 
 @Injectable()
 export class CoachImportService {
-  importCoach(
+  constructor(private readonly coachService: CoachService) {}
+
+  async importCoach(
     request: ImportRequestEnvelope<Coach>,
-  ): ImportResponseEnvelope<Coach> {
-    // TODO Find existing coach if it exists (using internal ID, external ID, name? Verify no conflicting internal/external IDs?)
+  ): Promise<ImportResponseEnvelope<Coach>> {
+    const found: Coach = await this.coachService.findCoachByReference({
+      id: request.data.id,
+      externalIds: request.data.externalIds.map((reqExtId) => ({
+        externalId: reqExtId.externalId,
+        externalSystem: reqExtId.externalSystem,
+      })),
+    });
     // TODO If existing coach found, update it (directives would control if existing data points get overwritten or not)
     // TODO If no existing coach, create new using the input
     // TODO Return the resulting updated/new state of the coach

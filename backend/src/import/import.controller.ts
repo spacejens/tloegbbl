@@ -8,9 +8,9 @@ export class ImportController {
   constructor(private coachImportService: CoachImportService) {}
 
   @Post('coach')
-  coach(
+  async coach(
     @Body() request: ImportRequestEnvelope<Coach>,
-  ): ImportResponseEnvelope<Coach> {
+  ): Promise<ImportResponseEnvelope<Coach>> {
     return this.coachImportService.importCoach(request);
   }
 }
