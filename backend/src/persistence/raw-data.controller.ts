@@ -9,15 +9,15 @@ export class RawDataController {
   async coaches() {
     // TODO Return list of all coaches instead of this temporary test
     return {
-      byId: this.coachService.findCoachById(2),
-      byExternalId: this.coachService.findCoachByExternalId({
+      byId: await this.coachService.findCoachById(2),
+      byExternalId: await this.coachService.findCoachByExternalId({
         externalId: 'Foo',
         externalSystem: 'TestSystem',
       }),
-      byReferenceId: this.coachService.findCoachByReference({
+      byReferenceId: await this.coachService.findCoachByReference({
         id: 2,
       }),
-      byReferenceExternalId: this.coachService.findCoachByReference({
+      byReferenceExternalId: await this.coachService.findCoachByReference({
         externalIds: [
           {
             externalId: 'Foo',
