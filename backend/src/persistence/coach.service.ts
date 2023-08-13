@@ -73,4 +73,17 @@ export class CoachService {
     // TODO Is it best to gather all output mapping the find-by-id method? Or better to prevent extra queries?
     return this.findCoachById(created.id);
   }
+
+  async updateCoach(input: Coach): Promise<Coach> {
+    const updated = await this.prisma.coach.update({
+      where: {
+        id: input.id,
+      },
+      data: {
+        // TODO Updated coach should also have external IDs added (but not removed/changed!)
+        name: input.name,
+      },
+    });
+    return this.findCoachById(updated.id);
+  }
 }

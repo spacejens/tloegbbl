@@ -18,9 +18,16 @@ export class CoachImportService {
       request.data,
     );
     if (found) {
-      // TODO Update existing coach
-      // TODO Directives should control if existing data points get overwritten or not
-      // TODO Return the updated state of the coach
+      const updated = await this.coachService.updateCoach({
+        ...request.data,
+        ...found,
+        // TODO Handle external IDs when combining requested and found coach data
+      });
+      // TODO Directives should control if existing data points get overwritten or not (but not the identity/reference fields)
+      return {
+        status: ImportResponseStatus.Updated,
+        data: updated,
+      };
     } else {
       const created = await this.coachService.createCoach(request.data);
       return {
@@ -28,9 +35,5 @@ export class CoachImportService {
         data: created,
       };
     }
-    // TODO Remove this failed return once no longer reachable
-    return {
-      status: ImportResponseStatus.Failed,
-    };
   }
 }
