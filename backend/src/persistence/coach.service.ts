@@ -62,4 +62,15 @@ export class CoachService {
     }
     return undefined;
   }
+
+  async createCoach(input: Coach): Promise<Coach> {
+    const created = await this.prisma.coach.create({
+      data: {
+        // TODO Created coach should also have external IDs
+        name: input.name,
+      },
+    });
+    // TODO Is it best to gather all output mapping the find-by-id method? Or better to prevent extra queries?
+    return this.findCoachById(created.id);
+  }
 }

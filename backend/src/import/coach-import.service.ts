@@ -17,9 +17,18 @@ export class CoachImportService {
     const found: Coach = await this.coachService.findCoachByReference(
       request.data,
     );
-    // TODO If existing coach found, update it (directives would control if existing data points get overwritten or not)
-    // TODO If no existing coach, create new using the input
-    // TODO Return the resulting updated/new state of the coach
+    if (found) {
+      // TODO Update existing coach
+      // TODO Directives should control if existing data points get overwritten or not
+      // TODO Return the updated state of the coach
+    } else {
+      const created = await this.coachService.createCoach(request.data);
+      return {
+        status: ImportResponseStatus.Inserted,
+        data: created,
+      };
+    }
+    // TODO Remove this failed return once no longer reachable
     return {
       status: ImportResponseStatus.Failed,
     };
