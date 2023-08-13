@@ -1,10 +1,10 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import {
-  ImportCoach,
   ImportRequestEnvelope,
   ImportResponseEnvelope,
 } from './import.interface';
 import { CoachImportService } from './coach-import.service';
+import { Coach } from '../dtos';
 
 @Controller('import')
 export class ImportController {
@@ -12,8 +12,8 @@ export class ImportController {
 
   @Post('coach')
   coach(
-    @Body() request: ImportRequestEnvelope<ImportCoach>,
-  ): ImportResponseEnvelope<ImportCoach> {
+    @Body() request: ImportRequestEnvelope<Coach>,
+  ): ImportResponseEnvelope<Coach> {
     return this.coachImportService.importCoach(request);
   }
 }

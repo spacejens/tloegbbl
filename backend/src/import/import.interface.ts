@@ -1,3 +1,5 @@
+import { Coach } from '../dtos';
+
 export enum ImportRequestDirective {
   Whatever = 'Whatever', // TODO Remove this example directive when any real directive is added
   // TODO Add directive to represent historical data (that shouldn't overwrite existing data)
@@ -21,18 +23,6 @@ export class ImportResponseEnvelope<T extends ImportData> {
   data?: T;
 }
 
-export class ImportExternalId {
-  id?: number;
-  externalId: string;
-  externalSystem: string;
-}
-
-export type ImportData = ImportCoach;
-
-export class ImportCoach {
-  id?: number;
-  externalIds?: ImportExternalId[];
-  name: string;
-}
+export type ImportData = Coach;
 
 // TODO Add type validation for everything, and apply the ValidationPipe to the app
