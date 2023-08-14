@@ -49,6 +49,7 @@ export class CoachService {
   }
 
   async findCoachByReference(reference: CoachReference): Promise<Coach> {
+    // TODO Reduce number of queries made by using Prisma's and/or mechanisms in a single query (desired external ID might not yet exist though)
     // TODO When finding by multiple references, check if references are contradictory (i.e. refer to different records) or dead (i.e. missing record)
     if (reference.id) {
       return this.findCoachById(reference.id);
