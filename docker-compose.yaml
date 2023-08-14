@@ -4,6 +4,8 @@ services:
   tloegbbl-backend:
     image: tloegbbl-backend
     container_name: tloegbbl-backend
+    depends_on:
+      - postgres-database
     environment:
       - DATABASE_URL=postgresql://test:test@postgres-database:5432/tloegbbl?schema=tloegbbl
     build:
