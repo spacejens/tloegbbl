@@ -7,7 +7,6 @@ services:
     container_name: tloegbbl-backend
     depends_on:
       - postgres-database
-      # TODO Ensure database is ready to accept connections, see https://docs.docker.com/compose/startup-order/
     environment:
       - DATABASE_URL=postgresql://test:test@postgres-database:5432/tloegbbl?schema=tloegbbl
     build:
@@ -24,6 +23,13 @@ services:
   postgres-database:
     image: postgres
     container_name: tloegbbl-postgres
+    healthcheck:
+      # Have to use single command string here, see https://github.com/peter-evans/docker-compose-healthcheck/pull/17
+      test: ["CMD-SHELL", "pg_isready -U test -d tloegbbl"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
     environment:
       - POSTGRES_USER=test
       - POSTGRES_PASSWORD=test
