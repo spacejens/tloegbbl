@@ -7,6 +7,7 @@ services:
     container_name: tloegbbl-backend
     depends_on:
       - postgres-database
+      # TODO Condition that DB must be healthy, see https://docs.docker.com/compose/compose-file/05-services/#depends_on
     environment:
       - DATABASE_URL=postgresql://test:test@postgres-database:5432/tloegbbl?schema=tloegbbl
     build:
