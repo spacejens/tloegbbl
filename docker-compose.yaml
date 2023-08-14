@@ -1,4 +1,5 @@
 version: "1"
+# TODO Migrate to Docker compose v2, as v1 no longer updates. See https://docs.docker.com/compose/migrate/
 
 services:
   tloegbbl-backend:
@@ -6,6 +7,7 @@ services:
     container_name: tloegbbl-backend
     depends_on:
       - postgres-database
+      # TODO Ensure database is ready to accept connections, see https://docs.docker.com/compose/startup-order/
     environment:
       - DATABASE_URL=postgresql://test:test@postgres-database:5432/tloegbbl?schema=tloegbbl
     build:

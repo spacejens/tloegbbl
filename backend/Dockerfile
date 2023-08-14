@@ -31,4 +31,5 @@ COPY --from=build /app/node_modules ./node_modules
 USER 1000
 EXPOSE ${PORT}
 
+# TODO Add health check by doing a GET request to /health (checking e.g. DB connectivity), see https://docs.docker.com/engine/reference/builder/#healthcheck
 CMD [ "node", "dist/main.js" ]
