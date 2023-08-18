@@ -7,7 +7,7 @@ export enum ImportRequestDirective {
 }
 
 export class ImportRequestEnvelope<T extends ImportData> {
-  directives?: ImportRequestDirective[];
+  directives?: ImportRequestDirective[]; // TODO Refactor directives to be a single object with several optional, named boolean properties instead
   data: T;
 }
 
