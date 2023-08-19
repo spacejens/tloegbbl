@@ -20,6 +20,12 @@ export class CombineDataService {
     alpha: ExternalId[],
     beta: ExternalId[],
   ): ExternalId[] {
+    if (!alpha) {
+      return beta;
+    }
+    if (!beta) {
+      return alpha;
+    }
     const combined = [...alpha, ...beta];
     // First, add all input objects that have an ID already
     const output = combined.filter((externalId) => externalId.id);
