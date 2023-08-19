@@ -3,8 +3,7 @@ import { Coach, ExternalId, ExternallyIdentifiable } from '../dtos';
 
 @Injectable()
 export class CombineDataService {
-  combineData<T extends ExternallyIdentifiable>(requested: T, found: T): T {
-    // TODO Directives should control if existing data points get overwritten or not (but not the identity/reference fields)
+  preferFound<T extends ExternallyIdentifiable>(requested: T, found: T): T {
     return {
       ...requested,
       ...found,

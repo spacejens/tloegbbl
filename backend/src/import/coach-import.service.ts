@@ -23,7 +23,7 @@ export class CoachImportService {
     );
     if (found) {
       const updated = await this.coachService.updateCoach(
-        this.combineDataService.combineData(request.data, found),
+        this.combineDataService.preferFound(request.data, found),
       );
       return {
         status: ImportResponseStatus.Updated,
