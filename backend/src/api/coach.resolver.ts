@@ -22,4 +22,13 @@ export class CoachResolver {
   externalIds(@Parent() coach: Coach): ExternalId[] {
     return coach.externalIds;
   }
+
+  @Query((returns) => [Coach], { nullable: true })
+  async coaches(): Promise<Coach[]> {
+    // TODO Implement list operation in persistence layer
+    return [
+      await this.coachService.findCoachById(2),
+      await this.coachService.findCoachById(3),
+    ];
+  }
 }

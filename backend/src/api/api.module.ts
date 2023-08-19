@@ -11,12 +11,16 @@ import { PersistenceModule } from '../persistence/persistence.module';
       path: 'api',
       graphiql: {
         defaultQuery: `{
-  coach(id: 2) {
+  singleCoach: coach(id: 2) {
     id,
     externalIds {
       externalId,
       externalSystem,
     },
+    name,
+  }
+  allCoaches: coaches {
+    id,
     name,
   }
 }`,
