@@ -25,7 +25,11 @@ export class CoachService {
 
   private wrapCoach(found: {
     id: number;
-    externalId: { id: number; externalId: string; externalSystem: string }[];
+    externalId: {
+      id: number;
+      externalId: string;
+      externalSystem: string;
+    }[];
     name: string;
   }): Coach {
     return (
