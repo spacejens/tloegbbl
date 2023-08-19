@@ -177,5 +177,15 @@ describe('CoachService', () => {
     });
   });
 
-  // TODO Unit test the rest of the methods
+  describe('findCoachByReference', () => {
+    // TODO Implement test cases
+  });
+
+  describe('createCoach', () => {
+    // TODO Implement test cases
+  });
+
+  describe('updateCoach', () => {
+    // TODO Implement test cases
+  });
 });
