@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class ExternalId {
@@ -23,6 +23,13 @@ export class CoachReference extends ExternallyIdentifiable {}
 
 @ObjectType()
 export class Coach extends CoachReference {
+  @Field()
+  name: string;
+}
+
+@InputType()
+export class CoachInput {
+  // TODO Other properties of coach input should ideally be inherited
   @Field()
   name: string;
 }
