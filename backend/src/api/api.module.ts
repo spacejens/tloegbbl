@@ -21,8 +21,6 @@ import { PersistenceModule } from '../persistence/persistence.module';
     }),
     PersistenceModule,
   ],
-  providers: [
-    CoachResolver,
-  ],
+  providers: [CoachResolver],
 })
 export class ApiModule {}
