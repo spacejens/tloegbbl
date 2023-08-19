@@ -16,9 +16,8 @@ export class CoachImportService {
   ) {}
 
   async import(requested: Coach): Promise<Coach> {
-    const found: Coach = await this.coachService.findCoachByReference(
-      requested,
-    );
+    const found: Coach =
+      await this.coachService.findCoachByReference(requested);
     if (found) {
       return await this.coachService.updateCoach(
         this.combineDataService.preferFound(requested, found),

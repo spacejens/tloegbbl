@@ -5,7 +5,6 @@ import { mock } from 'jest-mock-extended';
 
 describe('CoachService', () => {
   let service: CoachService;
-  let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -16,7 +15,6 @@ describe('CoachService', () => {
     }).compile();
 
     service = module.get<CoachService>(CoachService);
-    prisma = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {

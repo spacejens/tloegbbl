@@ -3,7 +3,7 @@ import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 @InputType('ExternalIdInput')
 @ObjectType()
 export class ExternalId {
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   id?: number;
   @Field()
   externalId: string;
@@ -14,9 +14,9 @@ export class ExternalId {
 @InputType('ExternallyIdentifiableInput')
 @ObjectType()
 export class ExternallyIdentifiable {
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   id?: number;
-  @Field((type) => [ExternalId], { nullable: true })
+  @Field(() => [ExternalId], { nullable: true })
   externalIds?: ExternalId[];
 }
 

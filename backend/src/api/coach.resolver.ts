@@ -11,14 +11,14 @@ import { CoachService } from '../persistence/coach.service';
 import { Coach, ExternalId } from '../dtos';
 import { CoachImportService } from '../import/coach-import.service';
 
-@Resolver((of) => Coach)
+@Resolver(() => Coach)
 export class CoachResolver {
   constructor(
     private coachService: CoachService,
     private coachImportService: CoachImportService,
   ) {}
 
-  @Mutation((returns) => Coach)
+  @Mutation(() => Coach)
   async import(
     @Args('coach', { type: () => Coach }) coach: Coach,
   ): Promise<Coach> {
@@ -49,7 +49,7 @@ export class CoachResolver {
     return this.coachImportService.import(coach);
   }
 
-  @Query((returns) => Coach, { nullable: true })
+  @Query(() => Coach, { nullable: true })
   async coach(@Args('id', { type: () => Int }) id: number): Promise<Coach> {
     return this.coachService.findCoachById(id);
   }
@@ -59,7 +59,7 @@ export class CoachResolver {
     return coach.externalIds;
   }
 
-  @Query((returns) => [Coach], { nullable: true })
+  @Query(() => [Coach], { nullable: true })
   async coaches(): Promise<Coach[]> {
     // TODO Implement list operation in persistence layer
     return [

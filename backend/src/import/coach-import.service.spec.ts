@@ -3,7 +3,7 @@ import { CoachImportService } from './coach-import.service';
 import { CoachService } from '../persistence/coach.service';
 import { mock } from 'jest-mock-extended';
 import { ImportResponseStatus } from './envelopes';
-import { Coach, CoachReference } from '../dtos';
+import { Coach } from '../dtos';
 import { CombineDataService } from './combine-data.service';
 
 describe('CoachImportService', () => {
@@ -12,7 +12,7 @@ describe('CoachImportService', () => {
   let combineDataService: CombineDataService;
 
   const mockFindCoachByReference = (id: number, name: string) => {
-    return jest.fn().mockImplementation((input: CoachReference) => ({
+    return jest.fn().mockImplementation(() => ({
       id: id,
       name: name,
     }));
