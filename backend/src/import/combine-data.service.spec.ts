@@ -3,7 +3,7 @@ import { CombineDataService } from './combine-data.service';
 import { ExternallyIdentifiable } from '../dtos';
 
 class TestData extends ExternallyIdentifiable {
-  mandatoryData: string;
+  alpha?: string;
 }
 
 describe('CombineDataService', () => {
@@ -22,9 +22,39 @@ describe('CombineDataService', () => {
   });
 
   describe('no directives', () => {
+    describe('id', () => {
+      it('should use found id', () => {
+        const requested: TestData = {};
+        const found: TestData = { id: 22 };
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({ id: 22 });
+      });
+
+      it('should prefer found id', () => {
+        const requested: TestData = { id: 11 };
+        const found: TestData = { id: 22 };
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({ id: 22 });
+      });
+
+      it('should ignore requested id', () => {
+        const requested: TestData = { id: 11 };
+        const found: TestData = {};
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({});
+      });
+
+      it('should ignore missing id', () => {
+        const requested: TestData = {};
+        const found: TestData = {};
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({});
+      });
+    });
+
     it('should combine requested and found', () => {
       const requested: TestData = {
-        mandatoryData: 'Requested',
+        alpha: 'Requested',
         externalIds: [
           {
             externalId: 'ExtId',
@@ -34,7 +64,7 @@ describe('CombineDataService', () => {
       };
       const found: TestData = {
         id: 47,
-        mandatoryData: 'Found',
+        alpha: 'Found',
       };
       const result: TestData = service.combineData(requested, found);
       expect(result).toEqual({
@@ -45,7 +75,7 @@ describe('CombineDataService', () => {
             externalSystem: 'ExtSys',
           },
         ],
-        mandatoryData: 'Found',
+        alpha: 'Found',
       });
     });
 

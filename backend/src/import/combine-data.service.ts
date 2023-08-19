@@ -8,6 +8,7 @@ export class CombineDataService {
     return {
       ...requested,
       ...found,
+      id: found.id,
       externalIds: this.combineExternalIds(
         requested.externalIds,
         found.externalIds,
