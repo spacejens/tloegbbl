@@ -68,7 +68,14 @@ export class CoachService {
   async createCoach(input: Coach): Promise<Coach> {
     const created = await this.prisma.coach.create({
       data: {
-        // TODO Created coach should also have external IDs
+        externalId: {
+          createMany: {
+            data: input.externalIds.map((extId) => ({
+              externalId: extId.externalId,
+              externalSystem: extId.externalSystem,
+            })),
+          },
+        },
         name: input.name,
       },
     });
