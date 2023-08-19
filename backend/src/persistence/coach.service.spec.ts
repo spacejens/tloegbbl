@@ -103,5 +103,79 @@ describe('CoachService', () => {
     });
   });
 
+  describe('findCoachByExternalId', () => {
+    it('should return found coach', async () => {
+      prismaService.externalCoachId.findUnique = jest.fn().mockReturnValue({
+        id: 11,
+        externalId: 'ExtId',
+        externalSystem: 'ExtSys',
+        coachId: 23,
+      });
+      prismaService.coach.findUnique = jest.fn().mockReturnValue({
+        id: 23,
+        externalId: [
+          {
+            id: 45,
+            externalId: 'ExtId',
+            externalSystem: 'ExtSys',
+          },
+        ],
+        name: 'Found',
+      });
+      const result = await service.findCoachByExternalId({
+        externalId: 'ExtId',
+        externalSystem: 'ExtSys',
+      });
+      expect(result).toEqual({
+        id: 23,
+        externalIds: [
+          {
+            id: 45,
+            externalId: 'ExtId',
+            externalSystem: 'ExtSys',
+          },
+        ],
+        name: 'Found',
+      });
+      expect(prismaService.externalCoachId.findUnique).toHaveBeenCalledWith({
+        where: {
+          externalId_externalSystem: {
+            externalId: 'ExtId',
+            externalSystem: 'ExtSys',
+          },
+        },
+      });
+      expect(prismaService.coach.findUnique).toHaveBeenCalledWith({
+        where: {
+          id: 23,
+        },
+        include: {
+          externalId: true,
+        },
+      });
+    });
+
+    it('should return undefined if not found', async () => {
+      prismaService.externalCoachId.findUnique = jest
+        .fn()
+        .mockReturnValue(undefined);
+      prismaService.coach.findUnique = jest.fn();
+      const result = await service.findCoachByExternalId({
+        externalId: 'ExtId',
+        externalSystem: 'ExtSys',
+      });
+      expect(result).toEqual(undefined);
+      expect(prismaService.externalCoachId.findUnique).toHaveBeenCalledWith({
+        where: {
+          externalId_externalSystem: {
+            externalId: 'ExtId',
+            externalSystem: 'ExtSys',
+          },
+        },
+      });
+      expect(prismaService.coach.findUnique).toHaveBeenCalledTimes(0);
+    });
+  });
+
   // TODO Unit test the rest of the methods
 });

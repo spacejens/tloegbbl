@@ -34,6 +34,7 @@ export class CoachService {
   }
 
   async findCoachByExternalId(externalId: ExternalId): Promise<Coach> {
+    // TODO Refactor this to a single Prisma query instead of having to get coach by ID after finding externalId
     const found = await this.prisma.externalCoachId.findUnique({
       where: {
         externalId_externalSystem: {
