@@ -13,6 +13,11 @@ import { PersistenceModule } from '../persistence/persistence.module';
         defaultQuery: `{
   coach(id: 2) {
     id,
+    externalIds {
+      id,
+      externalId,
+      externalSystem,
+    },
     name,
   }
 }`,
