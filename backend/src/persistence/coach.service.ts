@@ -74,37 +74,41 @@ export class CoachService {
   }
 
   async createCoach(input: Coach): Promise<Coach> {
-    return this.wrapCoach(await this.prisma.coach.create({
-      data: {
-        externalId: {
-          createMany: {
-            data: input.externalIds.map((extId) => ({
-              externalId: extId.externalId,
-              externalSystem: extId.externalSystem,
-            })),
+    return this.wrapCoach(
+      await this.prisma.coach.create({
+        data: {
+          externalId: {
+            createMany: {
+              data: input.externalIds.map((extId) => ({
+                externalId: extId.externalId,
+                externalSystem: extId.externalSystem,
+              })),
+            },
           },
+          name: input.name,
         },
-        name: input.name,
-      },
-      include: {
-        externalId: true,
-      },
-    }));
+        include: {
+          externalId: true,
+        },
+      }),
+    );
   }
 
   async updateCoach(input: Coach): Promise<Coach> {
     // TODO Need to enforce that input has an ID, otherwise this might update all coaches?
-    return this.wrapCoach(await this.prisma.coach.update({
-      where: {
-        id: input.id,
-      },
-      data: {
-        // TODO Updated coach should also have external IDs added (but not removed/changed!)
-        name: input.name,
-      },
-      include: {
-        externalId: true,
-      },
-    }));
+    return this.wrapCoach(
+      await this.prisma.coach.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          // TODO Updated coach should also have external IDs added (but not removed/changed!)
+          name: input.name,
+        },
+        include: {
+          externalId: true,
+        },
+      }),
+    );
   }
 }
