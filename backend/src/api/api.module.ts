@@ -19,6 +19,7 @@ import { PersistenceModule } from '../persistence/persistence.module';
 }
         `,
       },
+      autoSchemaFile: true, // Auto-generate in-memory schema file, doesn't have source folder in Docker
     }),
     PersistenceModule,
   ],
