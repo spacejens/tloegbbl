@@ -11,12 +11,15 @@ export class ExternalId {
 }
 
 @ObjectType()
-export class CoachReference {
+export class ExternallyIdentifiable {
   @Field((type) => Int)
   id?: number;
   @Field((type) => [ExternalId])
   externalIds?: ExternalId[];
 }
+
+@ObjectType()
+export class CoachReference extends ExternallyIdentifiable {}
 
 @ObjectType()
 export class Coach extends CoachReference {

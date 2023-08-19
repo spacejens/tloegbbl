@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CombineDataService } from './combine-data.service';
-import { Coach } from '../dtos';
+import { ExternallyIdentifiable } from '../dtos';
+
+class TestData extends ExternallyIdentifiable {
+  mandatoryData: string;
+}
 
 describe('CombineDataService', () => {
   let service: CombineDataService;
@@ -17,12 +21,10 @@ describe('CombineDataService', () => {
     expect(service).toBeDefined();
   });
 
-  // TODO Rewrite unit tests to be generic, using test-specific DTOs
-
   describe('no directives', () => {
     it('should combine requested and found', () => {
-      const requested: Coach = {
-        name: 'Requested Coach',
+      const requested: TestData = {
+        mandatoryData: 'Requested',
         externalIds: [
           {
             externalId: 'ExtId',
@@ -30,11 +32,11 @@ describe('CombineDataService', () => {
           },
         ],
       };
-      const found: Coach = {
+      const found: TestData = {
         id: 47,
-        name: 'Found Coach',
+        mandatoryData: 'Found',
       };
-      const result = service.combineData(requested, found);
+      const result: TestData = service.combineData(requested, found);
       expect(result).toEqual({
         id: 47,
         externalIds: [
@@ -43,9 +45,11 @@ describe('CombineDataService', () => {
             externalSystem: 'ExtSys',
           },
         ],
-        name: 'Found Coach',
+        mandatoryData: 'Found',
       });
     });
+
+    // TODO Unit test checking that found DB ID is never overwritten (for neither object itself or for external IDs)
 
     // TODO More test cases for data combination
   });

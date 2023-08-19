@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Coach, ExternalId } from '../dtos';
+import { Coach, ExternalId, ExternallyIdentifiable } from '../dtos';
 
 @Injectable()
 export class CombineDataService {
-  combineData(requested: Coach, found: Coach): Coach {
-    // TODO Make this method generic (requires common superclass of all externally identifiable DTOs)
+  combineData<T extends ExternallyIdentifiable>(requested: T, found: T): T {
     // TODO Directives should control if existing data points get overwritten or not (but not the identity/reference fields)
     return {
       ...requested,
