@@ -132,34 +132,6 @@ describe('CombineDataService', () => {
         expect(result).toEqual({ alpha: 'Requested', beta: 'Found' });
       });
     });
-
-    // TODO Remove this test case once the cleaner test cases above fully replace it
-    it('should combine requested and found', () => {
-      const requested: TestData = {
-        alpha: 'Requested',
-        externalIds: [
-          {
-            externalId: 'ExtId',
-            externalSystem: 'ExtSys',
-          },
-        ],
-      };
-      const found: TestData = {
-        id: 47,
-        alpha: 'Found',
-      };
-      const result: TestData = service.combineData(requested, found);
-      expect(result).toEqual({
-        id: 47,
-        externalIds: [
-          {
-            externalId: 'ExtId',
-            externalSystem: 'ExtSys',
-          },
-        ],
-        alpha: 'Found',
-      });
-    });
   });
 
   // TODO Unit tests for data combination using directives (e.g. allowing overwrite of found data)
