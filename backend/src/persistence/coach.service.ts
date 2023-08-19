@@ -74,7 +74,7 @@ export class CoachService {
   }
 
   async createCoach(input: Coach): Promise<Coach> {
-    const created = await this.prisma.coach.create({
+    return this.wrapCoach(await this.prisma.coach.create({
       data: {
         externalId: {
           createMany: {
@@ -86,14 +86,15 @@ export class CoachService {
         },
         name: input.name,
       },
-    });
-    // TODO Use wrapCoach method for result when creating coach (but need to ensure all fields are present in output)
-    return this.findCoachById(created.id);
+      include: {
+        externalId: true,
+      },
+    }));
   }
 
   async updateCoach(input: Coach): Promise<Coach> {
     // TODO Need to enforce that input has an ID, otherwise this might update all coaches?
-    const updated = await this.prisma.coach.update({
+    return this.wrapCoach(await this.prisma.coach.update({
       where: {
         id: input.id,
       },
@@ -101,8 +102,9 @@ export class CoachService {
         // TODO Updated coach should also have external IDs added (but not removed/changed!)
         name: input.name,
       },
-    });
-    // TODO Use wrapCoach method for result when updating coach (but need to ensure all fields are present in output)
-    return this.findCoachById(updated.id);
+      include: {
+        externalId: true,
+      },
+    }));
   }
 }
