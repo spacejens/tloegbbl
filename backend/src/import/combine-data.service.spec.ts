@@ -4,6 +4,7 @@ import { ExternallyIdentifiable } from '../dtos';
 
 class TestData extends ExternallyIdentifiable {
   alpha?: string;
+  beta?: string;
 }
 
 describe('CombineDataService', () => {
@@ -52,6 +53,46 @@ describe('CombineDataService', () => {
       });
     });
 
+    // TODO Unit tests for external ID (remember to check that requested DB IDs are ignored, as we do above)
+
+    describe('data', () => {
+      it('should add requested data', () => {
+        const requested: TestData = { alpha: 'Requested' };
+        const found: TestData = {};
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({ alpha: 'Requested' });
+      });
+
+      it('should keep found data', () => {
+        const requested: TestData = {};
+        const found: TestData = { alpha: 'Found' };
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({ alpha: 'Found' });
+      });
+
+      it('should not overwrite found data', () => {
+        const requested: TestData = { alpha: 'Requested' };
+        const found: TestData = { alpha: 'Found' };
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({ alpha: 'Found' });
+      });
+
+      it('should ignore missing data', () => {
+        const requested: TestData = {};
+        const found: TestData = {};
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({});
+      });
+
+      it('should merge different data', () => {
+        const requested: TestData = { alpha: 'Requested' };
+        const found: TestData = { beta: 'Found' };
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({ alpha: 'Requested', beta: 'Found' });
+      });
+    });
+
+    // TODO Remove this test case once the cleaner test cases above fully replace it
     it('should combine requested and found', () => {
       const requested: TestData = {
         alpha: 'Requested',
@@ -78,10 +119,6 @@ describe('CombineDataService', () => {
         alpha: 'Found',
       });
     });
-
-    // TODO Unit test checking that found DB ID is never overwritten (for neither object itself or for external IDs)
-
-    // TODO More test cases for data combination
   });
 
   // TODO Unit tests for data combination using directives (e.g. allowing overwrite of found data)
