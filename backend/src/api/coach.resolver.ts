@@ -6,10 +6,10 @@ import { Coach } from './coach.model';
 export class CoachResolver {
   constructor(private coachService: CoachService) {}
 
-  @Query(returns => Coach)
+  @Query(returns => Coach, { nullable: true })
   async coach(@Args('id', { type: () => Int }) id: number): Promise<Coach> {
     const coach = await this.coachService.findCoachById(id);
-    return {
+    return coach && {
       id: coach.id,
       name: coach.name,
     };
