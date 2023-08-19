@@ -14,7 +14,6 @@ import { PersistenceModule } from '../persistence/persistence.module';
   coach(id: 2) {
     id,
     externalIds {
-      id,
       externalId,
       externalSystem,
     },
