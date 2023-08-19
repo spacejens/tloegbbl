@@ -9,13 +9,19 @@ import {
 } from '@nestjs/graphql';
 import { CoachService } from '../persistence/coach.service';
 import { Coach, ExternalId } from '../dtos';
+import { CoachImportService } from '../import/coach-import.service';
 
 @Resolver((of) => Coach)
 export class CoachResolver {
-  constructor(private coachService: CoachService) {}
+  constructor(
+    private coachService: CoachService,
+    private coachImportService: CoachImportService,
+  ) {}
 
   @Mutation((returns) => Coach)
-  import(@Args('coach', { type: () => Coach }) coach: Coach): Coach {
+  async import(
+    @Args('coach', { type: () => Coach }) coach: Coach,
+  ): Promise<Coach> {
     /*
       TODO Remove this comment block once mutation query ready in code elsewhere
       Syntax for mutation query is like this:
@@ -40,11 +46,7 @@ export class CoachResolver {
         }
       }
     */
-    // TODO Implement importing in GraphQL
-    return {
-      ...coach,
-      id: 647,
-    };
+    return this.coachImportService.import(coach);
   }
 
   @Query((returns) => Coach, { nullable: true })

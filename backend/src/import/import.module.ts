@@ -8,5 +8,6 @@ import { CombineDataService } from './combine-data.service';
   imports: [PersistenceModule],
   controllers: [ImportController],
   providers: [CoachImportService, CombineDataService],
+  exports: [CoachImportService],
 })
 export class ImportModule {}

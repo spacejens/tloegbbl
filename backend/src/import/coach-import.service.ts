@@ -15,6 +15,19 @@ export class CoachImportService {
     private readonly combineDataService: CombineDataService,
   ) {}
 
+  async import(requested: Coach): Promise<Coach> {
+    const found: Coach = await this.coachService.findCoachByReference(
+      requested,
+    );
+    if (found) {
+      return await this.coachService.updateCoach(
+        this.combineDataService.preferFound(requested, found),
+      );
+    } else {
+      return await this.coachService.createCoach(requested);
+    }
+  }
+
   async importCoach(
     request: ImportRequestEnvelope<Coach>,
   ): Promise<ImportResponseEnvelope<Coach>> {
