@@ -8,23 +8,34 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { CoachService } from '../persistence/coach.service';
-import { Coach, CoachInput, ExternalId } from '../dtos';
+import { Coach, ExternalId } from '../dtos';
 
 @Resolver((of) => Coach)
 export class CoachResolver {
   constructor(private coachService: CoachService) {}
 
   @Mutation((returns) => Coach)
-  import(@Args('coach', { type: () => CoachInput }) coach: CoachInput): Coach {
+  import(@Args('coach', { type: () => Coach }) coach: Coach): Coach {
     /*
       TODO Remove this comment block once mutation query ready in code elsewhere
       Syntax for mutation query is like this:
 
       mutation {
         import(coach: {
-          name:"Frodo"
+          name:"Frodo",
+          externalIds:[
+            {
+              externalId:"ExtId",
+              externalSystem:"ExtSys",
+            },
+          ],
         }) {
           id,
+          externalIds {
+            id,
+            externalId,
+            externalSystem,
+          },
           name,
         }
       }

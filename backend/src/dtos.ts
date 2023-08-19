@@ -1,8 +1,9 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 
+@InputType('ExternalIdInput')
 @ObjectType()
 export class ExternalId {
-  @Field((type) => Int)
+  @Field((type) => Int, { nullable: true })
   id?: number;
   @Field()
   externalId: string;
@@ -10,26 +11,22 @@ export class ExternalId {
   externalSystem: string;
 }
 
+@InputType('ExternallyIdentifiableInput')
 @ObjectType()
 export class ExternallyIdentifiable {
-  @Field((type) => Int)
+  @Field((type) => Int, { nullable: true })
   id?: number;
-  @Field((type) => [ExternalId])
+  @Field((type) => [ExternalId], { nullable: true })
   externalIds?: ExternalId[];
 }
 
+@InputType('CoachReferenceInput')
 @ObjectType()
 export class CoachReference extends ExternallyIdentifiable {}
 
+@InputType('CoachInput')
 @ObjectType()
 export class Coach extends CoachReference {
-  @Field()
-  name: string;
-}
-
-@InputType()
-export class CoachInput {
-  // TODO Other properties of coach input should ideally be inherited
   @Field()
   name: string;
 }
