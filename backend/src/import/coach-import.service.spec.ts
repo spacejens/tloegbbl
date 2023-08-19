@@ -4,6 +4,7 @@ import { CoachService } from '../persistence/coach.service';
 import { mock } from 'jest-mock-extended';
 import { ImportResponseStatus } from './envelopes';
 import { Coach } from 'src/dtos';
+import { CombineDataService } from './combine-data.service';
 
 describe('CoachImportService', () => {
   let service: CoachImportService;
@@ -14,6 +15,7 @@ describe('CoachImportService', () => {
       providers: [
         CoachImportService,
         { provide: CoachService, useValue: mock<CoachService>() },
+        CombineDataService,
       ],
     }).compile();
 
