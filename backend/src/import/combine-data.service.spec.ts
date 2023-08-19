@@ -53,7 +53,55 @@ describe('CombineDataService', () => {
       });
     });
 
-    // TODO Unit tests for external ID (remember to check that requested DB IDs are ignored, as we do above)
+    describe('externalIds', () => {
+      it('should use found externalId', () => {
+        const requested: TestData = {};
+        const found: TestData = {
+          externalIds: [
+            { id: 1, externalId: 'extId', externalSystem: 'extSys' },
+          ],
+        };
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({
+          externalIds: [
+            { id: 1, externalId: 'extId', externalSystem: 'extSys' },
+          ],
+        });
+      });
+
+      it('should add requested externalId', () => {
+        const requested: TestData = {
+          externalIds: [{ externalId: 'extId', externalSystem: 'extSys' }],
+        };
+        const found: TestData = {};
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({
+          externalIds: [{ externalId: 'extId', externalSystem: 'extSys' }],
+        });
+      });
+
+      // TODO Test case verifying that requested DB ID is ignored
+
+      it('should merge different externalIds', () => {
+        const requested: TestData = {
+          externalIds: [{ externalId: 'reqId', externalSystem: 'reqSys' }],
+        };
+        const found: TestData = {
+          externalIds: [
+            { id: 1, externalId: 'foundId', externalSystem: 'foundSys' },
+          ],
+        };
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({
+          externalIds: [
+            { id: 1, externalId: 'foundId', externalSystem: 'foundSys' },
+            { externalId: 'reqId', externalSystem: 'reqSys' },
+          ],
+        });
+      });
+
+      // TODO More unit tests for external ID
+    });
 
     describe('data', () => {
       it('should add requested data', () => {
