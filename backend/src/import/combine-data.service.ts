@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Coach, ExternalId, ExternallyIdentifiable } from '../dtos';
+import { ExternalId, ExternallyIdentifiable } from '../dtos';
 
 @Injectable()
 export class CombineDataService {
