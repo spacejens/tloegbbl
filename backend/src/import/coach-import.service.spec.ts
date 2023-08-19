@@ -3,24 +3,61 @@ import { CoachImportService } from './coach-import.service';
 import { CoachService } from '../persistence/coach.service';
 import { mock } from 'jest-mock-extended';
 import { ImportResponseStatus } from './envelopes';
-import { Coach } from 'src/dtos';
+import { Coach, CoachReference } from '../dtos';
 import { CombineDataService } from './combine-data.service';
 
 describe('CoachImportService', () => {
   let service: CoachImportService;
   let coachService: CoachService;
+  let combineDataService: CombineDataService;
+
+  const mockFindCoachByReference = (id: number, name: string) => {
+    return jest.fn().mockImplementation((input: CoachReference) => ({
+      id: id,
+      name: name,
+    }));
+  };
+
+  const mockCreateCoach = (id: number) => {
+    return jest.fn().mockImplementation(
+      (input: Coach): Coach => ({
+        ...input,
+        id: id,
+      }),
+    );
+  };
+
+  const mockUpdateCoach = (nameSuffix: string) => {
+    return jest.fn().mockImplementation(
+      (input: Coach): Coach => ({
+        ...input,
+        name: input.name + nameSuffix,
+      }),
+    );
+  };
+
+  const mockPreferFound = () => {
+    return jest.fn().mockImplementation(
+      (requested: Coach, found: Coach): Coach => ({
+        ...requested,
+        ...found,
+        name: requested.name + ' ' + found.name,
+      }),
+    );
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CoachImportService,
         { provide: CoachService, useValue: mock<CoachService>() },
-        CombineDataService,
+        { provide: CombineDataService, useValue: mock<CombineDataService>() },
       ],
     }).compile();
 
     service = module.get<CoachImportService>(CoachImportService);
     coachService = module.get<CoachService>(CoachService);
+    combineDataService = module.get<CombineDataService>(CombineDataService);
   });
 
   it('should be defined', () => {
@@ -29,49 +66,39 @@ describe('CoachImportService', () => {
 
   describe('importCoach', () => {
     it('should create a new instance if not found', async () => {
-      coachService.createCoach = jest.fn().mockImplementation(
-        (input: Coach): Coach => ({
-          id: 47,
-          externalIds: input.externalIds,
-          name: input.name,
-        }),
-      );
+      coachService.createCoach = mockCreateCoach(47);
       const result = await service.importCoach({
         data: {
-          externalIds: [
-            {
-              externalSystem: 'UnitTests',
-              externalId: 'New',
-            },
-          ],
           name: 'New Coach',
         },
       });
-      // TODO The level of mock implementation and comparisons are overkill, a lot is just testing the mocked implementation
       expect(result).toStrictEqual({
         status: ImportResponseStatus.Inserted,
         data: {
           id: 47,
-          externalIds: [
-            {
-              externalSystem: 'UnitTests',
-              externalId: 'New',
-            },
-          ],
           name: 'New Coach',
         },
       });
-      expect(coachService.createCoach).toHaveBeenCalledWith({
-        externalIds: [
-          {
-            externalSystem: 'UnitTests',
-            externalId: 'New',
-          },
-        ],
-        name: 'New Coach',
-      });
     });
 
-    // TODO Test cases for updating (including checking externalIds combination)
+    // TODO Both test cases should verify what the other service methods were called with
+
+    it('should update existing instance if found', async () => {
+      coachService.findCoachByReference = mockFindCoachByReference(31, 'Found');
+      combineDataService.preferFound = mockPreferFound();
+      coachService.updateCoach = mockUpdateCoach(' Updated');
+      const result = await service.importCoach({
+        data: {
+          name: 'Requested',
+        },
+      });
+      expect(result).toStrictEqual({
+        status: ImportResponseStatus.Updated,
+        data: {
+          id: 31,
+          name: 'Requested Found Updated',
+        },
+      });
+    });
   });
 });
