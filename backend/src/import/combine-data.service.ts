@@ -17,32 +17,29 @@ export class CombineDataService {
   }
 
   private combineExternalIds(
-    alpha: ExternalId[],
-    beta: ExternalId[],
+    requested: ExternalId[],
+    found: ExternalId[],
   ): ExternalId[] {
-    if (!alpha) {
-      return beta;
+    if (!requested) {
+      return found;
     }
-    if (!beta) {
-      return alpha;
-    }
-    const combined = [...alpha, ...beta];
-    // First, add all input objects that have an ID already
-    const output = combined.filter((externalId) => externalId.id);
-    // Then, check all input objects that don't have an ID, adding them if not already present
-    combined
-      .filter((externalId) => !externalId.id)
-      .forEach((externalId) => {
-        const foundIndex = output.findIndex((value) => {
-          return (
-            externalId.externalSystem === value.externalSystem &&
-            externalId.externalId === value.externalId
-          );
-        });
-        if (foundIndex === -1) {
-          output.push(externalId);
-        }
-      });
+    const output = found ? [...found] : [];
+    requested
+      .filter(
+        (reqExtId) =>
+          output.findIndex((value) => {
+            return (
+              reqExtId.externalSystem === value.externalSystem &&
+              reqExtId.externalId === value.externalId
+            );
+          }) === -1,
+      )
+      .forEach((reqExtId) =>
+        output.push({
+          externalId: reqExtId.externalId,
+          externalSystem: reqExtId.externalSystem,
+        }),
+      );
     return output;
   }
 }

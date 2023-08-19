@@ -80,7 +80,18 @@ describe('CombineDataService', () => {
         });
       });
 
-      // TODO Test case verifying that requested DB ID is ignored
+      it('should ignore DB ID of requested externalId', () => {
+        const requested: TestData = {
+          externalIds: [
+            { id: 9, externalId: 'extId', externalSystem: 'extSys' },
+          ],
+        };
+        const found: TestData = {};
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({
+          externalIds: [{ externalId: 'extId', externalSystem: 'extSys' }],
+        });
+      });
 
       it('should include different externalIds', () => {
         const requested: TestData = {
@@ -103,6 +114,25 @@ describe('CombineDataService', () => {
       it('should merge matching externalIds', () => {
         const requested: TestData = {
           externalIds: [{ externalId: 'theId', externalSystem: 'theSys' }],
+        };
+        const found: TestData = {
+          externalIds: [
+            { id: 1, externalId: 'theId', externalSystem: 'theSys' },
+          ],
+        };
+        const result: TestData = service.combineData(requested, found);
+        expect(result).toEqual({
+          externalIds: [
+            { id: 1, externalId: 'theId', externalSystem: 'theSys' },
+          ],
+        });
+      });
+
+      it('should merge matching externalIds ignoring requested DB ID', () => {
+        const requested: TestData = {
+          externalIds: [
+            { id: 9, externalId: 'theId', externalSystem: 'theSys' },
+          ],
         };
         const found: TestData = {
           externalIds: [
