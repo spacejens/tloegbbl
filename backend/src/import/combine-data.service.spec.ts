@@ -23,6 +23,13 @@ describe('CombineDataService', () => {
   });
 
   describe('no directives', () => {
+    it('should ignore missing properties', () => {
+      const requested: TestData = {};
+      const found: TestData = {};
+      const result: TestData = service.combineData(requested, found);
+      expect(result).toEqual({});
+    });
+
     describe('id', () => {
       it('should use found id', () => {
         const requested: TestData = {};
@@ -40,13 +47,6 @@ describe('CombineDataService', () => {
 
       it('should ignore requested id', () => {
         const requested: TestData = { id: 11 };
-        const found: TestData = {};
-        const result: TestData = service.combineData(requested, found);
-        expect(result).toEqual({});
-      });
-
-      it('should ignore missing id', () => {
-        const requested: TestData = {};
         const found: TestData = {};
         const result: TestData = service.combineData(requested, found);
         expect(result).toEqual({});
@@ -75,13 +75,6 @@ describe('CombineDataService', () => {
         const found: TestData = { alpha: 'Found' };
         const result: TestData = service.combineData(requested, found);
         expect(result).toEqual({ alpha: 'Found' });
-      });
-
-      it('should ignore missing data', () => {
-        const requested: TestData = {};
-        const found: TestData = {};
-        const result: TestData = service.combineData(requested, found);
-        expect(result).toEqual({});
       });
 
       it('should merge different data', () => {
