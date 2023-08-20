@@ -57,7 +57,7 @@ export class CoachResolver {
 
   @ResolveField()
   externalIds(@Parent() coach: Coach): ExternalId[] {
-    // TODO Does this method need renaming to prevent naming conflicts later?
+    // TODO Does this method need renaming to prevent naming conflicts later? Or maybe make a resolver for any ExternallyIdentifiable argument?
     return coach.externalIds;
   }
 
