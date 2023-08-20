@@ -79,6 +79,7 @@ export class CoachService {
   }
 
   async createCoach(input: Coach): Promise<Coach> {
+    // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
     return this.wrapCoach(
       await this.prisma.coach.create({
         data: {
