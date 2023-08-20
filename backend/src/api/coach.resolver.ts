@@ -22,6 +22,7 @@ export class CoachResolver {
   async import(
     @Args('coach', { type: () => Coach }) coach: Coach,
   ): Promise<Coach> {
+    // TODO Rename to importCoach to prevent name conflicts later
     /*
       TODO Remove this comment block once mutation query ready in code elsewhere
       Syntax for mutation query is like this:
@@ -56,6 +57,7 @@ export class CoachResolver {
 
   @ResolveField()
   externalIds(@Parent() coach: Coach): ExternalId[] {
+    // TODO Does this method need renaming to prevent naming conflicts later?
     return coach.externalIds;
   }
 

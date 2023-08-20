@@ -23,6 +23,7 @@ export class CoachService {
     );
   }
 
+  // TODO Signature of wrap method should ideally use a Prisma type as argument
   private wrapCoach(found: {
     id: number;
     externalId: {
