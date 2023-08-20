@@ -108,6 +108,7 @@ export class CoachService {
         },
         data: {
           // TODO Updated coach should also have external IDs added (but not removed/changed!)
+          // TODO Maybe simply create those input external IDs that have no DB ID, using a filtered for-each pipe?
           name: input.name,
         },
         include: {
