@@ -85,10 +85,12 @@ export class CoachService {
         data: {
           externalId: {
             createMany: {
-              data: input.externalIds ? input.externalIds.map((extId) => ({
-                externalId: extId.externalId,
-                externalSystem: extId.externalSystem,
-              })) : [],
+              data: input.externalIds
+                ? input.externalIds.map((extId) => ({
+                    externalId: extId.externalId,
+                    externalSystem: extId.externalSystem,
+                  }))
+                : [],
             },
           },
           name: input.name,

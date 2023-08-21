@@ -183,15 +183,19 @@ describe('CoachService', () => {
 
   describe('createCoach', () => {
     beforeEach(() => {
-      prismaService.coach.create = jest.fn().mockImplementation((input: { data: any }) => ({
-        id: 99,
-        externalId: input.data.externalId.createMany.data ? input.data.externalId.createMany.data.map((extId) => ({
-          id: 66,
-          externalId: extId.externalId,
-          externalSystem: extId.externalSystem,
-        })) : [],
-        name: input.data.name,
-      }));
+      prismaService.coach.create = jest
+        .fn()
+        .mockImplementation((input: { data: any }) => ({
+          id: 99,
+          externalId: input.data.externalId.createMany.data
+            ? input.data.externalId.createMany.data.map((extId) => ({
+                id: 66,
+                externalId: extId.externalId,
+                externalSystem: extId.externalSystem,
+              }))
+            : [],
+          name: input.data.name,
+        }));
     });
 
     it('should create record with no externalIds', async () => {
@@ -245,12 +249,14 @@ describe('CoachService', () => {
 
     it('should create record with externalIds', async () => {
       const result = await service.createCoach({
-        externalIds: [{ externalId: "ExtId", externalSystem: "ExtSys" }],
+        externalIds: [{ externalId: 'ExtId', externalSystem: 'ExtSys' }],
         name: 'New with ExtIds',
       });
       expect(result).toEqual({
         id: 99,
-        externalIds: [{ id: 66, externalId: "ExtId", externalSystem: "ExtSys" }],
+        externalIds: [
+          { id: 66, externalId: 'ExtId', externalSystem: 'ExtSys' },
+        ],
         name: 'New with ExtIds',
       });
       expect(prismaService.coach.create).toHaveBeenCalledWith({
