@@ -34,38 +34,44 @@ export class CoachesService {
   }
 
   async uploadCoaches(coaches: BblCoach[]): Promise<void> {
-    for(let coach of coaches) {
+    for (const coach of coaches) {
       // TODO Get API URL from configuration
       // TODO Get externalSystem from configuration
       // TODO Use Axios variable substitution instead of assembling whole query string
-      const result = await firstValueFrom(this.httpService.post('http://localhost:3000/api', {
-        query: `
-          mutation {
-            importCoach(coach: {
-              name:"${coach.name}",
-              externalIds:[
-                {
-                  externalId:"${coach.name}",
-                  externalSystem:"tloeg.bbleague.se",
-                },
-              ],
-            }) {
-              id,
-              externalIds {
-                id,
-                externalId,
-                externalSystem,
-              },
-              name,
-            }
-          }
-        `,
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }));
+      const result = await firstValueFrom(
+        this.httpService.post(
+          'http://localhost:3000/api',
+          {
+            query: `
+              mutation {
+                importCoach(coach: {
+                  name:"${coach.name}",
+                  externalIds:[
+                    {
+                      externalId:"${coach.name}",
+                      externalSystem:"tloeg.bbleague.se",
+                    },
+                  ],
+                }) {
+                  id,
+                  externalIds {
+                    id,
+                    externalId,
+                    externalSystem,
+                  },
+                  name,
+                }
+              }
+            `,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        ),
+      );
       console.log(JSON.stringify(result.data)); // TODO Remove the debug printout
-    };
+    }
   }
 }
