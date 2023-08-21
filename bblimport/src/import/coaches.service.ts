@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 import { HttpService } from '@nestjs/axios';
-import { catchError, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 export type BblCoachReference = {
   name: string;
