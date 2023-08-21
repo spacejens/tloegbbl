@@ -35,11 +35,13 @@ export class CoachesService {
 
   async uploadCoaches(coaches: BblCoach[]): Promise<void> {
     for (const coach of coaches) {
-      // TODO Get API URL from configuration
+      const externalId = coach.name;
       // TODO Get externalSystem from configuration
+      const externalSystem = 'tloeg.bbleague.se';
       // TODO Use Axios variable substitution instead of assembling whole query string
       const result = await firstValueFrom(
         this.httpService.post(
+          // TODO Get API URL from configuration
           'http://localhost:3000/api',
           {
             query: `
@@ -48,8 +50,8 @@ export class CoachesService {
                   name:"${coach.name}",
                   externalIds:[
                     {
-                      externalId:"${coach.name}",
-                      externalSystem:"tloeg.bbleague.se",
+                      externalId:"${externalId}",
+                      externalSystem:"${externalSystem}",
                     },
                   ],
                 }) {
