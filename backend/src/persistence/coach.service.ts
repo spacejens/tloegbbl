@@ -110,8 +110,19 @@ export class CoachService {
           id: input.id,
         },
         data: {
-          // TODO Updated coach should also have external IDs added (but not removed/changed!)
-          // TODO Maybe simply create those input external IDs that have no DB ID, using a filtered for-each pipe?
+          externalId: {
+            // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
+            createMany: {
+              data: input.externalIds
+                ? input.externalIds
+                    .filter((extId) => !extId.id)
+                    .map((extId) => ({
+                      externalId: extId.externalId,
+                      externalSystem: extId.externalSystem,
+                    }))
+                : [],
+            },
+          },
           name: input.name,
         },
         include: {
