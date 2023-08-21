@@ -204,6 +204,19 @@ describe('CoachService', () => {
         externalIds: [],
         name: 'New',
       });
+      expect(prismaService.coach.create).toHaveBeenCalledWith({
+        data: {
+          externalId: {
+            createMany: {
+              data: [],
+            },
+          },
+          name: 'New',
+        },
+        include: {
+          externalId: true,
+        },
+      });
     });
 
     it('should create record without externalIds', async () => {
@@ -214,6 +227,19 @@ describe('CoachService', () => {
         id: 99,
         externalIds: [],
         name: 'New',
+      });
+      expect(prismaService.coach.create).toHaveBeenCalledWith({
+        data: {
+          externalId: {
+            createMany: {
+              data: [],
+            },
+          },
+          name: 'New',
+        },
+        include: {
+          externalId: true,
+        },
       });
     });
 
@@ -226,6 +252,24 @@ describe('CoachService', () => {
         id: 99,
         externalIds: [{ id: 66, externalId: "ExtId", externalSystem: "ExtSys" }],
         name: 'New with ExtIds',
+      });
+      expect(prismaService.coach.create).toHaveBeenCalledWith({
+        data: {
+          externalId: {
+            createMany: {
+              data: [
+                {
+                  externalId: 'ExtId',
+                  externalSystem: 'ExtSys',
+                },
+              ],
+            },
+          },
+          name: 'New with ExtIds',
+        },
+        include: {
+          externalId: true,
+        },
       });
     });
   });
