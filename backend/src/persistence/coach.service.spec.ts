@@ -206,7 +206,16 @@ describe('CoachService', () => {
       });
     });
 
-    // TODO Add test case for creating coach with undefined externalIds property
+    it('should create record without externalIds', async () => {
+      const result = await service.createCoach({
+        name: 'New',
+      });
+      expect(result).toEqual({
+        id: 99,
+        externalIds: [],
+        name: 'New',
+      });
+    });
 
     it('should create record with externalIds', async () => {
       const result = await service.createCoach({
