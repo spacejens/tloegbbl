@@ -6,7 +6,7 @@ import { SanityCheckService } from './sanitycheck/sanitycheck.service';
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
   const importService = app.get(ImportService);
-  importService.importEverything();
+  await importService.importEverything();
   const sanityCheckService = app.get(SanityCheckService);
   sanityCheckService.sanityCheckEverything();
 }

@@ -3,8 +3,10 @@ import { ImportService } from './import.service';
 import { FileReaderService } from './filereader.service';
 import { CoachesService } from './coaches.service';
 import { TeamsService } from './teams.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
+  imports: [HttpModule],
   providers: [ImportService, FileReaderService, CoachesService, TeamsService],
   exports: [ImportService],
 })
