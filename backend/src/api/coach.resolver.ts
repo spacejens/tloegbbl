@@ -19,16 +19,15 @@ export class CoachResolver {
   ) {}
 
   @Mutation(() => Coach)
-  async import(
+  async importCoach(
     @Args('coach', { type: () => Coach }) coach: Coach,
   ): Promise<Coach> {
-    // TODO Rename to importCoach to prevent name conflicts later
     /*
       TODO Remove this comment block once mutation query ready in code elsewhere
       Syntax for mutation query is like this:
 
       mutation {
-        import(coach: {
+        importCoach(coach: {
           name:"Frodo",
           externalIds:[
             {
