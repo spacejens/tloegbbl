@@ -16,10 +16,7 @@ export class FileReaderService {
     return files.filter((filename) => filename.startsWith(filenameStartsWith));
   }
 
-  readFile(
-    filename: string,
-    directory = this.defaultDirectory,
-  ): HTMLElement {
+  readFile(filename: string, directory = this.defaultDirectory): HTMLElement {
     const filepath = join(process.cwd(), directory, filename);
     return parse(readFileSync(filepath).toString());
   }
