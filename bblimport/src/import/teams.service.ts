@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 import { BblCoachReference, CoachesService } from './coaches.service';
 import { BblTeamType, TeamTypesService } from './team-types.service';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 export type BblTeamReference = {
   id: string;
@@ -21,6 +23,7 @@ export class TeamsService {
     private readonly fileReaderService: FileReaderService,
     private readonly coachesService: CoachesService,
     private readonly teamTypesService: TeamTypesService,
+    private readonly httpService: HttpService,
   ) {}
 
   getTeams(): BblTeam[] {
@@ -92,7 +95,6 @@ export class TeamsService {
     for (const team of teams) {
       await this.uploadTeam(team);
     }
-    console.log(teams); // TODO Remove debug printout
   }
 
   async uploadTeam(team: BblTeam): Promise<void> {
@@ -101,7 +103,84 @@ export class TeamsService {
       await this.coachesService.uploadCoach(team.coCoach);
     }
     await this.teamTypesService.uploadTeamType(team.teamType);
-    // TODO Upload team itself to backend
-    // TODO Console log the result from server
+    // Upload the team data
+    // TODO How to upload co-coach only some of the time?
+    // TODO Get externalSystem from configuration
+    const externalSystem = 'tloeg.bbleague.se';
+    const result = await firstValueFrom(
+      this.httpService.post(
+        // TODO Get API URL from configuration
+        'http://localhost:3000/api',
+        {
+          query: `
+            mutation {
+              importTeam(team: {
+                name:"${team.name}",
+                externalIds:[
+                  {
+                    externalId:"${team.id}",
+                    externalSystem:"${externalSystem}",
+                  },
+                ],
+                headCoach:{
+                  externalIds:[
+                    {
+                      externalId:"${team.headCoach.name}",
+                      externalSystem:"${externalSystem}",
+                    },
+                  ],
+                },
+                teamType:{
+                  externalIds:[
+                    {
+                      externalId:"${team.teamType.id}",
+                      externalSystem:"${externalSystem}",
+                    },
+                  ],
+                },
+              }) {
+                id,
+                externalIds {
+                  id,
+                  externalId,
+                  externalSystem,
+                },
+                name,
+                headCoach {
+                  id,
+                  externalIds {
+                    id,
+                    externalId,
+                    externalSystem,
+                  },
+                },
+                coCoach {
+                  id,
+                  externalIds {
+                    id,
+                    externalId,
+                    externalSystem,
+                  },
+                },
+                teamType {
+                  id,
+                  externalIds {
+                    id,
+                    externalId,
+                    externalSystem,
+                  },
+                },
+              }
+            }
+          `,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      ),
+    );
+    console.log(JSON.stringify(result.data));
   }
 }

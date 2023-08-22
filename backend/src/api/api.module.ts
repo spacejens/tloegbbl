@@ -5,6 +5,7 @@ import { CoachResolver } from './coach.resolver';
 import { PersistenceModule } from '../persistence/persistence.module';
 import { ImportModule } from '../import/import.module';
 import { TeamTypeResolver } from './team-type.resolver';
+import { TeamResolver } from './team.resolver';
 
 @Module({
   imports: [
@@ -32,6 +33,6 @@ import { TeamTypeResolver } from './team-type.resolver';
     PersistenceModule,
     ImportModule,
   ],
-  providers: [CoachResolver, TeamTypeResolver],
+  providers: [CoachResolver, TeamTypeResolver, TeamResolver],
 })
 export class ApiModule {}

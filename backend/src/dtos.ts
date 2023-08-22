@@ -41,3 +41,20 @@ export class TeamType extends TeamTypeReference {
   @Field()
   name: string;
 }
+
+@InputType('TeamReferenceInput')
+@ObjectType()
+export class TeamReference extends ExternallyIdentifiable {}
+
+@InputType('TeamInput')
+@ObjectType()
+export class Team extends TeamReference {
+  @Field()
+  name: string;
+  @Field(() => CoachReference)
+  headCoach: CoachReference;
+  @Field(() => CoachReference, { nullable: true })
+  coCoach?: CoachReference;
+  @Field(() => TeamTypeReference)
+  teamType: TeamTypeReference;
+}

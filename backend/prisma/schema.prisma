@@ -11,6 +11,8 @@ model Coach {
   id                      Int                       @default(autoincrement()) @id
   name                    String
   externalId              ExternalCoachId[]
+  headCoachTeams          Team[]                    @relation(name: "headCoachTeams")
+  coCoachTeams            Team[]                    @relation(name: "coCoachTeams")
 
   @@map("coach")
 }
@@ -31,6 +33,7 @@ model TeamType {
   id                      Int                       @default(autoincrement()) @id
   name                    String
   externalId              ExternalTeamTypeId[]
+  teams                   Team[]
 
   @@map("team_type")
 }
@@ -45,4 +48,30 @@ model ExternalTeamTypeId {
   @@unique([externalId, externalSystem])
 
   @@map("external_team_type_id")
+}
+
+model Team {
+  id                      Int                       @default(autoincrement()) @id
+  name                    String
+  externalId              ExternalTeamId[]
+  headCoach               Coach                     @relation(fields: [headCoachId], references: [id], name: "headCoachTeams")
+  headCoachId             Int                       @map("head_coach_id")
+  coCoach                 Coach?                    @relation(fields: [coCoachId], references: [id], name: "coCoachTeams")
+  coCoachId               Int?                      @map("co_coach_id")
+  teamType                TeamType                  @relation(fields: [teamTypeId], references: [id])
+  teamTypeId              Int                       @map("team_type_id")
+
+  @@map("team")
+}
+
+model ExternalTeamId {
+  id                      Int                       @default(autoincrement()) @id
+  externalId              String                    @map("external_id")
+  externalSystem          String                    @map("external_system")
+  team                    Team                      @relation(fields: [teamId], references: [id])
+  teamId                  Int                       @map("team_id")
+
+  @@unique([externalId, externalSystem])
+
+  @@map("external_team_id")
 }
