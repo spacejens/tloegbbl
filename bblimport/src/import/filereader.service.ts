@@ -1,14 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import { parse, HTMLElement } from 'node-html-parser';
 import { join } from 'path';
 
 @Injectable()
 export class FileReaderService {
   // TODO Get directory of data files from environment variable, input argument, or something like that
+  private defaultDirectory = '../bbldownload/bbl-site/tloeg.bbleague.se';
+
+  listFiles(
+    filenameStartsWith: string,
+    directory = this.defaultDirectory,
+  ): string[] {
+    const files = readdirSync(join(process.cwd(), directory));
+    return files.filter((filename) => filename.startsWith(filenameStartsWith));
+  }
+
   readFile(
     filename: string,
-    directory = '../bbldownload/bbl-site/tloeg.bbleague.se',
+    directory = this.defaultDirectory,
   ): HTMLElement {
     const filepath = join(process.cwd(), directory, filename);
     return parse(readFileSync(filepath).toString());
