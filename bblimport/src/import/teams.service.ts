@@ -100,5 +100,6 @@ export class TeamsService {
     }
     await this.teamTypesService.uploadTeamType(team.teamType);
     // TODO Upload team itself to backend
+    // TODO Console log the result from server
   }
 }
