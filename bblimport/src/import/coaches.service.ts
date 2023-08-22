@@ -35,45 +35,57 @@ export class CoachesService {
 
   async uploadCoaches(coaches: BblCoach[]): Promise<void> {
     for (const coach of coaches) {
-      const externalId = coach.name;
-      // TODO Get externalSystem from configuration
-      const externalSystem = 'tloeg.bbleague.se';
-      // TODO Use Axios variable substitution instead of assembling whole query string
-      const result = await firstValueFrom(
-        this.httpService.post(
-          // TODO Get API URL from configuration
-          'http://localhost:3000/api',
-          {
-            query: `
-              mutation {
-                importCoach(coach: {
-                  name:"${coach.name}",
-                  externalIds:[
-                    {
-                      externalId:"${externalId}",
-                      externalSystem:"${externalSystem}",
-                    },
-                  ],
-                }) {
-                  id,
-                  externalIds {
-                    id,
-                    externalId,
-                    externalSystem,
-                  },
-                  name,
-                }
-              }
-            `,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        ),
-      );
-      console.log(JSON.stringify(result.data)); // TODO Remove the debug printout
+      await this.uploadCoach(coach);
     }
+  }
+
+  private uploadedCoaches = Array<string>();
+  async uploadCoach(coach: BblCoach): Promise<void> {
+    // Ensure no duplicate uploads
+    if (this.uploadedCoaches.indexOf(coach.name) != -1) {
+      return;
+    }
+    this.uploadedCoaches.push(coach.name);
+    // TODO Can the duplicate upload detection be more clean? Would be nice with an object equality check of the whole coach
+    // Upload the coach data
+    const externalId = coach.name;
+    // TODO Get externalSystem from configuration
+    const externalSystem = 'tloeg.bbleague.se';
+    // TODO Use Axios variable substitution instead of assembling whole query string
+    const result = await firstValueFrom(
+      this.httpService.post(
+        // TODO Get API URL from configuration
+        'http://localhost:3000/api',
+        {
+          query: `
+            mutation {
+              importCoach(coach: {
+                name:"${coach.name}",
+                externalIds:[
+                  {
+                    externalId:"${externalId}",
+                    externalSystem:"${externalSystem}",
+                  },
+                ],
+              }) {
+                id,
+                externalIds {
+                  id,
+                  externalId,
+                  externalSystem,
+                },
+                name,
+              }
+            }
+          `,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      ),
+    );
+    console.log(JSON.stringify(result.data));
   }
 }

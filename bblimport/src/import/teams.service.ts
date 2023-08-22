@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
-import { BblCoachReference } from './coaches.service';
+import { BblCoachReference, CoachesService } from './coaches.service';
 
 export type BblTeamReference = {
   id: string;
@@ -15,7 +15,10 @@ export type BblTeam = BblTeamReference & {
 
 @Injectable()
 export class TeamsService {
-  constructor(private readonly fileReaderService: FileReaderService) {}
+  constructor(
+    private readonly fileReaderService: FileReaderService,
+    private readonly coachesService: CoachesService,
+  ) {}
 
   getTeams(): BblTeam[] {
     // Loop over all team files in the directory
@@ -67,8 +70,19 @@ export class TeamsService {
     return teams;
   }
 
-  uploadTeams(teams: BblTeam[]): void {
-    // TODO Upload teams to backend
-    console.log(teams);
+  async uploadTeams(teams: BblTeam[]): Promise<void> {
+    for (const team of teams) {
+      await this.uploadTeam(team);
+    }
+    console.log(teams); // TODO Remove debug printout
+  }
+
+  async uploadTeam(team: BblTeam): Promise<void> {
+    await this.coachesService.uploadCoach(team.headCoach);
+    if (team.coCoach) {
+      await this.coachesService.uploadCoach(team.coCoach);
+    }
+    // TODO Ensure team type is uploaded to backend
+    // TODO Upload team itself to backend
   }
 }
