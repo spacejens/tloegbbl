@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 import { BblCoachReference, CoachesService } from './coaches.service';
+import { BblTeamType, TeamTypesService } from './team-types.service';
 
 export type BblTeamReference = {
   id: string;
@@ -11,6 +12,7 @@ export type BblTeam = BblTeamReference & {
   name: string;
   headCoach: BblCoachReference;
   coCoach?: BblCoachReference;
+  teamType: BblTeamType,
 };
 
 @Injectable()
@@ -18,6 +20,7 @@ export class TeamsService {
   constructor(
     private readonly fileReaderService: FileReaderService,
     private readonly coachesService: CoachesService,
+    private readonly teamTypesService: TeamTypesService,
   ) {}
 
   getTeams(): BblTeam[] {
@@ -39,6 +42,17 @@ export class TeamsService {
         );
       }
       const teamName = teamNameElements[0].innerText;
+      // Find team type
+      const teamTypeElements = teamViewFile.querySelectorAll('td b a');
+      if (teamTypeElements.length != 1) {
+        throw new Error(
+          'Did not expect to find more than one team type for ' + teamId,
+        );
+      }
+      const teamType: BblTeamType = {
+        id: this.fileReaderService.findAnchorInHref(teamTypeElements[0].getAttribute('href')),
+        name: teamTypeElements[0].innerText,
+      };
       // Find head coach and co-coaches (if present)
       const coachElements = teamViewFile.querySelectorAll('td b span');
       if (coachElements.length === 1) {
@@ -48,6 +62,7 @@ export class TeamsService {
           headCoach: {
             name: coachElements[0].innerText,
           },
+          teamType: teamType,
         });
       } else if (coachElements.length === 2) {
         // TODO Merge one/many coaches cases into a single case to avoid code duplication
@@ -60,6 +75,7 @@ export class TeamsService {
           coCoach: {
             name: coachElements[1].innerText,
           },
+          teamType: teamType,
         });
       } else {
         throw new Error('Failed to find coach for ' + teamId);
@@ -82,7 +98,7 @@ export class TeamsService {
     if (team.coCoach) {
       await this.coachesService.uploadCoach(team.coCoach);
     }
-    // TODO Ensure team type is uploaded to backend
+    await this.teamTypesService.uploadTeamType(team.teamType);
     // TODO Upload team itself to backend
   }
 }

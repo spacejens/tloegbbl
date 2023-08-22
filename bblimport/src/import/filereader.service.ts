@@ -43,4 +43,8 @@ export class FileReaderService {
     });
     return value;
   }
+
+  findAnchorInHref(href: string): string {
+    return href.substring(href.lastIndexOf('#') + 1);
+  }
 }
