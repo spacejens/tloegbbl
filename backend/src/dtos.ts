@@ -30,3 +30,14 @@ export class Coach extends CoachReference {
   @Field()
   name: string;
 }
+
+@InputType('TeamTypeReferenceInput')
+@ObjectType()
+export class TeamTypeReference extends ExternallyIdentifiable {}
+
+@InputType('TeamTypeInput')
+@ObjectType()
+export class TeamType extends TeamTypeReference {
+  @Field()
+  name: string;
+}

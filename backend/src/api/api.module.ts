@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { CoachResolver } from './coach.resolver';
 import { PersistenceModule } from '../persistence/persistence.module';
 import { ImportModule } from '../import/import.module';
+import { TeamTypeResolver } from './team-type.resolver';
 
 @Module({
   imports: [
@@ -31,6 +32,6 @@ import { ImportModule } from '../import/import.module';
     PersistenceModule,
     ImportModule,
   ],
-  providers: [CoachResolver],
+  providers: [CoachResolver, TeamTypeResolver],
 })
 export class ApiModule {}

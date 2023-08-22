@@ -26,3 +26,23 @@ model ExternalCoachId {
 
   @@map("external_coach_id")
 }
+
+model TeamType {
+  id                      Int                       @default(autoincrement()) @id
+  name                    String
+  externalId              ExternalTeamTypeId[]
+
+  @@map("team_type")
+}
+
+model ExternalTeamTypeId {
+  id                      Int                       @default(autoincrement()) @id
+  externalId              String                    @map("external_id")
+  externalSystem          String                    @map("external_system")
+  teamType                TeamType                  @relation(fields: [teamTypeId], references: [id])
+  teamTypeId              Int                       @map("team_type_id")
+
+  @@unique([externalId, externalSystem])
+
+  @@map("external_team_type_id")
+}

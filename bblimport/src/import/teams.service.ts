@@ -12,7 +12,7 @@ export type BblTeam = BblTeamReference & {
   name: string;
   headCoach: BblCoachReference;
   coCoach?: BblCoachReference;
-  teamType: BblTeamType,
+  teamType: BblTeamType;
 };
 
 @Injectable()
@@ -50,7 +50,9 @@ export class TeamsService {
         );
       }
       const teamType: BblTeamType = {
-        id: this.fileReaderService.findAnchorInHref(teamTypeElements[0].getAttribute('href')),
+        id: this.fileReaderService.findAnchorInHref(
+          teamTypeElements[0].getAttribute('href'),
+        ),
         name: teamTypeElements[0].innerText,
       };
       // Find head coach and co-coaches (if present)

@@ -8,7 +8,13 @@ import { TeamTypesService } from './team-types.service';
 
 @Module({
   imports: [HttpModule],
-  providers: [ImportService, FileReaderService, CoachesService, TeamsService, TeamTypesService],
+  providers: [
+    ImportService,
+    FileReaderService,
+    CoachesService,
+    TeamsService,
+    TeamTypesService,
+  ],
   exports: [ImportService],
 })
 export class ImportModule {}

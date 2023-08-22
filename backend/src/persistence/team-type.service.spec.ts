@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TeamTypesService } from './team-types.service';
-import { HttpService } from '@nestjs/axios';
+import { TeamTypeService } from './team-type.service';
+import { PrismaService } from './prisma.service';
 import { mock } from 'jest-mock-extended';
 
-describe('TeamTypesService', () => {
-  let service: TeamTypesService;
+describe('TeamTypeService', () => {
+  let service: TeamTypeService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        TeamTypesService,
-        { provide: HttpService, useValue: mock<HttpService>() },
+        TeamTypeService,
+        { provide: PrismaService, useValue: mock<PrismaService>() },
       ],
     }).compile();
 
-    service = module.get<TeamTypesService>(TeamTypesService);
+    service = module.get<TeamTypeService>(TeamTypeService);
   });
 
   it('should be defined', () => {
