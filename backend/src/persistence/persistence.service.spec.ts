@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PersistenceService } from './persistence.service';
-import { ExternalId } from 'src/dtos';
+import { ExternallyIdentifiable } from '../dtos';
 
-class TestReference {
-  id?: number;
-}
+class TestReference extends ExternallyIdentifiable {}
 
 class TestEntity extends TestReference {
   name: string;
@@ -19,9 +17,6 @@ class TestPersistenceService extends PersistenceService<
     throw new Error('Method not implemented.');
   }
   findByExternalId(): Promise<TestEntity> {
-    throw new Error('Method not implemented.');
-  }
-  findByReference(): Promise<TestEntity> {
     throw new Error('Method not implemented.');
   }
   create(): Promise<TestEntity> {
@@ -52,5 +47,9 @@ describe('PersistenceService', () => {
       const result = await persistenceService.count();
       expect(result).toBe(23);
     });
+  });
+
+  describe('findByReference', () => {
+    // TODO Implement test cases
   });
 });

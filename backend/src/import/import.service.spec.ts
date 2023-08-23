@@ -4,10 +4,9 @@ import { ImportService } from './import.service';
 import { Injectable } from '@nestjs/common';
 import { CombineDataService } from './combine-data.service';
 import { mock } from 'jest-mock-extended';
+import { ExternallyIdentifiable } from '../dtos';
 
-class TestReference {
-  id?: number;
-}
+class TestReference extends ExternallyIdentifiable {}
 
 class TestEntity extends TestReference {
   name: string;
@@ -22,9 +21,6 @@ class TestPersistenceService extends PersistenceService<
     throw new Error('Method not implemented.');
   }
   findByExternalId(): Promise<TestEntity> {
-    throw new Error('Method not implemented.');
-  }
-  findByReference(): Promise<TestEntity> {
     throw new Error('Method not implemented.');
   }
   create(): Promise<TestEntity> {

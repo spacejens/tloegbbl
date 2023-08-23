@@ -61,22 +61,6 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
     return undefined;
   }
 
-  async findByReference(reference: CoachReference): Promise<Coach> {
-    // TODO Reduce number of queries made by using Prisma's and/or mechanisms in a single query (desired external ID might not yet exist though)
-    // TODO When finding by multiple references, check if references are contradictory (i.e. refer to different records) or dead (i.e. missing record)
-    if (reference.id) {
-      return this.findById(reference.id);
-    } else {
-      for (const extId of reference.externalIds) {
-        const found = await this.findByExternalId(extId);
-        if (found) {
-          return found;
-        }
-      }
-    }
-    return undefined;
-  }
-
   async create(input: Coach): Promise<Coach> {
     // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
     return this.wrap(

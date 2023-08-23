@@ -132,22 +132,6 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
     return undefined;
   }
 
-  async findByReference(reference: TeamReference): Promise<Team> {
-    // TODO Reduce number of queries made by using Prisma's and/or mechanisms in a single query (desired external ID might not yet exist though)
-    // TODO When finding by multiple references, check if references are contradictory (i.e. refer to different records) or dead (i.e. missing record)
-    if (reference.id) {
-      return this.findById(reference.id);
-    } else {
-      for (const extId of reference.externalIds) {
-        const found = await this.findByExternalId(extId);
-        if (found) {
-          return found;
-        }
-      }
-    }
-    return undefined;
-  }
-
   async create(input: Team): Promise<Team> {
     // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax

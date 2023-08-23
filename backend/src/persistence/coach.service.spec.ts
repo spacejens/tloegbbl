@@ -169,10 +169,6 @@ describe('CoachService', () => {
     });
   });
 
-  describe('findByReference', () => {
-    // TODO Implement test cases
-  });
-
   describe('create', () => {
     beforeEach(() => {
       prismaService.coach.create = jest
