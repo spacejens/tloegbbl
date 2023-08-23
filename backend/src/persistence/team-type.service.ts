@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ExternalId, TeamType, TeamTypeReference } from '../dtos';
+import { PersistenceService } from './persistence.service';
 
 @Injectable()
-export class TeamTypeService {
-  constructor(private prisma: PrismaService) {}
+export class TeamTypeService extends PersistenceService<TeamTypeReference, TeamType> {
+  constructor(private prisma: PrismaService) {
+    super();
+  }
 
   async findById(id: number): Promise<TeamType> {
     return this.wrap(

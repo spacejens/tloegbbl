@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Coach, CoachReference, ExternalId } from '../dtos';
+import { PersistenceService } from './persistence.service';
 
 @Injectable()
-export class CoachService {
-  constructor(private prisma: PrismaService) {}
+export class CoachService extends PersistenceService<CoachReference, Coach> {
+  constructor(private prisma: PrismaService) {
+    super();
+  }
 
   async count(): Promise<number> {
     return this.prisma.coach.count();
