@@ -7,13 +7,16 @@ import {
 import { Coach } from '../dtos';
 import { CoachService } from '../persistence/coach.service';
 import { CombineDataService } from './combine-data.service';
+import { ImportService } from './import.service';
 
 @Injectable()
-export class CoachImportService {
+export class CoachImportService extends ImportService<Coach> {
   constructor(
     private readonly coachService: CoachService,
     private readonly combineDataService: CombineDataService,
-  ) {}
+  ) {
+    super();
+  }
 
   async import(requested: Coach): Promise<Coach> {
     const found: Coach =

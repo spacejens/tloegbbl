@@ -5,6 +5,7 @@ import { PersistenceModule } from '../persistence/persistence.module';
 import { CombineDataService } from './combine-data.service';
 import { TeamTypeImportService } from './team-type-import.service';
 import { TeamImportService } from './team-import.service';
+import { ImportService } from './import.service';
 
 @Module({
   imports: [PersistenceModule],
@@ -15,6 +16,11 @@ import { TeamImportService } from './team-import.service';
     TeamTypeImportService,
     TeamImportService,
   ],
-  exports: [CoachImportService, TeamTypeImportService, TeamImportService],
+  exports: [
+    CoachImportService,
+    TeamTypeImportService,
+    TeamImportService,
+    ImportService,
+  ],
 })
 export class ImportModule {}
