@@ -4,7 +4,10 @@ import { ExternalId, TeamType, TeamTypeReference } from '../dtos';
 import { PersistenceService } from './persistence.service';
 
 @Injectable()
-export class TeamTypeService extends PersistenceService<TeamTypeReference, TeamType> {
+export class TeamTypeService extends PersistenceService<
+  TeamTypeReference,
+  TeamType
+> {
   constructor(private prisma: PrismaService) {
     super();
   }
@@ -61,9 +64,7 @@ export class TeamTypeService extends PersistenceService<TeamTypeReference, TeamT
     return undefined;
   }
 
-  async findByReference(
-    reference: TeamTypeReference,
-  ): Promise<TeamType> {
+  async findByReference(reference: TeamTypeReference): Promise<TeamType> {
     // TODO Reduce number of queries made by using Prisma's and/or mechanisms in a single query (desired external ID might not yet exist though)
     // TODO When finding by multiple references, check if references are contradictory (i.e. refer to different records) or dead (i.e. missing record)
     if (reference.id) {

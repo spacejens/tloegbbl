@@ -151,15 +151,11 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
   async create(input: Team): Promise<Team> {
     // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax
-    const headCoach = await this.coachService.findByReference(
-      input.headCoach,
-    );
+    const headCoach = await this.coachService.findByReference(input.headCoach);
     const coCoach = input.coCoach
       ? await this.coachService.findByReference(input.coCoach)
       : undefined;
-    const teamType = await this.teamTypeService.findByReference(
-      input.teamType,
-    );
+    const teamType = await this.teamTypeService.findByReference(input.teamType);
     return this.wrap(
       await this.prisma.team.create({
         data: {
