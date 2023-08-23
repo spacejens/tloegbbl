@@ -40,16 +40,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
     // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
     return await this.prisma.coach.create({
       data: {
-        externalIds: {
-          createMany: {
-            data: input.externalIds
-              ? input.externalIds.map((extId) => ({
-                  externalId: extId.externalId,
-                  externalSystem: extId.externalSystem,
-                }))
-              : [],
-          },
-        },
+        externalIds: this.createAllOf(input.externalIds),
         name: input.name,
       },
       include: {
@@ -60,24 +51,13 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
 
   async update(input: Coach): Promise<Coach> {
     // TODO Need to enforce that input has an ID, otherwise this might update all coaches?
+    // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
     return await this.prisma.coach.update({
       where: {
         id: input.id,
       },
       data: {
-        externalIds: {
-          // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
-          createMany: {
-            data: input.externalIds
-              ? input.externalIds
-                  .filter((extId) => !extId.id)
-                  .map((extId) => ({
-                    externalId: extId.externalId,
-                    externalSystem: extId.externalSystem,
-                  }))
-              : [],
-          },
-        },
+        externalIds: this.createAnonymousOf(input.externalIds),
         name: input.name,
       },
       include: {

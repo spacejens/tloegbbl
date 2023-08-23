@@ -37,6 +37,23 @@ export abstract class PersistenceService<
     return undefined;
   }
 
+  createAllOf(inputExternalIds: ExternalId[]) {
+    return {
+      createMany: {
+        data: inputExternalIds
+          ? inputExternalIds.map((extId) => ({
+              externalId: extId.externalId,
+              externalSystem: extId.externalSystem,
+            }))
+          : [],
+      },
+    };
+  }
+
+  createAnonymousOf(inputExternalIds: ExternalId[]) {
+    return this.createAllOf(inputExternalIds.filter((extId) => !extId.id));
+  }
+
   abstract create(input: E): Promise<E>;
 
   abstract update(input: E): Promise<E>;

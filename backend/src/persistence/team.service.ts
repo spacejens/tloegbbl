@@ -67,16 +67,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
     const teamType = await this.teamTypeService.findByReference(input.teamType);
     return await this.prisma.team.create({
       data: {
-        externalIds: {
-          createMany: {
-            data: input.externalIds
-              ? input.externalIds.map((extId) => ({
-                  externalId: extId.externalId,
-                  externalSystem: extId.externalSystem,
-                }))
-              : [],
-          },
-        },
+        externalIds: this.createAllOf(input.externalIds),
         name: input.name,
         headCoach: {
           connect: {
@@ -119,24 +110,13 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
 
   async update(input: Team): Promise<Team> {
     // TODO Need to enforce that input has an ID, otherwise this might update all team types?
+    // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
     return await this.prisma.team.update({
       where: {
         id: input.id,
       },
       data: {
-        externalIds: {
-          // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
-          createMany: {
-            data: input.externalIds
-              ? input.externalIds
-                  .filter((extId) => !extId.id)
-                  .map((extId) => ({
-                    externalId: extId.externalId,
-                    externalSystem: extId.externalSystem,
-                  }))
-              : [],
-          },
-        },
+        externalIds: this.createAnonymousOf(input.externalIds),
         name: input.name,
         // TODO Support changing of head coach for team?
         // TODO Support changing/adding co-coach for team?
