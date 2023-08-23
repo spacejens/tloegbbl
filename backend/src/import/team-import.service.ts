@@ -1,26 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { TeamService } from '../persistence/team.service';
 import { CombineDataService } from './combine-data.service';
-import { Team } from '../dtos';
+import { Team, TeamReference } from '../dtos';
 import { ImportService } from './import.service';
 
 @Injectable()
-export class TeamImportService extends ImportService<Team> {
+export class TeamImportService extends ImportService<TeamReference, Team> {
   constructor(
-    private readonly teamService: TeamService,
-    private readonly combineDataService: CombineDataService,
+    readonly persistenceService: TeamService,
+    readonly combineDataService: CombineDataService,
   ) {
-    super();
+    super(persistenceService, combineDataService);
   }
 
   async import(requested: Team): Promise<Team> {
-    const found: Team = await this.teamService.findByReference(requested);
+    const found: Team = await this.persistenceService.findByReference(requested);
     if (found) {
-      return await this.teamService.update(
+      return await this.persistenceService.update(
         this.combineDataService.preferFound(requested, found),
       );
     } else {
-      return await this.teamService.create(requested);
+      return await this.persistenceService.create(requested);
     }
   }
 }

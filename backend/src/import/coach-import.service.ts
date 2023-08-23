@@ -4,37 +4,37 @@ import {
   ImportResponseEnvelope,
   ImportResponseStatus,
 } from './envelopes';
-import { Coach } from '../dtos';
+import { Coach, CoachReference } from '../dtos';
 import { CoachService } from '../persistence/coach.service';
 import { CombineDataService } from './combine-data.service';
 import { ImportService } from './import.service';
 
 @Injectable()
-export class CoachImportService extends ImportService<Coach> {
+export class CoachImportService extends ImportService<CoachReference, Coach> {
   constructor(
-    private readonly coachService: CoachService,
-    private readonly combineDataService: CombineDataService,
+    readonly persistenceService: CoachService,
+    readonly combineDataService: CombineDataService,
   ) {
-    super();
+    super(persistenceService, combineDataService);
   }
 
   async import(requested: Coach): Promise<Coach> {
-    const found: Coach = await this.coachService.findByReference(requested);
+    const found: Coach = await this.persistenceService.findByReference(requested);
     if (found) {
-      return await this.coachService.update(
+      return await this.persistenceService.update(
         this.combineDataService.preferFound(requested, found),
       );
     } else {
-      return await this.coachService.create(requested);
+      return await this.persistenceService.create(requested);
     }
   }
 
   async importCoach(
     request: ImportRequestEnvelope<Coach>,
   ): Promise<ImportResponseEnvelope<Coach>> {
-    const found: Coach = await this.coachService.findByReference(request.data);
+    const found: Coach = await this.persistenceService.findByReference(request.data);
     if (found) {
-      const updated = await this.coachService.update(
+      const updated = await this.persistenceService.update(
         this.combineDataService.preferFound(request.data, found),
       );
       return {
@@ -42,7 +42,7 @@ export class CoachImportService extends ImportService<Coach> {
         data: updated,
       };
     } else {
-      const created = await this.coachService.create(request.data);
+      const created = await this.persistenceService.create(request.data);
       return {
         status: ImportResponseStatus.Inserted,
         data: created,
