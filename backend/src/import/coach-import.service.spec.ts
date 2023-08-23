@@ -66,7 +66,7 @@ describe('CoachImportService', () => {
 
   describe('import', () => {
     it('should create a new instance if not found', async () => {
-      coachService.createCoach = mockCreateCoach(47);
+      coachService.create = mockCreateCoach(47);
       const result = await service.import({
         name: 'New Coach',
       });
@@ -79,9 +79,9 @@ describe('CoachImportService', () => {
     // TODO Both test cases should verify what the other service methods were called with
 
     it('should update existing instance if found', async () => {
-      coachService.findCoachByReference = mockFindCoachByReference(31, 'Found');
+      coachService.findByReference = mockFindCoachByReference(31, 'Found');
       combineDataService.preferFound = mockPreferFound();
-      coachService.updateCoach = mockUpdateCoach(' Updated');
+      coachService.update = mockUpdateCoach(' Updated');
       const result = await service.import({
         name: 'Requested',
       });
@@ -94,7 +94,7 @@ describe('CoachImportService', () => {
 
   describe('importCoach', () => {
     it('should create a new instance if not found', async () => {
-      coachService.createCoach = mockCreateCoach(47);
+      coachService.create = mockCreateCoach(47);
       const result = await service.importCoach({
         data: {
           name: 'New Coach',
@@ -112,9 +112,9 @@ describe('CoachImportService', () => {
     // TODO Both test cases should verify what the other service methods were called with
 
     it('should update existing instance if found', async () => {
-      coachService.findCoachByReference = mockFindCoachByReference(31, 'Found');
+      coachService.findByReference = mockFindCoachByReference(31, 'Found');
       combineDataService.preferFound = mockPreferFound();
-      coachService.updateCoach = mockUpdateCoach(' Updated');
+      coachService.update = mockUpdateCoach(' Updated');
       const result = await service.importCoach({
         data: {
           name: 'Requested',

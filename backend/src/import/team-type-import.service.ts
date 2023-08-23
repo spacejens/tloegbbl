@@ -12,13 +12,13 @@ export class TeamTypeImportService {
 
   async import(requested: TeamType): Promise<TeamType> {
     const found: TeamType =
-      await this.teamTypeService.findTeamTypeByReference(requested);
+      await this.teamTypeService.findByReference(requested);
     if (found) {
-      return await this.teamTypeService.updateTeamType(
+      return await this.teamTypeService.update(
         this.combineDataService.preferFound(requested, found),
       );
     } else {
-      return await this.teamTypeService.createTeamType(requested);
+      return await this.teamTypeService.create(requested);
     }
   }
 }

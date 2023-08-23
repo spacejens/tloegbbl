@@ -6,12 +6,12 @@ import { Coach, CoachReference, ExternalId } from '../dtos';
 export class CoachService {
   constructor(private prisma: PrismaService) {}
 
-  async countCoaches(): Promise<number> {
+  async count(): Promise<number> {
     return this.prisma.coach.count();
   }
 
-  async findCoachById(id: number): Promise<Coach> {
-    return this.wrapCoach(
+  async findById(id: number): Promise<Coach> {
+    return this.wrap(
       await this.prisma.coach.findUnique({
         where: {
           id: id,
@@ -24,7 +24,7 @@ export class CoachService {
   }
 
   // TODO Signature of wrap method should ideally use a Prisma type as argument
-  private wrapCoach(found: {
+  private wrap(found: {
     id: number;
     externalId: {
       id: number;
@@ -46,7 +46,7 @@ export class CoachService {
     );
   }
 
-  async findCoachByExternalId(externalId: ExternalId): Promise<Coach> {
+  async findByExternalId(externalId: ExternalId): Promise<Coach> {
     // TODO Refactor this to a single Prisma query instead of having to get coach by ID after finding externalId
     const found = await this.prisma.externalCoachId.findUnique({
       where: {
@@ -57,19 +57,19 @@ export class CoachService {
       },
     });
     if (found) {
-      return this.findCoachById(found.coachId);
+      return this.findById(found.coachId);
     }
     return undefined;
   }
 
-  async findCoachByReference(reference: CoachReference): Promise<Coach> {
+  async findByReference(reference: CoachReference): Promise<Coach> {
     // TODO Reduce number of queries made by using Prisma's and/or mechanisms in a single query (desired external ID might not yet exist though)
     // TODO When finding by multiple references, check if references are contradictory (i.e. refer to different records) or dead (i.e. missing record)
     if (reference.id) {
-      return this.findCoachById(reference.id);
+      return this.findById(reference.id);
     } else {
       for (const extId of reference.externalIds) {
-        const found = await this.findCoachByExternalId(extId);
+        const found = await this.findByExternalId(extId);
         if (found) {
           return found;
         }
@@ -78,9 +78,9 @@ export class CoachService {
     return undefined;
   }
 
-  async createCoach(input: Coach): Promise<Coach> {
+  async create(input: Coach): Promise<Coach> {
     // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
-    return this.wrapCoach(
+    return this.wrap(
       await this.prisma.coach.create({
         data: {
           externalId: {
@@ -102,9 +102,9 @@ export class CoachService {
     );
   }
 
-  async updateCoach(input: Coach): Promise<Coach> {
+  async update(input: Coach): Promise<Coach> {
     // TODO Need to enforce that input has an ID, otherwise this might update all coaches?
-    return this.wrapCoach(
+    return this.wrap(
       await this.prisma.coach.update({
         where: {
           id: input.id,

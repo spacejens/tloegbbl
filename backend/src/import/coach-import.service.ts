@@ -17,24 +17,24 @@ export class CoachImportService {
 
   async import(requested: Coach): Promise<Coach> {
     const found: Coach =
-      await this.coachService.findCoachByReference(requested);
+      await this.coachService.findByReference(requested);
     if (found) {
-      return await this.coachService.updateCoach(
+      return await this.coachService.update(
         this.combineDataService.preferFound(requested, found),
       );
     } else {
-      return await this.coachService.createCoach(requested);
+      return await this.coachService.create(requested);
     }
   }
 
   async importCoach(
     request: ImportRequestEnvelope<Coach>,
   ): Promise<ImportResponseEnvelope<Coach>> {
-    const found: Coach = await this.coachService.findCoachByReference(
+    const found: Coach = await this.coachService.findByReference(
       request.data,
     );
     if (found) {
-      const updated = await this.coachService.updateCoach(
+      const updated = await this.coachService.update(
         this.combineDataService.preferFound(request.data, found),
       );
       return {
@@ -42,7 +42,7 @@ export class CoachImportService {
         data: updated,
       };
     } else {
-      const created = await this.coachService.createCoach(request.data);
+      const created = await this.coachService.create(request.data);
       return {
         status: ImportResponseStatus.Inserted,
         data: created,

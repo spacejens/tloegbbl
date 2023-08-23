@@ -23,22 +23,22 @@ describe('CoachService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('countCoaches', () => {
+  describe('count', () => {
     it('should return the count', async () => {
       prismaService.coach.count = jest.fn().mockReturnValue(23);
-      const result = await service.countCoaches();
+      const result = await service.count();
       expect(result).toBe(23);
     });
   });
 
-  describe('findCoachById', () => {
+  describe('findById', () => {
     it('should return found coach without external IDs', async () => {
       prismaService.coach.findUnique = jest.fn().mockReturnValue({
         id: 23,
         externalId: [],
         name: 'Found',
       });
-      const result = await service.findCoachById(23);
+      const result = await service.findById(23);
       expect(result).toEqual({
         id: 23,
         externalIds: [],
@@ -66,7 +66,7 @@ describe('CoachService', () => {
         ],
         name: 'Found',
       });
-      const result = await service.findCoachById(23);
+      const result = await service.findById(23);
       expect(result).toEqual({
         id: 23,
         externalIds: [
@@ -90,7 +90,7 @@ describe('CoachService', () => {
 
     it('should return undefined if not found', async () => {
       prismaService.coach.findUnique = jest.fn().mockReturnValue(undefined);
-      const result = await service.findCoachById(23);
+      const result = await service.findById(23);
       expect(result).toEqual(undefined);
       expect(prismaService.coach.findUnique).toHaveBeenCalledWith({
         where: {
@@ -103,7 +103,7 @@ describe('CoachService', () => {
     });
   });
 
-  describe('findCoachByExternalId', () => {
+  describe('findByExternalId', () => {
     it('should return found coach', async () => {
       prismaService.externalCoachId.findUnique = jest.fn().mockReturnValue({
         id: 11,
@@ -122,7 +122,7 @@ describe('CoachService', () => {
         ],
         name: 'Found',
       });
-      const result = await service.findCoachByExternalId({
+      const result = await service.findByExternalId({
         externalId: 'ExtId',
         externalSystem: 'ExtSys',
       });
@@ -160,7 +160,7 @@ describe('CoachService', () => {
         .fn()
         .mockReturnValue(undefined);
       prismaService.coach.findUnique = jest.fn();
-      const result = await service.findCoachByExternalId({
+      const result = await service.findByExternalId({
         externalId: 'ExtId',
         externalSystem: 'ExtSys',
       });
@@ -177,11 +177,11 @@ describe('CoachService', () => {
     });
   });
 
-  describe('findCoachByReference', () => {
+  describe('findByReference', () => {
     // TODO Implement test cases
   });
 
-  describe('createCoach', () => {
+  describe('create', () => {
     beforeEach(() => {
       prismaService.coach.create = jest
         .fn()
@@ -199,7 +199,7 @@ describe('CoachService', () => {
     });
 
     it('should create record with no externalIds', async () => {
-      const result = await service.createCoach({
+      const result = await service.create({
         externalIds: [],
         name: 'New',
       });
@@ -224,7 +224,7 @@ describe('CoachService', () => {
     });
 
     it('should create record without externalIds', async () => {
-      const result = await service.createCoach({
+      const result = await service.create({
         name: 'New',
       });
       expect(result).toEqual({
@@ -248,7 +248,7 @@ describe('CoachService', () => {
     });
 
     it('should create record with externalIds', async () => {
-      const result = await service.createCoach({
+      const result = await service.create({
         externalIds: [{ externalId: 'ExtId', externalSystem: 'ExtSys' }],
         name: 'New with ExtIds',
       });
@@ -280,7 +280,7 @@ describe('CoachService', () => {
     });
   });
 
-  describe('updateCoach', () => {
+  describe('update', () => {
     // TODO Implement test cases
   });
 });

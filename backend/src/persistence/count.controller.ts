@@ -8,7 +8,7 @@ export class CountController {
   @Get()
   async countEverything() {
     return {
-      coaches: await this.coachService.countCoaches(),
+      coaches: await this.coachService.count(),
       // TODO Count all (?) types of data
     };
   }

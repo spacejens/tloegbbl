@@ -6,8 +6,8 @@ import { ExternalId, TeamType, TeamTypeReference } from '../dtos';
 export class TeamTypeService {
   constructor(private prisma: PrismaService) {}
 
-  async findTeamTypeById(id: number): Promise<TeamType> {
-    return this.wrapTeamType(
+  async findById(id: number): Promise<TeamType> {
+    return this.wrap(
       await this.prisma.teamType.findUnique({
         where: {
           id: id,
@@ -20,7 +20,7 @@ export class TeamTypeService {
   }
 
   // TODO Signature of wrap method should ideally use a Prisma type as argument
-  private wrapTeamType(found: {
+  private wrap(found: {
     id: number;
     externalId: {
       id: number;
@@ -42,7 +42,7 @@ export class TeamTypeService {
     );
   }
 
-  async findTeamTypeByExternalId(externalId: ExternalId): Promise<TeamType> {
+  async findByExternalId(externalId: ExternalId): Promise<TeamType> {
     // TODO Refactor this to a single Prisma query instead of having to get team type by ID after finding externalId
     const found = await this.prisma.externalTeamTypeId.findUnique({
       where: {
@@ -53,21 +53,21 @@ export class TeamTypeService {
       },
     });
     if (found) {
-      return this.findTeamTypeById(found.teamTypeId);
+      return this.findById(found.teamTypeId);
     }
     return undefined;
   }
 
-  async findTeamTypeByReference(
+  async findByReference(
     reference: TeamTypeReference,
   ): Promise<TeamType> {
     // TODO Reduce number of queries made by using Prisma's and/or mechanisms in a single query (desired external ID might not yet exist though)
     // TODO When finding by multiple references, check if references are contradictory (i.e. refer to different records) or dead (i.e. missing record)
     if (reference.id) {
-      return this.findTeamTypeById(reference.id);
+      return this.findById(reference.id);
     } else {
       for (const extId of reference.externalIds) {
-        const found = await this.findTeamTypeByExternalId(extId);
+        const found = await this.findByExternalId(extId);
         if (found) {
           return found;
         }
@@ -76,9 +76,9 @@ export class TeamTypeService {
     return undefined;
   }
 
-  async createTeamType(input: TeamType): Promise<TeamType> {
+  async create(input: TeamType): Promise<TeamType> {
     // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
-    return this.wrapTeamType(
+    return this.wrap(
       await this.prisma.teamType.create({
         data: {
           externalId: {
@@ -100,9 +100,9 @@ export class TeamTypeService {
     );
   }
 
-  async updateTeamType(input: TeamType): Promise<TeamType> {
+  async update(input: TeamType): Promise<TeamType> {
     // TODO Need to enforce that input has an ID, otherwise this might update all team types?
-    return this.wrapTeamType(
+    return this.wrap(
       await this.prisma.teamType.update({
         where: {
           id: input.id,

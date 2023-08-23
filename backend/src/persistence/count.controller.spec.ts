@@ -23,7 +23,7 @@ describe('CountController', () => {
 
   describe('countEverything', () => {
     it('should count every type of data', async () => {
-      coachService.countCoaches = jest.fn().mockReturnValue(111);
+      coachService.count = jest.fn().mockReturnValue(111);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
         coaches: 111,

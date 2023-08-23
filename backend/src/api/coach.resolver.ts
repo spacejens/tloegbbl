@@ -51,7 +51,7 @@ export class CoachResolver {
 
   @Query(() => Coach, { nullable: true })
   async coach(@Args('id', { type: () => Int }) id: number): Promise<Coach> {
-    return this.coachService.findCoachById(id);
+    return this.coachService.findById(id);
   }
 
   @ResolveField()
@@ -64,8 +64,8 @@ export class CoachResolver {
   async coaches(): Promise<Coach[]> {
     // TODO Implement list operation in persistence layer
     return [
-      await this.coachService.findCoachById(2),
-      await this.coachService.findCoachById(3),
+      await this.coachService.findById(2),
+      await this.coachService.findById(3),
     ];
   }
 }
