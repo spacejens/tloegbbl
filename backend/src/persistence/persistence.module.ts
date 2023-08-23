@@ -5,11 +5,10 @@ import { CountController } from './count.controller';
 import { RawDataController } from './raw-data.controller';
 import { TeamTypeService } from './team-type.service';
 import { TeamService } from './team.service';
-import { PersistenceService } from './persistence.service';
 
 @Module({
   providers: [PrismaService, CoachService, TeamTypeService, TeamService],
   controllers: [CountController, RawDataController],
-  exports: [CoachService, TeamTypeService, TeamService, PersistenceService],
+  exports: [CoachService, TeamTypeService, TeamService],
 })
 export class PersistenceModule {}
