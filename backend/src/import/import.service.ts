@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PersistenceService } from 'src/persistence/persistence.service';
+import { PersistenceService } from '../persistence/persistence.service';
 import { CombineDataService } from './combine-data.service';
 
 @Injectable()
@@ -9,5 +9,14 @@ export abstract class ImportService<R, E extends R> {
     readonly combineDataService: CombineDataService,
   ) {}
 
-  abstract import(requested: E): Promise<E>;
+  async import(requested: E): Promise<E> {
+    const found: E = await this.persistenceService.findByReference(requested);
+    if (found) {
+      return await this.persistenceService.update(
+        this.combineDataService.preferFound(requested, found),
+      );
+    } else {
+      return await this.persistenceService.create(requested);
+    }
+  }
 }

@@ -18,17 +18,6 @@ export class CoachImportService extends ImportService<CoachReference, Coach> {
     super(persistenceService, combineDataService);
   }
 
-  async import(requested: Coach): Promise<Coach> {
-    const found: Coach = await this.persistenceService.findByReference(requested);
-    if (found) {
-      return await this.persistenceService.update(
-        this.combineDataService.preferFound(requested, found),
-      );
-    } else {
-      return await this.persistenceService.create(requested);
-    }
-  }
-
   async importCoach(
     request: ImportRequestEnvelope<Coach>,
   ): Promise<ImportResponseEnvelope<Coach>> {

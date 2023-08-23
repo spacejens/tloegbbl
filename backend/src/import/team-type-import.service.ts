@@ -12,16 +12,4 @@ export class TeamTypeImportService extends ImportService<TeamTypeReference, Team
   ) {
     super(persistenceService, combineDataService);
   }
-
-  async import(requested: TeamType): Promise<TeamType> {
-    const found: TeamType =
-      await this.persistenceService.findByReference(requested);
-    if (found) {
-      return await this.persistenceService.update(
-        this.combineDataService.preferFound(requested, found),
-      );
-    } else {
-      return await this.persistenceService.create(requested);
-    }
-  }
 }
