@@ -34,6 +34,7 @@ describe('PersistenceService', () => {
   };
 
   beforeEach(async () => {
+    // Cannot use test module and inject dependencies here, since Prisma delegates don't have a shared type/interface/superclass
     persistenceService = new TestPersistenceService(prismaDelegate);
   });
 
