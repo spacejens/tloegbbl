@@ -64,34 +64,6 @@ describe('CoachImportService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('import', () => {
-    it('should create a new instance if not found', async () => {
-      coachService.create = mockCreateCoach(47);
-      const result = await service.import({
-        name: 'New Coach',
-      });
-      expect(result).toStrictEqual({
-        id: 47,
-        name: 'New Coach',
-      });
-    });
-
-    // TODO Both test cases should verify what the other service methods were called with
-
-    it('should update existing instance if found', async () => {
-      coachService.findByReference = mockFindCoachByReference(31, 'Found');
-      combineDataService.preferFound = mockPreferFound();
-      coachService.update = mockUpdateCoach(' Updated');
-      const result = await service.import({
-        name: 'Requested',
-      });
-      expect(result).toStrictEqual({
-        id: 31,
-        name: 'Requested Found Updated',
-      });
-    });
-  });
-
   describe('importCoach', () => {
     it('should create a new instance if not found', async () => {
       coachService.create = mockCreateCoach(47);
