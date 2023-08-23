@@ -10,39 +10,14 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
   }
 
   async findById(id: number): Promise<Coach> {
-    return this.wrap(
-      await this.prisma.coach.findUnique({
-        where: {
-          id: id,
-        },
-        include: {
-          externalIds: true,
-        },
-      }),
-    );
-  }
-
-  // TODO Signature of wrap method should ideally use a Prisma type as argument
-  private wrap(found: {
-    id: number;
-    externalIds: {
-      id: number;
-      externalId: string;
-      externalSystem: string;
-    }[];
-    name: string;
-  }): Coach {
-    return (
-      found && {
-        id: found.id,
-        externalIds: found.externalIds.map((extId) => ({
-          id: extId.id,
-          externalId: extId.externalId,
-          externalSystem: extId.externalSystem,
-        })),
-        name: found.name,
-      }
-    );
+    return await this.prisma.coach.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        externalIds: true,
+      },
+    });
   }
 
   async findByExternalId(externalId: ExternalId): Promise<Coach> {
@@ -63,55 +38,51 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
 
   async create(input: Coach): Promise<Coach> {
     // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
-    return this.wrap(
-      await this.prisma.coach.create({
-        data: {
-          externalIds: {
-            createMany: {
-              data: input.externalIds
-                ? input.externalIds.map((extId) => ({
-                    externalId: extId.externalId,
-                    externalSystem: extId.externalSystem,
-                  }))
-                : [],
-            },
+    return await this.prisma.coach.create({
+      data: {
+        externalIds: {
+          createMany: {
+            data: input.externalIds
+              ? input.externalIds.map((extId) => ({
+                  externalId: extId.externalId,
+                  externalSystem: extId.externalSystem,
+                }))
+              : [],
           },
-          name: input.name,
         },
-        include: {
-          externalIds: true,
-        },
-      }),
-    );
+        name: input.name,
+      },
+      include: {
+        externalIds: true,
+      },
+    });
   }
 
   async update(input: Coach): Promise<Coach> {
     // TODO Need to enforce that input has an ID, otherwise this might update all coaches?
-    return this.wrap(
-      await this.prisma.coach.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          externalIds: {
-            // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
-            createMany: {
-              data: input.externalIds
-                ? input.externalIds
-                    .filter((extId) => !extId.id)
-                    .map((extId) => ({
-                      externalId: extId.externalId,
-                      externalSystem: extId.externalSystem,
-                    }))
-                : [],
-            },
+    return await this.prisma.coach.update({
+      where: {
+        id: input.id,
+      },
+      data: {
+        externalIds: {
+          // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
+          createMany: {
+            data: input.externalIds
+              ? input.externalIds
+                  .filter((extId) => !extId.id)
+                  .map((extId) => ({
+                    externalId: extId.externalId,
+                    externalSystem: extId.externalSystem,
+                  }))
+              : [],
           },
-          name: input.name,
         },
-        include: {
-          externalIds: true,
-        },
-      }),
-    );
+        name: input.name,
+      },
+      include: {
+        externalIds: true,
+      },
+    });
   }
 }
