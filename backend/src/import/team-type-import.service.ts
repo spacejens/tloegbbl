@@ -5,7 +5,10 @@ import { TeamTypeService } from '../persistence/team-type.service';
 import { ImportService } from './import.service';
 
 @Injectable()
-export class TeamTypeImportService extends ImportService<TeamTypeReference, TeamType> {
+export class TeamTypeImportService extends ImportService<
+  TeamTypeReference,
+  TeamType
+> {
   constructor(
     readonly persistenceService: TeamTypeService,
     readonly combineDataService: CombineDataService,

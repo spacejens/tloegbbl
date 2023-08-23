@@ -21,7 +21,9 @@ export class CoachImportService extends ImportService<CoachReference, Coach> {
   async importCoach(
     request: ImportRequestEnvelope<Coach>,
   ): Promise<ImportResponseEnvelope<Coach>> {
-    const found: Coach = await this.persistenceService.findByReference(request.data);
+    const found: Coach = await this.persistenceService.findByReference(
+      request.data,
+    );
     if (found) {
       const updated = await this.persistenceService.update(
         this.combineDataService.preferFound(request.data, found),
