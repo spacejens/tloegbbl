@@ -12,6 +12,7 @@ export abstract class PersistenceService<
     },
   ) {}
 
+  // TODO Not sure that trying to duck-type Prisma delegates into the superclass is a good thing? Maybe just keep abstract methods here?
   async count(): Promise<number> {
     return this.prismaDelegate.count();
   }
