@@ -18,6 +18,12 @@ class TestPersistenceService extends PersistenceService<
   TestReference,
   TestEntity
 > {
+  findById(): Promise<TestEntity> {
+    throw new Error('Method not implemented.');
+  }
+  findByExternalId(): Promise<TestEntity> {
+    throw new Error('Method not implemented.');
+  }
   findByReference(): Promise<TestEntity> {
     throw new Error('Method not implemented.');
   }
