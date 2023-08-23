@@ -22,20 +22,20 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
           id: id,
         },
         include: {
-          externalId: true,
+          externalIds: true,
           headCoach: {
             include: {
-              externalId: true,
+              externalIds: true,
             },
           },
           coCoach: {
             include: {
-              externalId: true,
+              externalIds: true,
             },
           },
           teamType: {
             include: {
-              externalId: true,
+              externalIds: true,
             },
           },
         },
@@ -46,7 +46,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
   // TODO Signature of wrap method should ideally use a Prisma type as argument
   private wrap(found: {
     id: number;
-    externalId: {
+    externalIds: {
       id: number;
       externalId: string;
       externalSystem: string;
@@ -54,7 +54,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
     name: string;
     headCoach: {
       id: number;
-      externalId: {
+      externalIds: {
         id: number;
         externalId: string;
         externalSystem: string;
@@ -62,7 +62,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
     };
     coCoach?: {
       id: number;
-      externalId: {
+      externalIds: {
         id: number;
         externalId: string;
         externalSystem: string;
@@ -70,7 +70,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
     };
     teamType: {
       id: number;
-      externalId: {
+      externalIds: {
         id: number;
         externalId: string;
         externalSystem: string;
@@ -80,7 +80,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
     return (
       found && {
         id: found.id,
-        externalIds: found.externalId.map((extId) => ({
+        externalIds: found.externalIds.map((extId) => ({
           id: extId.id,
           externalId: extId.externalId,
           externalSystem: extId.externalSystem,
@@ -88,7 +88,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
         name: found.name,
         headCoach: {
           id: found.headCoach.id,
-          externalIds: found.headCoach.externalId.map((extId) => ({
+          externalIds: found.headCoach.externalIds.map((extId) => ({
             id: extId.id,
             externalId: extId.externalId,
             externalSystem: extId.externalSystem,
@@ -97,7 +97,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
         coCoach: found.coCoach
           ? {
               id: found.coCoach.id,
-              externalIds: found.coCoach.externalId.map((extId) => ({
+              externalIds: found.coCoach.externalIds.map((extId) => ({
                 id: extId.id,
                 externalId: extId.externalId,
                 externalSystem: extId.externalSystem,
@@ -106,7 +106,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
           : undefined,
         teamType: {
           id: found.teamType.id,
-          externalIds: found.teamType.externalId.map((extId) => ({
+          externalIds: found.teamType.externalIds.map((extId) => ({
             id: extId.id,
             externalId: extId.externalId,
             externalSystem: extId.externalSystem,
@@ -143,7 +143,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
     return this.wrap(
       await this.prisma.team.create({
         data: {
-          externalId: {
+          externalIds: {
             createMany: {
               data: input.externalIds
                 ? input.externalIds.map((extId) => ({
@@ -173,20 +173,20 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
           },
         },
         include: {
-          externalId: true,
+          externalIds: true,
           headCoach: {
             include: {
-              externalId: true,
+              externalIds: true,
             },
           },
           coCoach: {
             include: {
-              externalId: true,
+              externalIds: true,
             },
           },
           teamType: {
             include: {
-              externalId: true,
+              externalIds: true,
             },
           },
         },
@@ -202,7 +202,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
           id: input.id,
         },
         data: {
-          externalId: {
+          externalIds: {
             // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
             createMany: {
               data: input.externalIds
@@ -221,20 +221,20 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
           // TODO Support changing of team type for team?
         },
         include: {
-          externalId: true,
+          externalIds: true,
           headCoach: {
             include: {
-              externalId: true,
+              externalIds: true,
             },
           },
           coCoach: {
             include: {
-              externalId: true,
+              externalIds: true,
             },
           },
           teamType: {
             include: {
-              externalId: true,
+              externalIds: true,
             },
           },
         },

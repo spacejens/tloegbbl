@@ -16,7 +16,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
           id: id,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       }),
     );
@@ -25,7 +25,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
   // TODO Signature of wrap method should ideally use a Prisma type as argument
   private wrap(found: {
     id: number;
-    externalId: {
+    externalIds: {
       id: number;
       externalId: string;
       externalSystem: string;
@@ -35,7 +35,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
     return (
       found && {
         id: found.id,
-        externalIds: found.externalId.map((extId) => ({
+        externalIds: found.externalIds.map((extId) => ({
           id: extId.id,
           externalId: extId.externalId,
           externalSystem: extId.externalSystem,
@@ -66,7 +66,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
     return this.wrap(
       await this.prisma.coach.create({
         data: {
-          externalId: {
+          externalIds: {
             createMany: {
               data: input.externalIds
                 ? input.externalIds.map((extId) => ({
@@ -79,7 +79,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
           name: input.name,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       }),
     );
@@ -93,7 +93,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
           id: input.id,
         },
         data: {
-          externalId: {
+          externalIds: {
             // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
             createMany: {
               data: input.externalIds
@@ -109,7 +109,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
           name: input.name,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       }),
     );

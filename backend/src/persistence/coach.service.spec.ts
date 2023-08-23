@@ -27,7 +27,7 @@ describe('CoachService', () => {
     it('should return found coach without external IDs', async () => {
       prismaService.coach.findUnique = jest.fn().mockReturnValue({
         id: 23,
-        externalId: [],
+        externalIds: [],
         name: 'Found',
       });
       const result = await service.findById(23);
@@ -41,7 +41,7 @@ describe('CoachService', () => {
           id: 23,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       });
     });
@@ -49,7 +49,7 @@ describe('CoachService', () => {
     it('should return found coach with external IDs', async () => {
       prismaService.coach.findUnique = jest.fn().mockReturnValue({
         id: 23,
-        externalId: [
+        externalIds: [
           {
             id: 45,
             externalId: 'ExtId',
@@ -75,7 +75,7 @@ describe('CoachService', () => {
           id: 23,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       });
     });
@@ -89,7 +89,7 @@ describe('CoachService', () => {
           id: 23,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       });
     });
@@ -105,7 +105,7 @@ describe('CoachService', () => {
       });
       prismaService.coach.findUnique = jest.fn().mockReturnValue({
         id: 23,
-        externalId: [
+        externalIds: [
           {
             id: 45,
             externalId: 'ExtId',
@@ -142,7 +142,7 @@ describe('CoachService', () => {
           id: 23,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       });
     });
@@ -175,8 +175,8 @@ describe('CoachService', () => {
         .fn()
         .mockImplementation((input: { data: any }) => ({
           id: 99,
-          externalId: input.data.externalId.createMany.data
-            ? input.data.externalId.createMany.data.map((extId) => ({
+          externalIds: input.data.externalIds.createMany.data
+            ? input.data.externalIds.createMany.data.map((extId) => ({
                 id: 66,
                 externalId: extId.externalId,
                 externalSystem: extId.externalSystem,
@@ -198,7 +198,7 @@ describe('CoachService', () => {
       });
       expect(prismaService.coach.create).toHaveBeenCalledWith({
         data: {
-          externalId: {
+          externalIds: {
             createMany: {
               data: [],
             },
@@ -206,7 +206,7 @@ describe('CoachService', () => {
           name: 'New',
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       });
     });
@@ -222,7 +222,7 @@ describe('CoachService', () => {
       });
       expect(prismaService.coach.create).toHaveBeenCalledWith({
         data: {
-          externalId: {
+          externalIds: {
             createMany: {
               data: [],
             },
@@ -230,7 +230,7 @@ describe('CoachService', () => {
           name: 'New',
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       });
     });
@@ -249,7 +249,7 @@ describe('CoachService', () => {
       });
       expect(prismaService.coach.create).toHaveBeenCalledWith({
         data: {
-          externalId: {
+          externalIds: {
             createMany: {
               data: [
                 {
@@ -262,7 +262,7 @@ describe('CoachService', () => {
           name: 'New with ExtIds',
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       });
     });

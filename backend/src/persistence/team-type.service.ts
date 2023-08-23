@@ -19,7 +19,7 @@ export class TeamTypeService extends PersistenceService<
           id: id,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       }),
     );
@@ -28,7 +28,7 @@ export class TeamTypeService extends PersistenceService<
   // TODO Signature of wrap method should ideally use a Prisma type as argument
   private wrap(found: {
     id: number;
-    externalId: {
+    externalIds: {
       id: number;
       externalId: string;
       externalSystem: string;
@@ -38,7 +38,7 @@ export class TeamTypeService extends PersistenceService<
     return (
       found && {
         id: found.id,
-        externalIds: found.externalId.map((extId) => ({
+        externalIds: found.externalIds.map((extId) => ({
           id: extId.id,
           externalId: extId.externalId,
           externalSystem: extId.externalSystem,
@@ -69,7 +69,7 @@ export class TeamTypeService extends PersistenceService<
     return this.wrap(
       await this.prisma.teamType.create({
         data: {
-          externalId: {
+          externalIds: {
             createMany: {
               data: input.externalIds
                 ? input.externalIds.map((extId) => ({
@@ -82,7 +82,7 @@ export class TeamTypeService extends PersistenceService<
           name: input.name,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       }),
     );
@@ -96,7 +96,7 @@ export class TeamTypeService extends PersistenceService<
           id: input.id,
         },
         data: {
-          externalId: {
+          externalIds: {
             // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
             createMany: {
               data: input.externalIds
@@ -112,7 +112,7 @@ export class TeamTypeService extends PersistenceService<
           name: input.name,
         },
         include: {
-          externalId: true,
+          externalIds: true,
         },
       }),
     );
