@@ -9,7 +9,7 @@ export class TeamTypeService extends PersistenceService<
   TeamType
 > {
   constructor(private prisma: PrismaService) {
-    super();
+    super(prisma.teamType);
   }
 
   async findById(id: number): Promise<TeamType> {

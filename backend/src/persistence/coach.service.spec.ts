@@ -23,14 +23,6 @@ describe('CoachService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('count', () => {
-    it('should return the count', async () => {
-      prismaService.coach.count = jest.fn().mockReturnValue(23);
-      const result = await service.count();
-      expect(result).toBe(23);
-    });
-  });
-
   describe('findById', () => {
     it('should return found coach without external IDs', async () => {
       prismaService.coach.findUnique = jest.fn().mockReturnValue({

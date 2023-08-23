@@ -12,7 +12,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
     private coachService: CoachService,
     private teamTypeService: TeamTypeService,
   ) {
-    super();
+    super(prisma.team);
   }
 
   async findById(id: number): Promise<Team> {

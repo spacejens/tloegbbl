@@ -6,11 +6,7 @@ import { PersistenceService } from './persistence.service';
 @Injectable()
 export class CoachService extends PersistenceService<CoachReference, Coach> {
   constructor(private prisma: PrismaService) {
-    super();
-  }
-
-  async count(): Promise<number> {
-    return this.prisma.coach.count();
+    super(prisma.coach);
   }
 
   async findById(id: number): Promise<Coach> {
