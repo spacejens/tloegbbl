@@ -19,6 +19,13 @@ export abstract class PersistenceService<
 
   abstract findById(id: number): Promise<E>;
 
+  fieldsNeededForTheDto() {
+    // This will be overridden and expanded upon by those subclasses that need more
+    return {
+      externalIds: true,
+    };
+  }
+
   abstract findByExternalId(externalId: ExternalId): Promise<E>;
 
   async findByReference(reference: R): Promise<E> {

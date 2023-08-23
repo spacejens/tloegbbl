@@ -20,25 +20,29 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
       where: {
         id: id,
       },
-      include: {
-        externalIds: true,
-        headCoach: {
-          include: {
-            externalIds: true,
-          },
-        },
-        coCoach: {
-          include: {
-            externalIds: true,
-          },
-        },
-        teamType: {
-          include: {
-            externalIds: true,
-          },
+      include: this.fieldsNeededForTheDto(),
+    });
+  }
+
+  fieldsNeededForTheDto() {
+    return {
+      externalIds: true,
+      headCoach: {
+        include: {
+          externalIds: true,
         },
       },
-    });
+      coCoach: {
+        include: {
+          externalIds: true,
+        },
+      },
+      teamType: {
+        include: {
+          externalIds: true,
+        },
+      },
+    };
   }
 
   async findByExternalId(externalId: ExternalId): Promise<Team> {
@@ -87,24 +91,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
           },
         },
       },
-      include: {
-        externalIds: true,
-        headCoach: {
-          include: {
-            externalIds: true,
-          },
-        },
-        coCoach: {
-          include: {
-            externalIds: true,
-          },
-        },
-        teamType: {
-          include: {
-            externalIds: true,
-          },
-        },
-      },
+      include: this.fieldsNeededForTheDto(),
     });
   }
 
@@ -122,24 +109,7 @@ export class TeamService extends PersistenceService<TeamReference, Team> {
         // TODO Support changing/adding co-coach for team?
         // TODO Support changing of team type for team?
       },
-      include: {
-        externalIds: true,
-        headCoach: {
-          include: {
-            externalIds: true,
-          },
-        },
-        coCoach: {
-          include: {
-            externalIds: true,
-          },
-        },
-        teamType: {
-          include: {
-            externalIds: true,
-          },
-        },
-      },
+      include: this.fieldsNeededForTheDto(),
     });
   }
 }

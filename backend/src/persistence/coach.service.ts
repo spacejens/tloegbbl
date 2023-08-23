@@ -14,9 +14,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
       where: {
         id: id,
       },
-      include: {
-        externalIds: true,
-      },
+      include: this.fieldsNeededForTheDto(),
     });
   }
 
@@ -43,9 +41,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
         externalIds: this.createAllOf(input.externalIds),
         name: input.name,
       },
-      include: {
-        externalIds: true,
-      },
+      include: this.fieldsNeededForTheDto(),
     });
   }
 
@@ -60,9 +56,7 @@ export class CoachService extends PersistenceService<CoachReference, Coach> {
         externalIds: this.createAnonymousOf(input.externalIds),
         name: input.name,
       },
-      include: {
-        externalIds: true,
-      },
+      include: this.fieldsNeededForTheDto(),
     });
   }
 }

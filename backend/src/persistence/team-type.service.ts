@@ -17,9 +17,7 @@ export class TeamTypeService extends PersistenceService<
       where: {
         id: id,
       },
-      include: {
-        externalIds: true,
-      },
+      include: this.fieldsNeededForTheDto(),
     });
   }
 
@@ -46,9 +44,7 @@ export class TeamTypeService extends PersistenceService<
         externalIds: this.createAllOf(input.externalIds),
         name: input.name,
       },
-      include: {
-        externalIds: true,
-      },
+      include: this.fieldsNeededForTheDto(),
     });
   }
 
@@ -63,9 +59,7 @@ export class TeamTypeService extends PersistenceService<
         externalIds: this.createAnonymousOf(input.externalIds),
         name: input.name,
       },
-      include: {
-        externalIds: true,
-      },
+      include: this.fieldsNeededForTheDto(),
     });
   }
 }
