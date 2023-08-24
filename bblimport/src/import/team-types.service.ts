@@ -40,11 +40,7 @@ export class TeamTypesService {
       [
         'id',
         {
-          externalIds: [
-            'id',
-            'externalId',
-            'externalSystem',
-          ]
+          externalIds: ['id', 'externalId', 'externalSystem'],
         },
         'name',
       ],

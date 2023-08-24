@@ -117,16 +117,16 @@ export class TeamsService {
             externalSystem: externalSystem,
           },
         ],
-        headCoach:{
-          externalIds:[
+        headCoach: {
+          externalIds: [
             {
               externalId: team.headCoach.name,
               externalSystem: externalSystem,
             },
           ],
         },
-        teamType:{
-          externalIds:[
+        teamType: {
+          externalIds: [
             {
               externalId: team.teamType.id,
               externalSystem: externalSystem,
@@ -137,22 +137,14 @@ export class TeamsService {
       [
         'id',
         {
-          externalIds: [
-            'id',
-            'externalId',
-            'externalSystem',
-          ]
+          externalIds: ['id', 'externalId', 'externalSystem'],
         },
         'name',
         {
           headCoach: [
             'id',
             {
-              externalIds: [
-                'id',
-                'externalId',
-                'externalSystem',
-              ]
+              externalIds: ['id', 'externalId', 'externalSystem'],
             },
           ],
         },
@@ -160,11 +152,7 @@ export class TeamsService {
           coCoach: [
             'id',
             {
-              externalIds: [
-                'id',
-                'externalId',
-                'externalSystem',
-              ]
+              externalIds: ['id', 'externalId', 'externalSystem'],
             },
           ],
         },
@@ -172,11 +160,7 @@ export class TeamsService {
           teamType: [
             'id',
             {
-              externalIds: [
-                'id',
-                'externalId',
-                'externalSystem',
-              ]
+              externalIds: ['id', 'externalId', 'externalSystem'],
             },
           ],
         },

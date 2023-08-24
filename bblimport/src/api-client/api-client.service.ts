@@ -17,12 +17,15 @@ export class ApiClientService {
     argumentName: string,
     argument: any,
     returnedFields: ReturnedFields,
-  ): Promise<any> { // TODO Define better typing of API result
+  ): Promise<any> {
+    // TODO Define better typing of API result
     // TODO Use Axios variable substitution instead of assembling whole query string
     // TODO Rewrite query string without linebreaks/indentation to make it cleaner to test
     const query: string = `
       mutation {
-        ${name}(${argumentName}: ${this.formatArgument(argument)}) ${this.formatReturnedFields(returnedFields)}
+        ${name}(${argumentName}: ${this.formatArgument(
+          argument,
+        )}) ${this.formatReturnedFields(returnedFields)}
       }
     `;
     return await firstValueFrom(
@@ -44,32 +47,54 @@ export class ApiClientService {
   // TODO Make private after test has verified that it kind of works
   formatArgument(argument: any): string {
     if (argument instanceof Array) {
-      return '[' + argument.map((value) => {
-        return this.formatArgument(value);
-      }).join(',') + ']';
+      return (
+        '[' +
+        argument
+          .map((value) => {
+            return this.formatArgument(value);
+          })
+          .join(',') +
+        ']'
+      );
     }
-    return '{' + Object.keys(argument).map((key) => {
-      if (typeof argument[key] === 'number') {
-        return key + ':' + argument[key];
-      } else if (typeof argument[key] === 'string') {
-        return key + ':"' + argument[key] + '"';
-      } else {
-        return key + ':' + this.formatArgument(argument[key]);
-      }
-    }).join(',') + '}';
+    return (
+      '{' +
+      Object.keys(argument)
+        .map((key) => {
+          if (typeof argument[key] === 'number') {
+            return key + ':' + argument[key];
+          } else if (typeof argument[key] === 'string') {
+            return key + ':"' + argument[key] + '"';
+          } else {
+            return key + ':' + this.formatArgument(argument[key]);
+          }
+        })
+        .join(',') +
+      '}'
+    );
   }
 
   // TODO Make private after test has verified that it kind of works
   formatReturnedFields(returnedFields: ReturnedFields): string {
-    return '{' + returnedFields.map((returnedField) => {
-      if (typeof returnedField === 'string') {
-        return returnedField;
-      } else {
-        const returnedSubfield = returnedField as ReturnedSubfield;
-        return Object.keys(returnedSubfield).map((key) => {
-          return key + ' ' + this.formatReturnedFields(returnedSubfield[key]);
-        }).join(',');
-      }
-    }).join(',') + '}';
+    return (
+      '{' +
+      returnedFields
+        .map((returnedField) => {
+          if (typeof returnedField === 'string') {
+            return returnedField;
+          } else {
+            const returnedSubfield = returnedField as ReturnedSubfield;
+            return Object.keys(returnedSubfield)
+              .map((key) => {
+                return (
+                  key + ' ' + this.formatReturnedFields(returnedSubfield[key])
+                );
+              })
+              .join(',');
+          }
+        })
+        .join(',') +
+      '}'
+    );
   }
 }

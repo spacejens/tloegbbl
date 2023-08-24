@@ -24,60 +24,58 @@ describe('ApiClientService', () => {
   // TODO Add tests for the whole mutation method
 
   it('should format argument correctly', () => {
-    expect(service.formatArgument({
-    })).toBe('{}');
-    expect(service.formatArgument({
-      num: 3,
-    })).toBe('{num:3}');
-    expect(service.formatArgument({
-      str: 'text',
-    })).toBe('{str:"text"}');
-    expect(service.formatArgument({
-      inner: {
-        key: 'value',
-      },
-    })).toBe('{inner:{key:"value"}}');
-    expect(service.formatArgument({
-      array: [
-        {
-          first: 'value',
+    expect(service.formatArgument({})).toBe('{}');
+    expect(
+      service.formatArgument({
+        num: 3,
+      }),
+    ).toBe('{num:3}');
+    expect(
+      service.formatArgument({
+        str: 'text',
+      }),
+    ).toBe('{str:"text"}');
+    expect(
+      service.formatArgument({
+        inner: {
+          key: 'value',
         },
-        {
-          second: 'value',
-        },
-      ],
-    })).toBe('{array:[{first:"value"},{second:"value"}]}');
+      }),
+    ).toBe('{inner:{key:"value"}}');
+    expect(
+      service.formatArgument({
+        array: [
+          {
+            first: 'value',
+          },
+          {
+            second: 'value',
+          },
+        ],
+      }),
+    ).toBe('{array:[{first:"value"},{second:"value"}]}');
   });
 
   it('should format returned fields correctly', () => {
-    expect(service.formatReturnedFields([
-      'id',
-      'name'
-    ])).toBe('{id,name}');
-    expect(service.formatReturnedFields([
-      'id',
-      {
-        externalIds: [
-          'id',
-          'externalId',
-          'externalSystem',
-        ]
-      },
-      'name',
-    ])).toBe('{id,externalIds {id,externalId,externalSystem},name}');
-    expect(service.formatReturnedFields([
-      'id',
-      {
-        externalIds: [
-          'id',
-          'externalId',
-          'externalSystem',
-        ],
-        more: [
-          'stuff',
-        ],
-      },
-      'name',
-    ])).toBe('{id,externalIds {id,externalId,externalSystem},more {stuff},name}');
+    expect(service.formatReturnedFields(['id', 'name'])).toBe('{id,name}');
+    expect(
+      service.formatReturnedFields([
+        'id',
+        {
+          externalIds: ['id', 'externalId', 'externalSystem'],
+        },
+        'name',
+      ]),
+    ).toBe('{id,externalIds {id,externalId,externalSystem},name}');
+    expect(
+      service.formatReturnedFields([
+        'id',
+        {
+          externalIds: ['id', 'externalId', 'externalSystem'],
+          more: ['stuff'],
+        },
+        'name',
+      ]),
+    ).toBe('{id,externalIds {id,externalId,externalSystem},more {stuff},name}');
   });
 });

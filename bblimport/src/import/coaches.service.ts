@@ -65,11 +65,7 @@ export class CoachesService {
       [
         'id',
         {
-          externalIds: [
-            'id',
-            'externalId',
-            'externalSystem',
-          ]
+          externalIds: ['id', 'externalId', 'externalSystem'],
         },
         'name',
       ],
