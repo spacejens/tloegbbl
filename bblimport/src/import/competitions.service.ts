@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { FileReaderService } from './filereader.service';
+import { BblTeamReference } from './teams.service';
 
 export type BblCompetitionReference = {
   id: string;
@@ -9,6 +10,7 @@ export type BblCompetitionReference = {
 
 export type BblCompetition = BblCompetitionReference & {
   name: string;
+  participants: BblTeamReference[];
 };
 
 @Injectable()
@@ -41,10 +43,23 @@ export class CompetitionsService {
       const competitionName = competitionNameElements[0].innerText.slice(
         'Score for '.length,
       );
-      // TODO Add participants of the competition
+      // Find participants
+      const participants = Array<BblTeamReference>();
+      const participantElements = competitionFile.querySelectorAll(
+        'table tr.trlist td.td9',
+      );
+      for (const participantElement of participantElements) {
+        participants.push({
+          id: this.fileReaderService.findTeamIdInGoToTeam(
+            participantElement.getAttribute('onclick'),
+          ),
+        });
+      }
+      // Assemble result
       competitions.push({
         id: competitionId,
         name: competitionName,
+        participants: participants,
       });
     }
     return competitions;
@@ -62,6 +77,7 @@ export class CompetitionsService {
     // TODO Get externalSystem from configuration
     const externalSystem = 'tloeg.bbleague.se';
     // TODO Use Axios variable substitution instead of assembling whole query string
+    console.log('Participants: ' + JSON.stringify(competition.participants)); // TODO Actually upload participants instead of printing
     const result = await firstValueFrom(
       this.httpService.post(
         // TODO Get API URL from configuration

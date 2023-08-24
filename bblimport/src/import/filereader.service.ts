@@ -21,6 +21,11 @@ export class FileReaderService {
     return parse(readFileSync(filepath).toString());
   }
 
+  findTeamIdInGoToTeam(onclick: string): string {
+    // TODO Verify that the argument has the expected format, otherwise fail (to prevent incorrect data being imported)
+    return onclick.slice("gototeam('".length, onclick.length - "')".length);
+  }
+
   findQueryParamInOnclick(queryParam: string, onclick: string): string {
     // TODO Verify that the onclick attribute has the expected format (prefix, suffic), otherwise fail (to prevent incorrect data being imported)
     return this.findQueryParamInHref(
