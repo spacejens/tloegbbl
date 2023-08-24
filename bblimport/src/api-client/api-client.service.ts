@@ -28,7 +28,7 @@ export class ApiClientService {
         )}) ${this.formatReturnedFields(returnedFields)}
       }
     `;
-    return await firstValueFrom(
+    const result = await firstValueFrom(
       this.httpService.post(
         // TODO Get API URL from configuration
         'http://localhost:3000/api',
@@ -42,6 +42,14 @@ export class ApiClientService {
         },
       ),
     );
+    if (result.status != 200 || result.data.errors) {
+      throw new Error(
+        `Unexpected result from mutation API: ${result.status} ${
+          result.statusText
+        } ${JSON.stringify(result.data)}`,
+      );
+    }
+    return result;
   }
 
   // TODO Make private after test has verified that it kind of works
