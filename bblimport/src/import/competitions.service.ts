@@ -72,21 +72,13 @@ export class CompetitionsService {
 
   async uploadCompetition(competition: BblCompetition): Promise<void> {
     // Upload the competition data
-    const externalId = competition.id;
-    // TODO Get externalSystem from configuration
-    const externalSystem = 'tloeg.bbleague.se';
     console.log('Participants: ' + JSON.stringify(competition.participants)); // TODO Actually upload participants instead of printing
     const result = await this.api.mutation(
       'importCompetition',
       'competition',
       {
         name: competition.name,
-        externalIds: [
-          {
-            externalId: externalId,
-            externalSystem: externalSystem,
-          },
-        ],
+        externalIds: [this.api.externalId(competition.id)],
       },
       [
         'id',

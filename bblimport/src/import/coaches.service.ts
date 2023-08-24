@@ -47,20 +47,12 @@ export class CoachesService {
     this.uploadedCoaches.push(coach.name);
     // TODO Can the duplicate upload detection be more clean? Would be nice with an object equality check of the whole coach
     // Upload the coach data
-    const externalId = coach.name;
-    // TODO Get externalSystem from configuration
-    const externalSystem = 'tloeg.bbleague.se';
     const result = await this.api.mutation(
       'importCoach',
       'coach',
       {
         name: coach.name,
-        externalIds: [
-          {
-            externalId: externalId,
-            externalSystem: externalSystem,
-          },
-        ],
+        externalIds: [this.api.externalId(coach.name)],
       },
       [
         'id',

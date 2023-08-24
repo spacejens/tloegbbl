@@ -103,44 +103,22 @@ export class TeamsService {
     }
     await this.teamTypesService.uploadTeamType(team.teamType);
     // Upload the team data
-    // TODO Get externalSystem from configuration
-    const externalSystem = 'tloeg.bbleague.se';
     const result = await this.api.mutation(
       'importTeam',
       'team',
       {
         name: team.name,
-        externalIds: [
-          {
-            externalId: team.id,
-            externalSystem: externalSystem,
-          },
-        ],
+        externalIds: [this.api.externalId(team.id)],
         headCoach: {
-          externalIds: [
-            {
-              externalId: team.headCoach.name,
-              externalSystem: externalSystem,
-            },
-          ],
+          externalIds: [this.api.externalId(team.headCoach.name)],
         },
         coCoach: team.coCoach
           ? {
-              externalIds: [
-                {
-                  externalId: team.coCoach.name,
-                  externalSystem: externalSystem,
-                },
-              ],
+              externalIds: [this.api.externalId(team.coCoach.name)],
             }
           : undefined,
         teamType: {
-          externalIds: [
-            {
-              externalId: team.teamType.id,
-              externalSystem: externalSystem,
-            },
-          ],
+          externalIds: [this.api.externalId(team.teamType.id)],
         },
       },
       [
