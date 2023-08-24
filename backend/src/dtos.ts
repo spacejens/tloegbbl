@@ -58,3 +58,14 @@ export class Team extends TeamReference {
   @Field(() => TeamTypeReference)
   teamType: TeamTypeReference;
 }
+
+@InputType('CompetitionReferenceInput')
+@ObjectType()
+export class CompetitionReference extends ExternallyIdentifiable {}
+
+@InputType('CompetitionInput')
+@ObjectType()
+export class Competition extends CompetitionReference {
+  @Field()
+  name: string;
+}

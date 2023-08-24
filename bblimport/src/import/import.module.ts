@@ -5,6 +5,7 @@ import { CoachesService } from './coaches.service';
 import { TeamsService } from './teams.service';
 import { HttpModule } from '@nestjs/axios';
 import { TeamTypesService } from './team-types.service';
+import { CompetitionsService } from './competitions.service';
 
 @Module({
   imports: [HttpModule],
@@ -14,6 +15,7 @@ import { TeamTypesService } from './team-types.service';
     CoachesService,
     TeamsService,
     TeamTypesService,
+    CompetitionsService,
   ],
   exports: [ImportService],
 })
