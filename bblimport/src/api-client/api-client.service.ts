@@ -19,7 +19,6 @@ export class ApiClientService {
     returnedFields: ReturnedFields,
   ): Promise<any> {
     // TODO Define better typing of API result
-    // TODO Use Axios variable substitution instead of assembling whole query string
     const query: string = `mutation {${name}(${argumentName}: ${this.formatArgument(
       argument,
     )}) ${this.formatReturnedFields(returnedFields)}}`;
