@@ -12,6 +12,8 @@ export type ReturnedSubfield = { [fieldName: string]: ReturnedFields };
 export class ApiClientService {
   constructor(private readonly httpService: HttpService) {}
 
+  // TODO Replace this implementation with actual generated (from schema) GraphQL code of some kind
+
   async mutation(
     name: string,
     argumentName: string,
