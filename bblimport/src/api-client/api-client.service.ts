@@ -20,14 +20,9 @@ export class ApiClientService {
   ): Promise<any> {
     // TODO Define better typing of API result
     // TODO Use Axios variable substitution instead of assembling whole query string
-    // TODO Rewrite query string without linebreaks/indentation to make it cleaner to test
-    const query: string = `
-      mutation {
-        ${name}(${argumentName}: ${this.formatArgument(
-          argument,
-        )}) ${this.formatReturnedFields(returnedFields)}
-      }
-    `;
+    const query: string = `mutation {${name}(${argumentName}: ${this.formatArgument(
+      argument,
+    )}) ${this.formatReturnedFields(returnedFields)}}`;
     const result = await firstValueFrom(
       this.httpService.post(
         // TODO Get API URL from configuration
