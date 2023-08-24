@@ -60,6 +60,7 @@ export class ApiClientService {
     return (
       '{' +
       Object.keys(argument)
+        .filter((key) => argument[key] != undefined)
         .map((key) => {
           if (typeof argument[key] === 'number') {
             return key + ':' + argument[key];

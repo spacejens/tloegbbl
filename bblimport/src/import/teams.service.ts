@@ -105,7 +105,6 @@ export class TeamsService {
     // Upload the team data
     // TODO Get externalSystem from configuration
     const externalSystem = 'tloeg.bbleague.se';
-    // TODO Also associate team with co-coach when present
     const result = await this.api.mutation(
       'importTeam',
       'team',
@@ -125,6 +124,16 @@ export class TeamsService {
             },
           ],
         },
+        coCoach: team.coCoach
+          ? {
+              externalIds: [
+                {
+                  externalId: team.coCoach.name,
+                  externalSystem: externalSystem,
+                },
+              ],
+            }
+          : undefined,
         teamType: {
           externalIds: [
             {

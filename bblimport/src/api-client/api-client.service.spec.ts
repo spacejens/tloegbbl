@@ -37,6 +37,12 @@ describe('ApiClientService', () => {
     ).toBe('{str:"text"}');
     expect(
       service.formatArgument({
+        present: 'here',
+        missing: undefined,
+      }),
+    ).toBe('{present:"here"}');
+    expect(
+      service.formatArgument({
         inner: {
           key: 'value',
         },
