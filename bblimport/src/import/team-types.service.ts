@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
+import { ApiClientService } from '../api-client/api-client.service';
 
 export type BblTeamTypeReference = {
   id: string;
@@ -12,7 +11,7 @@ export type BblTeamType = BblTeamTypeReference & {
 
 @Injectable()
 export class TeamTypesService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly api: ApiClientService) {}
 
   private uploadedTeamTypes = Array<string>();
   async uploadTeamType(teamType: BblTeamType): Promise<void> {
@@ -26,40 +25,29 @@ export class TeamTypesService {
     const externalId = teamType.id;
     // TODO Get externalSystem from configuration
     const externalSystem = 'tloeg.bbleague.se';
-    // TODO Use Axios variable substitution instead of assembling whole query string
-    const result = await firstValueFrom(
-      this.httpService.post(
-        // TODO Get API URL from configuration
-        'http://localhost:3000/api',
-        {
-          query: `
-            mutation {
-              importTeamType(teamType: {
-                name:"${teamType.name}",
-                externalIds:[
-                  {
-                    externalId:"${externalId}",
-                    externalSystem:"${externalSystem}",
-                  },
-                ],
-              }) {
-                id,
-                externalIds {
-                  id,
-                  externalId,
-                  externalSystem,
-                },
-                name,
-              }
-            }
-          `,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
+    const result = await this.api.mutation(
+      'importTeamType',
+      'teamType',
+      {
+        name: teamType.name,
+        externalIds: [
+          {
+            externalId: externalId,
+            externalSystem: externalSystem,
           },
+        ],
+      },
+      [
+        'id',
+        {
+          externalIds: [
+            'id',
+            'externalId',
+            'externalSystem',
+          ]
         },
-      ),
+        'name',
+      ],
     );
     console.log(JSON.stringify(result.data));
   }

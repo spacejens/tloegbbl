@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
+import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { BblTeamReference } from './teams.service';
 
@@ -17,7 +16,7 @@ export type BblCompetition = BblCompetitionReference & {
 export class CompetitionsService {
   constructor(
     private readonly fileReaderService: FileReaderService,
-    private readonly httpService: HttpService,
+    private readonly api: ApiClientService,
   ) {}
 
   getCompetitions(): BblCompetition[] {
@@ -76,41 +75,30 @@ export class CompetitionsService {
     const externalId = competition.id;
     // TODO Get externalSystem from configuration
     const externalSystem = 'tloeg.bbleague.se';
-    // TODO Use Axios variable substitution instead of assembling whole query string
     console.log('Participants: ' + JSON.stringify(competition.participants)); // TODO Actually upload participants instead of printing
-    const result = await firstValueFrom(
-      this.httpService.post(
-        // TODO Get API URL from configuration
-        'http://localhost:3000/api',
-        {
-          query: `
-            mutation {
-              importCompetition(competition: {
-                name:"${competition.name}",
-                externalIds:[
-                  {
-                    externalId:"${externalId}",
-                    externalSystem:"${externalSystem}",
-                  },
-                ],
-              }) {
-                id,
-                externalIds {
-                  id,
-                  externalId,
-                  externalSystem,
-                },
-                name,
-              }
-            }
-          `,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
+    const result = await this.api.mutation(
+      'importCompetition',
+      'competition',
+      {
+        name: competition.name,
+        externalIds: [
+          {
+            externalId: externalId,
+            externalSystem: externalSystem,
           },
+        ],
+      },
+      [
+        'id',
+        {
+          externalIds: [
+            'id',
+            'externalId',
+            'externalSystem',
+          ]
         },
-      ),
+        'name',
+      ],
     );
     console.log(JSON.stringify(result.data));
   }

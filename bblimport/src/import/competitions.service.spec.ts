@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompetitionsService } from './competitions.service';
-import { HttpService } from '@nestjs/axios';
+import { ApiClientService } from '../api-client/api-client.service';
 import { mock } from 'jest-mock-extended';
 import { FileReaderService } from './filereader.service';
 
@@ -12,7 +12,7 @@ describe('CompetitionsService', () => {
       providers: [
         CompetitionsService,
         { provide: FileReaderService, useValue: mock<FileReaderService>() },
-        { provide: HttpService, useValue: mock<HttpService>() },
+        { provide: ApiClientService, useValue: mock<ApiClientService>() },
       ],
     }).compile();
 

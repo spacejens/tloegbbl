@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TeamTypesService } from './team-types.service';
-import { HttpService } from '@nestjs/axios';
 import { mock } from 'jest-mock-extended';
+import { ApiClientService } from '../api-client/api-client.service';
 
 describe('TeamTypesService', () => {
   let service: TeamTypesService;
@@ -10,7 +10,7 @@ describe('TeamTypesService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TeamTypesService,
-        { provide: HttpService, useValue: mock<HttpService>() },
+        { provide: ApiClientService, useValue: mock<ApiClientService>() },
       ],
     }).compile();
 
