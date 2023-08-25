@@ -6,6 +6,14 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+# Get files that were somehow missed by the download script (probably due to åäö at beginning of query parameter)
+wget --config=wget.ini --no-clobber --page-requisites --wait=1 --remote-encoding=UTF-8 --directory-prefix=bbl-site/ "http://tloeg.bbleague.se/default.asp?p=ma&so=t&t=%E4ng"
+wget --config=wget.ini --no-clobber --page-requisites --wait=1 --remote-encoding=UTF-8 --directory-prefix=bbl-site/ "http://tloeg.bbleague.se/default.asp?p=plo&t=%E4ng"
+wget --config=wget.ini --no-clobber --page-requisites --wait=1 --remote-encoding=UTF-8 --directory-prefix=bbl-site/ "http://tloeg.bbleague.se/default.asp?p=plo&t=%E4ng&sort=spp"
+wget --config=wget.ini --no-clobber --page-requisites --wait=1 --remote-encoding=UTF-8 --directory-prefix=bbl-site/ "http://tloeg.bbleague.se/default.asp?p=plo&t=%E4ng&sort=typ"
+wget --config=wget.ini --no-clobber --page-requisites --wait=1 --remote-encoding=UTF-8 --directory-prefix=bbl-site/ "http://tloeg.bbleague.se/default.asp?p=ro&t=%E4ng"
+wget --config=wget.ini --no-clobber --page-requisites --wait=1 --remote-encoding=UTF-8 --directory-prefix=bbl-site/ "http://tloeg.bbleague.se/default.asp?p=tm&t=%E4ng"
+
 SITE=$1
 cd bbl-site/$SITE
 
@@ -104,3 +112,11 @@ mv 'default.asp?p=plo&t=v'$'\344''t&sort=spp' 'default.asp?p=plo&t=vät&sort=spp
 mv 'default.asp?p=plo&t=v'$'\344''t&sort=typ' 'default.asp?p=plo&t=vät&sort=typ'
 mv 'default.asp?p=ro&t=v'$'\344''t' 'default.asp?p=ro&t=vät'
 mv 'default.asp?p=tm&t=v'$'\344''t' 'default.asp?p=tm&t=vät'
+
+# äng = Ängårdsbergen Avengers
+mv 'default.asp?p=ma&so=t&t='$'\344''ng' 'default.asp?p=ma&so=t&t=äng'
+mv 'default.asp?p=plo&t='$'\344''ng' 'default.asp?p=plo&t=äng'
+mv 'default.asp?p=plo&t='$'\344''ng&sort=spp' 'default.asp?p=plo&t=äng&sort=spp'
+mv 'default.asp?p=plo&t='$'\344''ng&sort=typ' 'default.asp?p=plo&t=äng&sort=typ'
+mv 'default.asp?p=ro&t='$'\344''ng' 'default.asp?p=ro&t=äng'
+mv 'default.asp?p=tm&t='$'\344''ng' 'default.asp?p=tm&t=äng'
