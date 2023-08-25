@@ -62,6 +62,7 @@ export class Team extends TeamReference {
   coCoach?: CoachReference;
   @Field(() => TeamTypeReference)
   teamType: TeamTypeReference;
+  // TODO Include array of TeamInCompetitionReference records
 }
 
 @InputType('CompetitionReferenceInput')
@@ -73,4 +74,18 @@ export class CompetitionReference extends ExternallyIdentifiable {}
 export class Competition extends CompetitionReference {
   @Field()
   name: string;
+  // TODO Include array of TeamInCompetitionReference records
 }
+
+@InputType('TeamInCompetitionReferenceInput')
+@ObjectType()
+export class TeamInCompetitionReference extends Identifiable {
+  @Field(() => TeamReference, { nullable: true })
+  team?: TeamReference;
+  @Field(() => CompetitionReference, { nullable: true })
+  competition?: CompetitionReference;
+}
+
+@InputType('TeamInCompetitionInput')
+@ObjectType()
+export class TeamInCompetition extends TeamInCompetitionReference {}

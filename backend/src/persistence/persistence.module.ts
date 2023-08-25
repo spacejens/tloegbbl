@@ -6,6 +6,7 @@ import { RawDataController } from './raw-data.controller';
 import { TeamTypeService } from './team-type.service';
 import { TeamService } from './team.service';
 import { CompetitionService } from './competition.service';
+import { TeamInCompetitionService } from './team-in-competition.service';
 
 @Module({
   providers: [
@@ -14,8 +15,9 @@ import { CompetitionService } from './competition.service';
     TeamTypeService,
     TeamService,
     CompetitionService,
+    TeamInCompetitionService,
   ],
   controllers: [CountController, RawDataController],
-  exports: [CoachService, TeamTypeService, TeamService, CompetitionService],
+  exports: [CoachService, TeamTypeService, TeamService, CompetitionService, TeamInCompetitionService],
 })
 export class PersistenceModule {}

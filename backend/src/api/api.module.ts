@@ -7,6 +7,7 @@ import { ImportModule } from '../import/import.module';
 import { TeamTypeResolver } from './team-type.resolver';
 import { TeamResolver } from './team.resolver';
 import { CompetitionResolver } from './competition.resolver';
+import { TeamInCompetitionResolver } from './team-in-competition.resolver';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CompetitionResolver } from './competition.resolver';
     TeamTypeResolver,
     TeamResolver,
     CompetitionResolver,
+    TeamInCompetitionResolver,
   ],
 })
 export class ApiModule {}

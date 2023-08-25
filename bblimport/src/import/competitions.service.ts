@@ -72,7 +72,6 @@ export class CompetitionsService {
 
   async uploadCompetition(competition: BblCompetition): Promise<void> {
     // Upload the competition data
-    console.log('Participants: ' + JSON.stringify(competition.participants)); // TODO Actually upload participants instead of printing
     const result = await this.api.mutation(
       'importCompetition',
       'competition',
@@ -89,5 +88,39 @@ export class CompetitionsService {
       ],
     );
     console.log(JSON.stringify(result.data));
+    for (const participant of competition.participants) {
+      const participantResult = await this.api.mutation(
+        'importTeamInCompetition',
+        'teamInCompetition',
+        {
+          team: {
+            externalIds: [this.api.externalId(participant.id)],
+          },
+          competition: {
+            externalIds: [this.api.externalId(competition.id)],
+          },
+        },
+        [
+          'id',
+          {
+            team: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+          {
+            competition: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+        ],
+      );
+      console.log(JSON.stringify(participantResult.data));
+    }
   }
 }

@@ -60,6 +60,7 @@ model Team {
   coCoachId               Int?                      @map("co_coach_id")
   teamType                TeamType                  @relation(fields: [teamTypeId], references: [id])
   teamTypeId              Int                       @map("team_type_id")
+  competitions            TeamInCompetition[]
 
   @@map("team")
 }
@@ -80,6 +81,7 @@ model Competition {
   id                      Int                       @default(autoincrement()) @id
   name                    String
   externalIds             ExternalCompetitionId[]
+  teams                   TeamInCompetition[]
 
   @@map("competition")
 }
@@ -94,4 +96,16 @@ model ExternalCompetitionId {
   @@unique([externalId, externalSystem])
 
   @@map("external_competition_id")
+}
+
+model TeamInCompetition {
+  id                      Int                       @default(autoincrement()) @id
+  team                    Team                      @relation(fields: [teamId], references: [id])
+  teamId                  Int                       @map("team_id")
+  competition             Competition               @relation(fields: [competitionId], references: [id])
+  competitionId           Int                       @map("competition_id")
+
+  @@unique([teamId, competitionId])
+
+  @@map("team_in_competition")
 }
