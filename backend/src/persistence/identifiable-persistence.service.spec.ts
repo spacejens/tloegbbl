@@ -1,22 +1,22 @@
+import { IdentifiablePersistenceService } from './identifiable-persistence.service';
+import { Identifiable } from '../dtos';
 import { Injectable } from '@nestjs/common';
-import { ExternallyIdentifiablePersistenceService } from './externally-identifiable-persistence.service';
-import { ExternallyIdentifiable } from '../dtos';
 
-class TestReference extends ExternallyIdentifiable {}
+class TestReference extends Identifiable {}
 
 class TestEntity extends TestReference {
   name: string;
 }
 
 @Injectable()
-class TestPersistenceService extends ExternallyIdentifiablePersistenceService<
+class TestPersistenceService extends IdentifiablePersistenceService<
   TestReference,
   TestEntity
 > {
   findById(): Promise<TestEntity> {
     throw new Error('Method not implemented.');
   }
-  findByExternalId(): Promise<TestEntity> {
+  findByReference(): Promise<TestEntity> {
     throw new Error('Method not implemented.');
   }
   create(): Promise<TestEntity> {
@@ -27,7 +27,7 @@ class TestPersistenceService extends ExternallyIdentifiablePersistenceService<
   }
 }
 
-describe('ExternallyIdentifiablePersistenceService', () => {
+describe('IdentifiablePersistenceService', () => {
   let persistenceService: TestPersistenceService;
   const prismaDelegate = {
     count: jest.fn(),
@@ -40,6 +40,14 @@ describe('ExternallyIdentifiablePersistenceService', () => {
 
   it('should be defined', () => {
     expect(persistenceService).toBeDefined();
+  });
+
+  describe('count', () => {
+    it('should return the count', async () => {
+      prismaDelegate.count = jest.fn().mockReturnValue(23);
+      const result = await persistenceService.count();
+      expect(result).toBe(23);
+    });
   });
 
   // TODO Implement test cases

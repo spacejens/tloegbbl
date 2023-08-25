@@ -1,5 +1,12 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 
+@InputType('Identifiable')
+@ObjectType()
+export class Identifiable {
+  @Field(() => Int, { nullable: true })
+  id?: number;
+}
+
 @InputType('ExternalIdInput')
 @ObjectType()
 export class ExternalId {
@@ -13,9 +20,7 @@ export class ExternalId {
 
 @InputType('ExternallyIdentifiableInput')
 @ObjectType()
-export class ExternallyIdentifiable {
-  @Field(() => Int, { nullable: true })
-  id?: number;
+export class ExternallyIdentifiable extends Identifiable {
   @Field(() => [ExternalId], { nullable: true })
   externalIds?: ExternalId[];
 }
