@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PersistenceService } from '../persistence/persistence.service';
+import { ExternallyIdentifiablePersistenceService } from '../persistence/externally-identifiable-persistence.service';
 import { CombineDataService } from './combine-data.service';
 import { ExternallyIdentifiable } from '../dtos';
 
@@ -9,7 +9,7 @@ export abstract class ImportService<
   E extends R,
 > {
   constructor(
-    readonly persistenceService: PersistenceService<R, E>,
+    readonly persistenceService: ExternallyIdentifiablePersistenceService<R, E>,
     readonly combineDataService: CombineDataService,
   ) {}
 

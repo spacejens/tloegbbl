@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ExternalId, TeamType, TeamTypeReference } from '../dtos';
-import { PersistenceService } from './persistence.service';
+import { ExternallyIdentifiablePersistenceService } from './externally-identifiable-persistence.service';
 
 @Injectable()
-export class TeamTypeService extends PersistenceService<
+export class TeamTypeService extends ExternallyIdentifiablePersistenceService<
   TeamTypeReference,
   TeamType
 > {

@@ -3,10 +3,13 @@ import { PrismaService } from './prisma.service';
 import { ExternalId, Team, TeamReference } from '../dtos';
 import { TeamTypeService } from './team-type.service';
 import { CoachService } from './coach.service';
-import { PersistenceService } from './persistence.service';
+import { ExternallyIdentifiablePersistenceService } from './externally-identifiable-persistence.service';
 
 @Injectable()
-export class TeamService extends PersistenceService<TeamReference, Team> {
+export class TeamService extends ExternallyIdentifiablePersistenceService<
+  TeamReference,
+  Team
+> {
   constructor(
     private prisma: PrismaService,
     private coachService: CoachService,

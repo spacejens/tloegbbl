@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ExternalId, ExternallyIdentifiable } from '../dtos';
 
 @Injectable()
-export abstract class PersistenceService<
+export abstract class ExternallyIdentifiablePersistenceService<
   R extends ExternallyIdentifiable,
   E extends R,
 > {

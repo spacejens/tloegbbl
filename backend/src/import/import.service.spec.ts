@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PersistenceService } from '../persistence/persistence.service';
+import { ExternallyIdentifiablePersistenceService } from '../persistence/externally-identifiable-persistence.service';
 import { ImportService } from './import.service';
 import { Injectable } from '@nestjs/common';
 import { CombineDataService } from './combine-data.service';
@@ -13,7 +13,7 @@ class TestEntity extends TestReference {
 }
 
 @Injectable()
-class TestPersistenceService extends PersistenceService<
+class TestPersistenceService extends ExternallyIdentifiablePersistenceService<
   TestReference,
   TestEntity
 > {

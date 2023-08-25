@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PersistenceService } from './persistence.service';
+import { ExternallyIdentifiablePersistenceService } from './externally-identifiable-persistence.service';
 import { ExternallyIdentifiable } from '../dtos';
 
 class TestReference extends ExternallyIdentifiable {}
@@ -9,7 +9,7 @@ class TestEntity extends TestReference {
 }
 
 @Injectable()
-class TestPersistenceService extends PersistenceService<
+class TestPersistenceService extends ExternallyIdentifiablePersistenceService<
   TestReference,
   TestEntity
 > {
@@ -27,7 +27,7 @@ class TestPersistenceService extends PersistenceService<
   }
 }
 
-describe('PersistenceService', () => {
+describe('ExternallyIdentifiablePersistenceService', () => {
   let persistenceService: TestPersistenceService;
   const prismaDelegate = {
     count: jest.fn(),

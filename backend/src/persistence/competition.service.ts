@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PersistenceService } from './persistence.service';
+import { ExternallyIdentifiablePersistenceService } from './externally-identifiable-persistence.service';
 import { Competition, CompetitionReference, ExternalId } from '../dtos';
 import { PrismaService } from './prisma.service';
 
 @Injectable()
-export class CompetitionService extends PersistenceService<
+export class CompetitionService extends ExternallyIdentifiablePersistenceService<
   CompetitionReference,
   Competition
 > {

@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Coach, CoachReference, ExternalId } from '../dtos';
-import { PersistenceService } from './persistence.service';
+import { ExternallyIdentifiablePersistenceService } from './externally-identifiable-persistence.service';
 
 @Injectable()
-export class CoachService extends PersistenceService<CoachReference, Coach> {
+export class CoachService extends ExternallyIdentifiablePersistenceService<
+  CoachReference,
+  Coach
+> {
   constructor(private prisma: PrismaService) {
     super(prisma.coach);
   }
