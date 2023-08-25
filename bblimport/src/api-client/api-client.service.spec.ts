@@ -1,24 +1,61 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApiClientService } from './api-client.service';
-import { HttpService } from '@nestjs/axios';
+import { HttpWrapperService } from './http-wrapper.service';
 import { mock } from 'jest-mock-extended';
 
 describe('ApiClientService', () => {
   let service: ApiClientService;
+  let httpService: HttpWrapperService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApiClientService,
-        { provide: HttpService, useValue: mock<HttpService>() },
+        { provide: HttpWrapperService, useValue: mock<HttpWrapperService>() },
       ],
     }).compile();
 
     service = module.get<ApiClientService>(ApiClientService);
+    httpService = module.get<HttpWrapperService>(HttpWrapperService);
+
+    httpService.post = jest.fn().mockImplementation(() => {
+      return {
+        status: 200,
+        data: {},
+      };
+    });
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('externalId', () => {
+    it('should wrap in object with external system', () => {
+      expect(service.externalId('MyId')).toEqual({
+        externalId: 'MyId',
+        externalSystem: 'tloeg.bbleague.se',
+      });
+    });
+  });
+
+  describe('mutation', () => {
+    it('should format numerical argument correctly', () => {
+      service.mutation('theName', 'theArgument', { num: 3 }, ['id']);
+      expect(httpService.post).toHaveBeenCalledWith(
+        'http://localhost:3000/api',
+        {
+          query: 'mutation {theName(theArgument: {num:3}) {id}}',
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+    });
+
+    // TODO Add tests for checking result of POST (successful, and failures throwing exceptions)
   });
 
   // TODO Add tests for the whole mutation method

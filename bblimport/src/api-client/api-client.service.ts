@@ -1,6 +1,6 @@
-import { HttpService } from '@nestjs/axios';
+import { HttpWrapperService } from './http-wrapper.service';
 import { Injectable } from '@nestjs/common';
-import { firstValueFrom } from 'rxjs';
+import { AxiosResponse } from 'axios';
 
 export type ReturnedFields = ReturnedField[];
 
@@ -10,7 +10,7 @@ export type ReturnedSubfield = { [fieldName: string]: ReturnedFields };
 
 @Injectable()
 export class ApiClientService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpWrapperService) {}
 
   // TODO Replace this implementation with actual generated (from schema) GraphQL code of some kind
 
@@ -26,24 +26,21 @@ export class ApiClientService {
     argumentName: string,
     argument: any,
     returnedFields: ReturnedFields,
-  ): Promise<any> {
-    // TODO Define better typing of API result
+  ): Promise<AxiosResponse<any, any>> {
     const query: string = `mutation {${name}(${argumentName}: ${this.formatArgument(
       argument,
     )}) ${this.formatReturnedFields(returnedFields)}}`;
-    const result = await firstValueFrom(
-      this.httpService.post(
-        // TODO Get API URL from configuration
-        'http://localhost:3000/api',
-        {
-          query: query,
+    const result = await this.httpService.post(
+      // TODO Get API URL from configuration
+      'http://localhost:3000/api',
+      {
+        query: query,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      ),
+      },
     );
     if (result.status != 200 || result.data.errors) {
       throw new Error(
