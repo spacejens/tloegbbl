@@ -62,7 +62,7 @@ export class Team extends TeamReference {
   coCoach?: CoachReference;
   @Field(() => TeamTypeReference)
   teamType: TeamTypeReference;
-  // TODO Include array of TeamInCompetitionReference records
+  // TODO Include array of TeamInCompetitionReference records? Or should API instead query using a partial TeamInCompetitionReference?
 }
 
 @InputType('CompetitionReferenceInput')
@@ -74,7 +74,7 @@ export class CompetitionReference extends ExternallyIdentifiable {}
 export class Competition extends CompetitionReference {
   @Field()
   name: string;
-  // TODO Include array of TeamInCompetitionReference records
+  // TODO Include array of TeamInCompetitionReference records? Or should API instead query using a partial TeamInCompetitionReference?
 }
 
 @InputType('TeamInCompetitionReferenceInput')
