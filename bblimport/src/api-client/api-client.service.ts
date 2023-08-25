@@ -15,7 +15,7 @@ export class ApiClientService {
   // TODO Replace this implementation with actual generated (from schema) GraphQL code of some kind
 
   externalId(id: string) {
-    return {
+    return id && {
       externalId: id,
       externalSystem: 'tloeg.bbleague.se', // TODO Get externalSystem from configuration
     };
@@ -57,6 +57,7 @@ export class ApiClientService {
       return (
         '[' +
         argument
+          .filter((value) => value != undefined)
           .map((value) => {
             return this.formatArgument(value);
           })

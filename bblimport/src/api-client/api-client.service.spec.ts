@@ -37,6 +37,10 @@ describe('ApiClientService', () => {
         externalSystem: 'tloeg.bbleague.se',
       });
     });
+
+    it('should ignore undefined values', () => {
+      expect(service.externalId(undefined)).toBe(undefined);
+    });
   });
 
   describe('mutation', () => {
@@ -151,6 +155,34 @@ describe('ApiClientService', () => {
           {
             query:
               'mutation {theName(theArgument: {array:[{first:"value"},{second:"value"}]}) {}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('array argument ignores undefined elements', () => {
+        service.mutation(
+          'theName',
+          'theArgument',
+          {
+            array: [
+              {
+                only: 'value',
+              },
+              undefined,
+            ],
+          },
+          [],
+        );
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query:
+              'mutation {theName(theArgument: {array:[{only:"value"}]}) {}}',
           },
           {
             headers: {

@@ -11,6 +11,7 @@ export type BblTeamReference = {
 // TODO Add more data points about each team
 export type BblTeam = BblTeamReference & {
   name: string;
+  extraId?: string
   headCoach: BblCoachReference;
   coCoach?: BblCoachReference;
   teamType: BblTeamType;
@@ -57,11 +58,21 @@ export class TeamsService {
         ),
         name: teamTypeElements[0].innerText,
       };
+      // Find extra team ID (if different in links due to character encoding issues)
+      const teamSelfLinkElements = teamViewFile.querySelectorAll('td a.opacity');
+      if (teamSelfLinkElements.length != 2) {
+        throw new Error(`Did not expect to find ${teamSelfLinkElements.length} self links on team page for ${teamId}`);
+      }
+      let extraId: string = this.fileReaderService.findQueryParamInHref('t', teamSelfLinkElements[0].getAttribute('href'));
+      if (teamId === extraId) {
+        extraId = undefined;
+      }
       // Find head coach and co-coaches (if present)
       const coachElements = teamViewFile.querySelectorAll('td b span');
       if (coachElements.length === 1) {
         teams.push({
           id: teamId,
+          extraId: extraId,
           name: teamName,
           headCoach: {
             name: coachElements[0].innerText,
@@ -72,6 +83,7 @@ export class TeamsService {
         // TODO Merge one/many coaches cases into a single case to avoid code duplication
         teams.push({
           id: teamId,
+          extraId: extraId,
           name: teamName,
           headCoach: {
             name: coachElements[0].innerText,
@@ -108,7 +120,7 @@ export class TeamsService {
       'team',
       {
         name: team.name,
-        externalIds: [this.api.externalId(team.id)],
+        externalIds: [this.api.externalId(team.id), this.api.externalId(team.extraId)],
         headCoach: {
           externalIds: [this.api.externalId(team.headCoach.name)],
         },
