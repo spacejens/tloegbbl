@@ -236,6 +236,44 @@ describe('ApiClientService', () => {
       });
     });
 
-    // TODO Add tests for checking result of POST (successful, and failures throwing exceptions)
+    describe('error handling', () => {
+      it('HTTP status is not 200', async () => {
+        httpService.post = jest.fn().mockImplementation(() => {
+          return {
+            status: 201,
+            data: {},
+          };
+        });
+        let gotException: boolean = false;
+        await service
+          .mutation('theName', 'theArgument', {}, [])
+          .catch(() => {
+            gotException = true;
+          })
+          .finally(() => {
+            expect(gotException).toBe(true);
+          });
+      });
+
+      it('data contains errors', async () => {
+        httpService.post = jest.fn().mockImplementation(() => {
+          return {
+            status: 200,
+            data: {
+              errors: 'exist',
+            },
+          };
+        });
+        let gotException: boolean = false;
+        await service
+          .mutation('theName', 'theArgument', {}, [])
+          .catch(() => {
+            gotException = true;
+          })
+          .finally(() => {
+            expect(gotException).toBe(true);
+          });
+      });
+    });
   });
 });
