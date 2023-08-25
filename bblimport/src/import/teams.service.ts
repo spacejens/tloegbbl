@@ -11,7 +11,7 @@ export type BblTeamReference = {
 // TODO Add more data points about each team
 export type BblTeam = BblTeamReference & {
   name: string;
-  extraId?: string
+  extraId?: string;
   headCoach: BblCoachReference;
   coCoach?: BblCoachReference;
   teamType: BblTeamType;
@@ -59,11 +59,17 @@ export class TeamsService {
         name: teamTypeElements[0].innerText,
       };
       // Find extra team ID (if different in links due to character encoding issues)
-      const teamSelfLinkElements = teamViewFile.querySelectorAll('td a.opacity');
+      const teamSelfLinkElements =
+        teamViewFile.querySelectorAll('td a.opacity');
       if (teamSelfLinkElements.length != 2) {
-        throw new Error(`Did not expect to find ${teamSelfLinkElements.length} self links on team page for ${teamId}`);
+        throw new Error(
+          `Did not expect to find ${teamSelfLinkElements.length} self links on team page for ${teamId}`,
+        );
       }
-      let extraId: string = this.fileReaderService.findQueryParamInHref('t', teamSelfLinkElements[0].getAttribute('href'));
+      let extraId: string = this.fileReaderService.findQueryParamInHref(
+        't',
+        teamSelfLinkElements[0].getAttribute('href'),
+      );
       if (teamId === extraId) {
         extraId = undefined;
       }
@@ -120,7 +126,10 @@ export class TeamsService {
       'team',
       {
         name: team.name,
-        externalIds: [this.api.externalId(team.id), this.api.externalId(team.extraId)],
+        externalIds: [
+          this.api.externalId(team.id),
+          this.api.externalId(team.extraId),
+        ],
         headCoach: {
           externalIds: [this.api.externalId(team.headCoach.name)],
         },

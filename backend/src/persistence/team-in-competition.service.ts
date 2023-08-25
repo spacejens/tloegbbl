@@ -67,7 +67,9 @@ export class TeamInCompetitionService extends IdentifiablePersistenceService<
         if (results.length == 1) {
           return results[0];
         } else if (results.length > 1) {
-          throw new Error(`Found ${results.length} records for team ${team.id} in competition ${competition.id}`);
+          throw new Error(
+            `Found ${results.length} records for team ${team.id} in competition ${competition.id}`,
+          );
         }
       }
     }
@@ -85,7 +87,9 @@ export class TeamInCompetitionService extends IdentifiablePersistenceService<
       input.competition,
     );
     if (!competition) {
-      throw new Error(`Failed to find competition: ${JSON.stringify(input.competition)}`);
+      throw new Error(
+        `Failed to find competition: ${JSON.stringify(input.competition)}`,
+      );
     }
     return await this.prisma.teamInCompetition.create({
       data: {

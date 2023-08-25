@@ -15,10 +15,12 @@ export class ApiClientService {
   // TODO Replace this implementation with actual generated (from schema) GraphQL code of some kind
 
   externalId(id: string) {
-    return id && {
-      externalId: id,
-      externalSystem: 'tloeg.bbleague.se', // TODO Get externalSystem from configuration
-    };
+    return (
+      id && {
+        externalId: id,
+        externalSystem: 'tloeg.bbleague.se', // TODO Get externalSystem from configuration
+      }
+    );
   }
 
   async mutation(

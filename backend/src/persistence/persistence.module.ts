@@ -18,6 +18,12 @@ import { TeamInCompetitionService } from './team-in-competition.service';
     TeamInCompetitionService,
   ],
   controllers: [CountController, RawDataController],
-  exports: [CoachService, TeamTypeService, TeamService, CompetitionService, TeamInCompetitionService],
+  exports: [
+    CoachService,
+    TeamTypeService,
+    TeamService,
+    CompetitionService,
+    TeamInCompetitionService,
+  ],
 })
 export class PersistenceModule {}
