@@ -52,8 +52,7 @@ export class ApiClientService {
     return result;
   }
 
-  // TODO Make private after test has verified that it kind of works
-  formatArgument(argument: any): string {
+  private formatArgument(argument: any): string {
     if (argument instanceof Array) {
       return (
         '[' +

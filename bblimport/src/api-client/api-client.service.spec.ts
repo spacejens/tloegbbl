@@ -40,64 +40,130 @@ describe('ApiClientService', () => {
   });
 
   describe('mutation', () => {
-    it('should format numerical argument correctly', () => {
-      service.mutation('theName', 'theArgument', { num: 3 }, ['id']);
-      expect(httpService.post).toHaveBeenCalledWith(
-        'http://localhost:3000/api',
-        {
-          query: 'mutation {theName(theArgument: {num:3}) {id}}',
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
+    describe('format arguments', () => {
+      it('empty argument as empty', () => {
+        service.mutation('theName', 'theArgument', {}, ['id']);
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query: 'mutation {theName(theArgument: {}) {id}}',
           },
-        },
-      );
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('numerical argument as plain value', () => {
+        service.mutation('theName', 'theArgument', { num: 3 }, ['id']);
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query: 'mutation {theName(theArgument: {num:3}) {id}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('string argument with quotes', () => {
+        service.mutation('theName', 'theArgument', { str: 'text' }, ['id']);
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query: 'mutation {theName(theArgument: {str:"text"}) {id}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('undefined argument should be excluded', () => {
+        service.mutation(
+          'theName',
+          'theArgument',
+          { present: 'here', missing: undefined },
+          ['id'],
+        );
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query: 'mutation {theName(theArgument: {present:"here"}) {id}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('structured argument as same structure', () => {
+        service.mutation(
+          'theName',
+          'theArgument',
+          {
+            inner: {
+              key: 'value',
+            },
+          },
+          ['id'],
+        );
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query: 'mutation {theName(theArgument: {inner:{key:"value"}}) {id}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('array argument as same structure', () => {
+        service.mutation(
+          'theName',
+          'theArgument',
+          {
+            array: [
+              {
+                first: 'value',
+              },
+              {
+                second: 'value',
+              },
+            ],
+          },
+          ['id'],
+        );
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query: 'mutation {theName(theArgument: {array:[{first:"value"},{second:"value"}]}) {id}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
     });
 
     // TODO Add tests for checking result of POST (successful, and failures throwing exceptions)
   });
 
   // TODO Add tests for the whole mutation method
-
-  it('should format argument correctly', () => {
-    expect(service.formatArgument({})).toBe('{}');
-    expect(
-      service.formatArgument({
-        num: 3,
-      }),
-    ).toBe('{num:3}');
-    expect(
-      service.formatArgument({
-        str: 'text',
-      }),
-    ).toBe('{str:"text"}');
-    expect(
-      service.formatArgument({
-        present: 'here',
-        missing: undefined,
-      }),
-    ).toBe('{present:"here"}');
-    expect(
-      service.formatArgument({
-        inner: {
-          key: 'value',
-        },
-      }),
-    ).toBe('{inner:{key:"value"}}');
-    expect(
-      service.formatArgument({
-        array: [
-          {
-            first: 'value',
-          },
-          {
-            second: 'value',
-          },
-        ],
-      }),
-    ).toBe('{array:[{first:"value"},{second:"value"}]}');
-  });
 
   it('should format returned fields correctly', () => {
     expect(service.formatReturnedFields(['id', 'name'])).toBe('{id,name}');
