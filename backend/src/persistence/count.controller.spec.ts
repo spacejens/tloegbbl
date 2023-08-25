@@ -5,6 +5,7 @@ import { mock } from 'jest-mock-extended';
 import { TeamTypeService } from './team-type.service';
 import { TeamService } from './team.service';
 import { CompetitionService } from './competition.service';
+import { TeamInCompetitionService } from './team-in-competition.service';
 
 describe('CountController', () => {
   let controller: CountController;
@@ -12,6 +13,7 @@ describe('CountController', () => {
   let teamTypeService: TeamTypeService;
   let teamService: TeamService;
   let competitionService: CompetitionService;
+  let teamInCompetitionService: TeamInCompetitionService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,6 +22,10 @@ describe('CountController', () => {
         { provide: TeamTypeService, useValue: mock<TeamTypeService>() },
         { provide: TeamService, useValue: mock<TeamService>() },
         { provide: CompetitionService, useValue: mock<CompetitionService>() },
+        {
+          provide: TeamInCompetitionService,
+          useValue: mock<TeamInCompetitionService>(),
+        },
       ],
       controllers: [CountController],
     }).compile();
@@ -29,6 +35,9 @@ describe('CountController', () => {
     teamTypeService = module.get<TeamTypeService>(TeamTypeService);
     teamService = module.get<TeamService>(TeamService);
     competitionService = module.get<CompetitionService>(CompetitionService);
+    teamInCompetitionService = module.get<TeamInCompetitionService>(
+      TeamInCompetitionService,
+    );
   });
 
   it('should be defined', () => {
@@ -41,12 +50,14 @@ describe('CountController', () => {
       teamTypeService.count = jest.fn().mockReturnValue(222);
       teamService.count = jest.fn().mockReturnValue(333);
       competitionService.count = jest.fn().mockReturnValue(444);
+      teamInCompetitionService.count = jest.fn().mockReturnValue(555);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
         coaches: 111,
         teamTypes: 222,
         teams: 333,
         competitions: 444,
+        teamsInCompetitions: 555,
       });
     });
   });
