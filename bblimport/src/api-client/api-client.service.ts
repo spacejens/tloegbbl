@@ -82,8 +82,7 @@ export class ApiClientService {
     );
   }
 
-  // TODO Make private after test has verified that it kind of works
-  formatReturnedFields(returnedFields: ReturnedFields): string {
+  private formatReturnedFields(returnedFields: ReturnedFields): string {
     return (
       '{' +
       returnedFields

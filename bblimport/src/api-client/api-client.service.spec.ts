@@ -42,11 +42,11 @@ describe('ApiClientService', () => {
   describe('mutation', () => {
     describe('format arguments', () => {
       it('empty argument as empty', () => {
-        service.mutation('theName', 'theArgument', {}, ['id']);
+        service.mutation('theName', 'theArgument', {}, []);
         expect(httpService.post).toHaveBeenCalledWith(
           'http://localhost:3000/api',
           {
-            query: 'mutation {theName(theArgument: {}) {id}}',
+            query: 'mutation {theName(theArgument: {}) {}}',
           },
           {
             headers: {
@@ -57,11 +57,11 @@ describe('ApiClientService', () => {
       });
 
       it('numerical argument as plain value', () => {
-        service.mutation('theName', 'theArgument', { num: 3 }, ['id']);
+        service.mutation('theName', 'theArgument', { num: 3 }, []);
         expect(httpService.post).toHaveBeenCalledWith(
           'http://localhost:3000/api',
           {
-            query: 'mutation {theName(theArgument: {num:3}) {id}}',
+            query: 'mutation {theName(theArgument: {num:3}) {}}',
           },
           {
             headers: {
@@ -72,11 +72,11 @@ describe('ApiClientService', () => {
       });
 
       it('string argument with quotes', () => {
-        service.mutation('theName', 'theArgument', { str: 'text' }, ['id']);
+        service.mutation('theName', 'theArgument', { str: 'text' }, []);
         expect(httpService.post).toHaveBeenCalledWith(
           'http://localhost:3000/api',
           {
-            query: 'mutation {theName(theArgument: {str:"text"}) {id}}',
+            query: 'mutation {theName(theArgument: {str:"text"}) {}}',
           },
           {
             headers: {
@@ -91,12 +91,12 @@ describe('ApiClientService', () => {
           'theName',
           'theArgument',
           { present: 'here', missing: undefined },
-          ['id'],
+          [],
         );
         expect(httpService.post).toHaveBeenCalledWith(
           'http://localhost:3000/api',
           {
-            query: 'mutation {theName(theArgument: {present:"here"}) {id}}',
+            query: 'mutation {theName(theArgument: {present:"here"}) {}}',
           },
           {
             headers: {
@@ -115,12 +115,12 @@ describe('ApiClientService', () => {
               key: 'value',
             },
           },
-          ['id'],
+          [],
         );
         expect(httpService.post).toHaveBeenCalledWith(
           'http://localhost:3000/api',
           {
-            query: 'mutation {theName(theArgument: {inner:{key:"value"}}) {id}}',
+            query: 'mutation {theName(theArgument: {inner:{key:"value"}}) {}}',
           },
           {
             headers: {
@@ -144,12 +144,88 @@ describe('ApiClientService', () => {
               },
             ],
           },
-          ['id'],
+          [],
         );
         expect(httpService.post).toHaveBeenCalledWith(
           'http://localhost:3000/api',
           {
-            query: 'mutation {theName(theArgument: {array:[{first:"value"},{second:"value"}]}) {id}}',
+            query:
+              'mutation {theName(theArgument: {array:[{first:"value"},{second:"value"}]}) {}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+    });
+
+    describe('format returned fields', () => {
+      it('no returned fields', () => {
+        service.mutation('theName', 'theArgument', {}, []);
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query: 'mutation {theName(theArgument: {}) {}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('field names', () => {
+        service.mutation('theName', 'theArgument', {}, ['id', 'name']);
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query: 'mutation {theName(theArgument: {}) {id,name}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('field structure', () => {
+        service.mutation('theName', 'theArgument', {}, [
+          'id',
+          { externalIds: ['id', 'externalId', 'externalSystem'] },
+          'name',
+        ]);
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query:
+              'mutation {theName(theArgument: {}) {id,externalIds {id,externalId,externalSystem},name}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('field structure with multiple lists (weird edge case)', () => {
+        service.mutation('theName', 'theArgument', {}, [
+          'id',
+          {
+            externalIds: ['id', 'externalId', 'externalSystem'],
+            more: ['stuff'],
+          },
+          'name',
+        ]);
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query:
+              'mutation {theName(theArgument: {}) {id,externalIds {id,externalId,externalSystem},more {stuff},name}}',
           },
           {
             headers: {
@@ -161,30 +237,5 @@ describe('ApiClientService', () => {
     });
 
     // TODO Add tests for checking result of POST (successful, and failures throwing exceptions)
-  });
-
-  // TODO Add tests for the whole mutation method
-
-  it('should format returned fields correctly', () => {
-    expect(service.formatReturnedFields(['id', 'name'])).toBe('{id,name}');
-    expect(
-      service.formatReturnedFields([
-        'id',
-        {
-          externalIds: ['id', 'externalId', 'externalSystem'],
-        },
-        'name',
-      ]),
-    ).toBe('{id,externalIds {id,externalId,externalSystem},name}');
-    expect(
-      service.formatReturnedFields([
-        'id',
-        {
-          externalIds: ['id', 'externalId', 'externalSystem'],
-          more: ['stuff'],
-        },
-        'name',
-      ]),
-    ).toBe('{id,externalIds {id,externalId,externalSystem},more {stuff},name}');
   });
 });
