@@ -75,6 +75,7 @@ export class PlayerTypeReference extends ExternallyIdentifiable {}
 export class PlayerType extends PlayerTypeReference {
   @Field()
   name: string;
+  // TODO Add many-to-many relation between player type and team type (explicit, to store e.g. number and cost of player type)
 }
 
 @InputType('PlayerReferenceInput')
