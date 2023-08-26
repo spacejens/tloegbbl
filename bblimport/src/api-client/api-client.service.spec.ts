@@ -75,12 +75,27 @@ describe('ApiClientService', () => {
         );
       });
 
-      it('string argument with quotes', () => {
+      it('string argument quoted', () => {
         service.mutation('theName', 'theArgument', { str: 'text' }, []);
         expect(httpService.post).toHaveBeenCalledWith(
           'http://localhost:3000/api',
           {
             query: 'mutation {theName(theArgument: {str:"text"}) {}}',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+      });
+
+      it('string argument with quotes escaped and quoted', () => {
+        service.mutation('theName', 'theArgument', { str: 'te"x"t' }, []);
+        expect(httpService.post).toHaveBeenCalledWith(
+          'http://localhost:3000/api',
+          {
+            query: 'mutation {theName(theArgument: {str:"te\\"x\\"t"}) {}}',
           },
           {
             headers: {

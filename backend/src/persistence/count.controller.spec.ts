@@ -8,6 +8,7 @@ import { CompetitionService } from './competition.service';
 import { TeamInCompetitionService } from './team-in-competition.service';
 import { MatchService } from './match.service';
 import { TeamInMatchService } from './team-in-match.service';
+import { PlayerService } from './player.service';
 
 describe('CountController', () => {
   let controller: CountController;
@@ -18,6 +19,7 @@ describe('CountController', () => {
   let teamInCompetitionService: TeamInCompetitionService;
   let matchService: MatchService;
   let teamInMatchService: TeamInMatchService;
+  let playerService: PlayerService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,6 +34,7 @@ describe('CountController', () => {
         },
         { provide: MatchService, useValue: mock<MatchService>() },
         { provide: TeamInMatchService, useValue: mock<TeamInMatchService>() },
+        { provide: PlayerService, useValue: mock<PlayerService>() },
       ],
       controllers: [CountController],
     }).compile();
@@ -46,6 +49,7 @@ describe('CountController', () => {
     );
     matchService = module.get<MatchService>(MatchService);
     teamInMatchService = module.get<TeamInMatchService>(TeamInMatchService);
+    playerService = module.get<PlayerService>(PlayerService);
   });
 
   it('should be defined', () => {
@@ -61,6 +65,7 @@ describe('CountController', () => {
       teamInCompetitionService.count = jest.fn().mockReturnValue(555);
       matchService.count = jest.fn().mockReturnValue(666);
       teamInMatchService.count = jest.fn().mockReturnValue(777);
+      playerService.count = jest.fn().mockReturnValue(888);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
         coaches: 111,
@@ -70,6 +75,7 @@ describe('CountController', () => {
         teamsInCompetitions: 555,
         matches: 666,
         teamsInMatches: 777,
+        players: 888,
       });
     });
   });

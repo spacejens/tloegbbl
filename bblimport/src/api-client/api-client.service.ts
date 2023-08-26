@@ -75,7 +75,8 @@ export class ApiClientService {
           if (typeof argument[key] === 'number') {
             return key + ':' + argument[key];
           } else if (typeof argument[key] === 'string') {
-            return key + ':"' + argument[key] + '"';
+            const value = (argument[key] as string).replace(/"/gi, '\\"');
+            return key + ':"' + value + '"';
           } else {
             return key + ':' + this.formatArgument(argument[key]);
           }
