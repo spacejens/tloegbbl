@@ -66,6 +66,17 @@ export class Team extends TeamReference {
   // TODO Include array of TeamInMatchReference records? Or should API instead query using a partial TeamInMatchReference?
 }
 
+@InputType('PlayerTypeReferenceInput')
+@ObjectType()
+export class PlayerTypeReference extends ExternallyIdentifiable {}
+
+@InputType('PlayerTypeInput')
+@ObjectType()
+export class PlayerType extends PlayerTypeReference {
+  @Field()
+  name: string;
+}
+
 @InputType('PlayerReferenceInput')
 @ObjectType()
 export class PlayerReference extends ExternallyIdentifiable {}
@@ -75,6 +86,8 @@ export class PlayerReference extends ExternallyIdentifiable {}
 export class Player extends PlayerReference {
   @Field()
   name: string;
+  @Field(() => PlayerTypeReference)
+  playerType: PlayerTypeReference;
   @Field(() => TeamReference)
   team: TeamReference;
 }

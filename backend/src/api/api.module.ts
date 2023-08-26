@@ -11,6 +11,7 @@ import { TeamInCompetitionResolver } from './team-in-competition.resolver';
 import { MatchResolver } from './match.resolver';
 import { TeamInMatchResolver } from './team-in-match.resolver';
 import { PlayerResolver } from './player.resolver';
+import { PlayerTypeResolver } from './player-type.resolver';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { PlayerResolver } from './player.resolver';
     MatchResolver,
     TeamInMatchResolver,
     PlayerResolver,
+    PlayerTypeResolver,
   ],
 })
 export class ApiModule {}

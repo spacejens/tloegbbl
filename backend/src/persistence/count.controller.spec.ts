@@ -9,6 +9,7 @@ import { TeamInCompetitionService } from './team-in-competition.service';
 import { MatchService } from './match.service';
 import { TeamInMatchService } from './team-in-match.service';
 import { PlayerService } from './player.service';
+import { PlayerTypeService } from './player-type.service';
 
 describe('CountController', () => {
   let controller: CountController;
@@ -20,6 +21,7 @@ describe('CountController', () => {
   let matchService: MatchService;
   let teamInMatchService: TeamInMatchService;
   let playerService: PlayerService;
+  let playerTypeService: PlayerTypeService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,6 +37,7 @@ describe('CountController', () => {
         { provide: MatchService, useValue: mock<MatchService>() },
         { provide: TeamInMatchService, useValue: mock<TeamInMatchService>() },
         { provide: PlayerService, useValue: mock<PlayerService>() },
+        { provide: PlayerTypeService, useValue: mock<PlayerTypeService>() },
       ],
       controllers: [CountController],
     }).compile();
@@ -50,6 +53,7 @@ describe('CountController', () => {
     matchService = module.get<MatchService>(MatchService);
     teamInMatchService = module.get<TeamInMatchService>(TeamInMatchService);
     playerService = module.get<PlayerService>(PlayerService);
+    playerTypeService = module.get<PlayerTypeService>(PlayerTypeService);
   });
 
   it('should be defined', () => {
@@ -66,6 +70,7 @@ describe('CountController', () => {
       matchService.count = jest.fn().mockReturnValue(666);
       teamInMatchService.count = jest.fn().mockReturnValue(777);
       playerService.count = jest.fn().mockReturnValue(888);
+      playerTypeService.count = jest.fn().mockReturnValue(999);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
         coaches: 111,
@@ -76,6 +81,7 @@ describe('CountController', () => {
         matches: 666,
         teamsInMatches: 777,
         players: 888,
+        playerTypes: 999,
       });
     });
   });

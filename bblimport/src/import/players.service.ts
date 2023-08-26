@@ -3,6 +3,7 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { BblTeamReference } from './teams.service';
 import { HTMLElement } from 'node-html-parser';
+import { BblPlayerType, PlayerTypesService } from './player-types.service';
 
 export type BblPlayerReference = {
   id: string;
@@ -10,6 +11,7 @@ export type BblPlayerReference = {
 
 export type BblPlayer = BblPlayerReference & {
   name: string;
+  playerType: BblPlayerType;
   team: BblTeamReference;
 };
 
@@ -17,6 +19,7 @@ export type BblPlayer = BblPlayerReference & {
 export class PlayersService {
   constructor(
     private readonly fileReaderService: FileReaderService,
+    private readonly playerTypeService: PlayerTypesService,
     private readonly api: ApiClientService,
   ) {}
 
@@ -55,7 +58,13 @@ export class PlayersService {
           `Did not expect to find ${playerLinkElements.length} type/team elements for player ${playerId}`,
         );
       }
-      // TODO Implement player type
+      const playerType = {
+        id: this.fileReaderService.findQueryParamInHref(
+          'typID',
+          playerLinkElements[0].getAttribute('href'),
+        ),
+        name: playerLinkElements[0].innerText,
+      };
       // Find team
       const team = {
         id: this.fileReaderService.findQueryParamInHref(
@@ -67,6 +76,7 @@ export class PlayersService {
       players.push({
         id: playerId,
         name: playerName,
+        playerType: playerType,
         team: team,
       });
     }
@@ -80,7 +90,7 @@ export class PlayersService {
   }
 
   async uploadPlayer(player: BblPlayer): Promise<void> {
-    // TODO Upload player type
+    await this.playerTypeService.uploadPlayerType(player.playerType);
     // Upload the player data
     const result = await this.api.mutation(
       'importPlayer',
@@ -88,6 +98,9 @@ export class PlayersService {
       {
         name: player.name,
         externalIds: [this.api.externalId(player.id)],
+        playerType: {
+          externalIds: [this.api.externalId(player.playerType.id)],
+        },
         team: {
           externalIds: [this.api.externalId(player.team.id)],
         },
@@ -98,6 +111,14 @@ export class PlayersService {
           externalIds: ['id', 'externalId', 'externalSystem'],
         },
         'name',
+        {
+          playerType: [
+            'id',
+            {
+              externalIds: ['id', 'externalId', 'externalSystem'],
+            },
+          ],
+        },
         {
           team: [
             'id',

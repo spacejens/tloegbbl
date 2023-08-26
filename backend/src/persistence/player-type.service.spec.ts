@@ -1,24 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PlayerService } from './player.service';
+import { PlayerTypeService } from './player-type.service';
 import { PrismaService } from './prisma.service';
 import { mock } from 'jest-mock-extended';
-import { TeamService } from './team.service';
-import { PlayerTypeService } from './player-type.service';
 
-describe('PlayerService', () => {
-  let service: PlayerService;
+describe('PlayerTypeService', () => {
+  let service: PlayerTypeService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        PlayerService,
+        PlayerTypeService,
         { provide: PrismaService, useValue: mock<PrismaService>() },
-        { provide: PlayerTypeService, useValue: mock<PlayerTypeService>() },
-        { provide: TeamService, useValue: mock<TeamService>() },
       ],
     }).compile();
 
-    service = module.get<PlayerService>(PlayerService);
+    service = module.get<PlayerTypeService>(PlayerTypeService);
   });
 
   it('should be defined', () => {

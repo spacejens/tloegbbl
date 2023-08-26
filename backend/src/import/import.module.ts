@@ -9,6 +9,7 @@ import { TeamInCompetitionImportService } from './team-in-competition-import.ser
 import { MatchImportService } from './match-import.service';
 import { TeamInMatchImportService } from './team-in-match-import.service';
 import { PlayerImportService } from './player-import.service';
+import { PlayerTypeImportService } from './player-type-import.service';
 
 @Module({
   imports: [PersistenceModule],
@@ -22,6 +23,7 @@ import { PlayerImportService } from './player-import.service';
     MatchImportService,
     TeamInMatchImportService,
     PlayerImportService,
+    PlayerTypeImportService,
   ],
   exports: [
     CoachImportService,
@@ -32,6 +34,7 @@ import { PlayerImportService } from './player-import.service';
     MatchImportService,
     TeamInMatchImportService,
     PlayerImportService,
+    PlayerTypeImportService,
   ],
 })
 export class ImportModule {}

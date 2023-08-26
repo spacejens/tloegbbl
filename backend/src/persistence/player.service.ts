@@ -3,6 +3,7 @@ import { ExternallyIdentifiablePersistenceService } from './externally-identifia
 import { ExternalId, Player, PlayerReference } from '../dtos';
 import { PrismaService } from './prisma.service';
 import { TeamService } from './team.service';
+import { PlayerTypeService } from './player-type.service';
 
 @Injectable()
 export class PlayerService extends ExternallyIdentifiablePersistenceService<
@@ -11,6 +12,7 @@ export class PlayerService extends ExternallyIdentifiablePersistenceService<
 > {
   constructor(
     private prisma: PrismaService,
+    private playerTypeService: PlayerTypeService,
     private teamService: TeamService,
   ) {
     super(prisma.player);
@@ -28,6 +30,11 @@ export class PlayerService extends ExternallyIdentifiablePersistenceService<
   fieldsNeededForTheDto() {
     return {
       externalIds: true,
+      playerType: {
+        include: {
+          externalIds: true,
+        },
+      },
       team: {
         include: {
           externalIds: true,
@@ -55,11 +62,19 @@ export class PlayerService extends ExternallyIdentifiablePersistenceService<
   async create(input: Player): Promise<Player> {
     // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax
+    const playerType = await this.playerTypeService.findByReference(
+      input.playerType,
+    );
     const team = await this.teamService.findByReference(input.team);
     return await this.prisma.player.create({
       data: {
         externalIds: this.createAllOf(input.externalIds),
         name: input.name,
+        playerType: {
+          connect: {
+            id: playerType.id,
+          },
+        },
         team: {
           connect: {
             id: team.id,
