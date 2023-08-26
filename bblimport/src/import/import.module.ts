@@ -6,6 +6,7 @@ import { TeamsService } from './teams.service';
 import { TeamTypesService } from './team-types.service';
 import { CompetitionsService } from './competitions.service';
 import { ApiClientModule } from '../api-client/api-client.module';
+import { MatchesService } from './matches.service';
 
 @Module({
   imports: [ApiClientModule],
@@ -16,6 +17,7 @@ import { ApiClientModule } from '../api-client/api-client.module';
     TeamsService,
     TeamTypesService,
     CompetitionsService,
+    MatchesService,
   ],
   exports: [ImportService],
 })

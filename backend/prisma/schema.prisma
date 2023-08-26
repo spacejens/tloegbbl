@@ -61,6 +61,7 @@ model Team {
   teamType                TeamType                  @relation(fields: [teamTypeId], references: [id])
   teamTypeId              Int                       @map("team_type_id")
   competitions            TeamInCompetition[]
+  matches                 TeamInMatch[]
 
   @@map("team")
 }
@@ -82,6 +83,7 @@ model Competition {
   name                    String
   externalIds             ExternalCompetitionId[]
   teams                   TeamInCompetition[]
+  matches                 Match[]
 
   @@map("competition")
 }
@@ -108,4 +110,39 @@ model TeamInCompetition {
   @@unique([teamId, competitionId])
 
   @@map("team_in_competition")
+}
+
+model Match {
+  id                      Int                       @default(autoincrement()) @id
+  name                    String
+  externalIds             ExternalMatchId[]
+  competition             Competition               @relation(fields: [competitionId], references: [id])
+  competitionId           Int                       @map("competition_id")
+  teams                   TeamInMatch[]
+
+  @@map("match")
+}
+
+model ExternalMatchId {
+  id                      Int                       @default(autoincrement()) @id
+  externalId              String                    @map("external_id")
+  externalSystem          String                    @map("external_system")
+  match                   Match                     @relation(fields: [matchId], references: [id])
+  matchId                 Int                       @map("match_id")
+
+  @@unique([externalId, externalSystem])
+
+  @@map("external_match_id")
+}
+
+model TeamInMatch {
+  id                      Int                       @default(autoincrement()) @id
+  team                    Team                      @relation(fields: [teamId], references: [id])
+  teamId                  Int                       @map("team_id")
+  match                   Match                     @relation(fields: [matchId], references: [id])
+  matchId                 Int                       @map("match_id")
+
+  @@unique([teamId, matchId])
+
+  @@map("team_in_match")
 }

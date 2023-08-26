@@ -6,6 +6,8 @@ import { TeamTypeService } from './team-type.service';
 import { TeamService } from './team.service';
 import { CompetitionService } from './competition.service';
 import { TeamInCompetitionService } from './team-in-competition.service';
+import { MatchService } from './match.service';
+import { TeamInMatchService } from './team-in-match.service';
 
 describe('CountController', () => {
   let controller: CountController;
@@ -14,6 +16,8 @@ describe('CountController', () => {
   let teamService: TeamService;
   let competitionService: CompetitionService;
   let teamInCompetitionService: TeamInCompetitionService;
+  let matchService: MatchService;
+  let teamInMatchService: TeamInMatchService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -26,6 +30,8 @@ describe('CountController', () => {
           provide: TeamInCompetitionService,
           useValue: mock<TeamInCompetitionService>(),
         },
+        { provide: MatchService, useValue: mock<MatchService>() },
+        { provide: TeamInMatchService, useValue: mock<TeamInMatchService>() },
       ],
       controllers: [CountController],
     }).compile();
@@ -38,6 +44,8 @@ describe('CountController', () => {
     teamInCompetitionService = module.get<TeamInCompetitionService>(
       TeamInCompetitionService,
     );
+    matchService = module.get<MatchService>(MatchService);
+    teamInMatchService = module.get<TeamInMatchService>(TeamInMatchService);
   });
 
   it('should be defined', () => {
@@ -51,6 +59,8 @@ describe('CountController', () => {
       teamService.count = jest.fn().mockReturnValue(333);
       competitionService.count = jest.fn().mockReturnValue(444);
       teamInCompetitionService.count = jest.fn().mockReturnValue(555);
+      matchService.count = jest.fn().mockReturnValue(666);
+      teamInMatchService.count = jest.fn().mockReturnValue(777);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
         coaches: 111,
@@ -58,6 +68,8 @@ describe('CountController', () => {
         teams: 333,
         competitions: 444,
         teamsInCompetitions: 555,
+        matches: 666,
+        teamsInMatches: 777,
       });
     });
   });

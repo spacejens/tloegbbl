@@ -63,6 +63,7 @@ export class Team extends TeamReference {
   @Field(() => TeamTypeReference)
   teamType: TeamTypeReference;
   // TODO Include array of TeamInCompetitionReference records? Or should API instead query using a partial TeamInCompetitionReference?
+  // TODO Include array of TeamInMatchReference records? Or should API instead query using a partial TeamInMatchReference?
 }
 
 @InputType('CompetitionReferenceInput')
@@ -75,6 +76,7 @@ export class Competition extends CompetitionReference {
   @Field()
   name: string;
   // TODO Include array of TeamInCompetitionReference records? Or should API instead query using a partial TeamInCompetitionReference?
+  // TODO Include array of MatchReference records? Or should API instead query using a partial MatchReference?
 }
 
 @InputType('TeamInCompetitionReferenceInput')
@@ -89,3 +91,30 @@ export class TeamInCompetitionReference extends Identifiable {
 @InputType('TeamInCompetitionInput')
 @ObjectType()
 export class TeamInCompetition extends TeamInCompetitionReference {}
+
+@InputType('MatchReferenceInput')
+@ObjectType()
+export class MatchReference extends ExternallyIdentifiable {}
+
+@InputType('MatchInput')
+@ObjectType()
+export class Match extends MatchReference {
+  @Field()
+  name: string;
+  @Field(() => CompetitionReference)
+  competition: CompetitionReference;
+  // TODO Include array of TeamInMatchReference records? Or should API instead query using a partial TeamInMatchReference?
+}
+
+@InputType('TeamInMatchReferenceInput')
+@ObjectType()
+export class TeamInMatchReference extends Identifiable {
+  @Field(() => TeamReference, { nullable: true })
+  team?: TeamReference;
+  @Field(() => MatchReference, { nullable: true })
+  match?: MatchReference;
+}
+
+@InputType('TeamInMatchInput')
+@ObjectType()
+export class TeamInMatch extends TeamInMatchReference {}

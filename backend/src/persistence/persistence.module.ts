@@ -7,6 +7,8 @@ import { TeamTypeService } from './team-type.service';
 import { TeamService } from './team.service';
 import { CompetitionService } from './competition.service';
 import { TeamInCompetitionService } from './team-in-competition.service';
+import { MatchService } from './match.service';
+import { TeamInMatchService } from './team-in-match.service';
 
 @Module({
   providers: [
@@ -16,6 +18,8 @@ import { TeamInCompetitionService } from './team-in-competition.service';
     TeamService,
     CompetitionService,
     TeamInCompetitionService,
+    MatchService,
+    TeamInMatchService,
   ],
   controllers: [CountController, RawDataController],
   exports: [
@@ -24,6 +28,8 @@ import { TeamInCompetitionService } from './team-in-competition.service';
     TeamService,
     CompetitionService,
     TeamInCompetitionService,
+    MatchService,
+    TeamInMatchService,
   ],
 })
 export class PersistenceModule {}
