@@ -2,6 +2,9 @@
 /dist
 /node_modules
 
+# Generated documentation
+/EntityRelationshipDiagram.svg
+
 # Logs
 logs
 *.log
