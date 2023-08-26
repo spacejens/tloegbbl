@@ -29,19 +29,6 @@ export class MatchesService {
     for (const matchFilename of matchFilenames) {
       const matchId = matchFilename.slice(matchFilename.lastIndexOf('=') + 1);
       const matchFile = this.fileReaderService.readFile(matchFilename);
-      // Find match name
-      const matchNameElements = matchFile.querySelectorAll('td div b');
-      if (matchNameElements.length != 4) {
-        // The expected element, plus three sidebar elements
-        // TODO Refactor to not be specific to tloeg's final sidebar layout? Perhaps query for specific child element and navigate back to parent?
-        throw new Error(
-          `Did not expect to find ${matchNameElements.length} match name-like elements for ${matchId}`,
-        );
-      }
-      const competitionAndMatchName = matchNameElements[0].innerText;
-      const matchName = competitionAndMatchName.slice(
-        competitionAndMatchName.indexOf(', ') + 2,
-      );
       // Find competition
       const competitionElements = matchFile.querySelectorAll('td div b a');
       if (competitionElements.length != 1) {
@@ -55,6 +42,12 @@ export class MatchesService {
           competitionElements[0].getAttribute('href'),
         ),
       };
+      // Find match name
+      const competitionAndMatchName =
+        competitionElements[0].parentNode.innerText;
+      const matchName = competitionAndMatchName.slice(
+        competitionAndMatchName.indexOf(', ') + 2,
+      );
       // Find teams
       const teamLogoElements = matchFile.querySelectorAll(
         'tr.trborder td a img',
