@@ -13,6 +13,8 @@ export type BblPlayerType = BblPlayerTypeReference & {
 export class PlayerTypesService {
   constructor(private readonly api: ApiClientService) {}
 
+  // TODO Implement (and call from ImportService) finding all player types from the list of files
+
   private uploadedPlayerTypes = Array<string>();
   async uploadPlayerType(playerType: BblPlayerType): Promise<void> {
     // Ensure no duplicate uploads

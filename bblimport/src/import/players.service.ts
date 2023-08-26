@@ -72,6 +72,10 @@ export class PlayersService {
           playerLinkElements[1].getAttribute('href'),
         ),
       };
+      // Find advancements
+      // TODO Find advancements by listing elements "table.tblist td.rtd9 span" and taking their innerText (filtering out ? for unpicked skills)
+      // Find sustained injuries
+      // TODO Find sustained injuries by listing elements "table.tblist td.red3" and taking their innerText (ensure niggling injuries registered correctly, e.g. player 330)
       // Assemble the result
       players.push({
         id: playerId,
@@ -91,6 +95,8 @@ export class PlayersService {
 
   async uploadPlayer(player: BblPlayer): Promise<void> {
     await this.playerTypeService.uploadPlayerType(player.playerType);
+    // TODO Ensure any used advancements have been uploaded before connecting players to them
+    // TODO Ensure any sustained injuries have been uploaded before connecting players to them
     // Upload the player data
     const result = await this.api.mutation(
       'importPlayer',
