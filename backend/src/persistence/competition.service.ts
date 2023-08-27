@@ -22,19 +22,17 @@ export class CompetitionService extends ExternallyIdentifiablePersistenceService
   }
 
   async findByExternalId(externalId: ExternalId): Promise<Competition> {
-    // TODO Refactor this to a single Prisma query instead of having to get by competition ID after finding externalId
-    const found = await this.prisma.externalCompetitionId.findUnique({
+    return await this.prisma.competition.findFirst({
       where: {
-        externalId_externalSystem: {
-          externalId: externalId.externalId,
-          externalSystem: externalId.externalSystem,
-        },
+        externalIds: {
+          some: {
+            externalId: externalId.externalId,
+            externalSystem: externalId.externalSystem,
+          }
+        }
       },
+      include: this.fieldsNeededForTheDto(),
     });
-    if (found) {
-      return this.findById(found.competitionId);
-    }
-    return undefined;
   }
 
   async create(input: Competition): Promise<Competition> {

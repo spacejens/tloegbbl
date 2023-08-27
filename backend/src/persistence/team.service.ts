@@ -49,19 +49,17 @@ export class TeamService extends ExternallyIdentifiablePersistenceService<
   }
 
   async findByExternalId(externalId: ExternalId): Promise<Team> {
-    // TODO Refactor this to a single Prisma query instead of having to get team by ID after finding externalId
-    const found = await this.prisma.externalTeamId.findUnique({
+    return await this.prisma.team.findFirst({
       where: {
-        externalId_externalSystem: {
-          externalId: externalId.externalId,
-          externalSystem: externalId.externalSystem,
-        },
+        externalIds: {
+          some: {
+            externalId: externalId.externalId,
+            externalSystem: externalId.externalSystem,
+          }
+        }
       },
+      include: this.fieldsNeededForTheDto(),
     });
-    if (found) {
-      return this.findById(found.teamId);
-    }
-    return undefined;
   }
 
   async create(input: Team): Promise<Team> {

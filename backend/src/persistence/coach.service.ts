@@ -22,19 +22,17 @@ export class CoachService extends ExternallyIdentifiablePersistenceService<
   }
 
   async findByExternalId(externalId: ExternalId): Promise<Coach> {
-    // TODO Refactor this to a single Prisma query instead of having to get coach by ID after finding externalId
-    const found = await this.prisma.externalCoachId.findUnique({
+    return await this.prisma.coach.findFirst({
       where: {
-        externalId_externalSystem: {
-          externalId: externalId.externalId,
-          externalSystem: externalId.externalSystem,
-        },
+        externalIds: {
+          some: {
+            externalId: externalId.externalId,
+            externalSystem: externalId.externalSystem,
+          }
+        }
       },
+      include: this.fieldsNeededForTheDto(),
     });
-    if (found) {
-      return this.findById(found.coachId);
-    }
-    return undefined;
   }
 
   async create(input: Coach): Promise<Coach> {

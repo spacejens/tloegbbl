@@ -44,19 +44,17 @@ export class PlayerService extends ExternallyIdentifiablePersistenceService<
   }
 
   async findByExternalId(externalId: ExternalId): Promise<Player> {
-    // TODO Refactor this to a single Prisma query instead of having to get by ID after finding externalId
-    const found = await this.prisma.externalPlayerId.findUnique({
+    return await this.prisma.player.findFirst({
       where: {
-        externalId_externalSystem: {
-          externalId: externalId.externalId,
-          externalSystem: externalId.externalSystem,
-        },
+        externalIds: {
+          some: {
+            externalId: externalId.externalId,
+            externalSystem: externalId.externalSystem,
+          }
+        }
       },
+      include: this.fieldsNeededForTheDto(),
     });
-    if (found) {
-      return this.findById(found.playerId);
-    }
-    return undefined;
   }
 
   async create(input: Player): Promise<Player> {
