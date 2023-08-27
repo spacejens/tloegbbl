@@ -4,6 +4,10 @@ import { FileReaderService } from './filereader.service';
 import { BblTeamReference } from './teams.service';
 import { HTMLElement } from 'node-html-parser';
 import { BblPlayerType, PlayerTypesService } from './player-types.service';
+import {
+  AdvancementsService,
+  BblAdvancementReference,
+} from './advancements.service';
 
 export type BblPlayerReference = {
   id: string;
@@ -13,6 +17,7 @@ export type BblPlayer = BblPlayerReference & {
   name: string;
   playerType: BblPlayerType;
   team: BblTeamReference;
+  advancements: BblAdvancementReference[];
 };
 
 @Injectable()
@@ -20,6 +25,7 @@ export class PlayersService {
   constructor(
     private readonly fileReaderService: FileReaderService,
     private readonly playerTypeService: PlayerTypesService,
+    private readonly advancementService: AdvancementsService,
     private readonly api: ApiClientService,
   ) {}
 
@@ -73,7 +79,20 @@ export class PlayersService {
         ),
       };
       // Find advancements
-      // TODO Find advancements by listing elements "table.tblist td.rtd9 span" and taking their innerText (filtering out ? for unpicked skills)
+      const advancements = Array<BblAdvancementReference>();
+      const advancementElements = playerFile.querySelectorAll(
+        'table.tblist td.rtd9 span',
+      );
+      for (const advancementElement of advancementElements) {
+        if (advancementElement.innerText) {
+          const trimmedText = advancementElement.innerText.trim();
+          if (trimmedText != '?') {
+            advancements.push({
+              name: trimmedText,
+            });
+          }
+        }
+      }
       // Find sustained injuries
       // TODO Find sustained injuries by listing elements "table.tblist td.red3" and taking their innerText (ensure niggling injuries registered correctly, e.g. player 330)
       // Assemble the result
@@ -82,6 +101,7 @@ export class PlayersService {
         name: playerName,
         playerType: playerType,
         team: team,
+        advancements: advancements,
       });
     }
     return players;
@@ -95,7 +115,6 @@ export class PlayersService {
 
   async uploadPlayer(player: BblPlayer): Promise<void> {
     await this.playerTypeService.uploadPlayerType(player.playerType);
-    // TODO Ensure any used advancements have been uploaded before connecting players to them
     // TODO Ensure any sustained injuries have been uploaded before connecting players to them
     // Upload the player data
     const result = await this.api.mutation(
@@ -136,5 +155,40 @@ export class PlayersService {
       ],
     );
     console.log(JSON.stringify(result.data));
+    for (const advancement of player.advancements) {
+      await this.advancementService.uploadAdvancement(advancement);
+      const advancementResult = await this.api.mutation(
+        'importPlayerHasAdvancement',
+        'playerHasAdvancement',
+        {
+          player: {
+            externalIds: [this.api.externalId(player.id)],
+          },
+          advancement: {
+            externalIds: [this.api.externalId(advancement.name)],
+          },
+        },
+        [
+          'id',
+          {
+            player: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+          {
+            advancement: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+        ],
+      );
+      console.log(JSON.stringify(advancementResult.data));
+    }
   }
 }

@@ -10,6 +10,8 @@ import { MatchService } from './match.service';
 import { TeamInMatchService } from './team-in-match.service';
 import { PlayerService } from './player.service';
 import { PlayerTypeService } from './player-type.service';
+import { AdvancementService } from './advancement.service';
+import { PlayerHasAdvancementService } from './player-has-advancement.service';
 
 describe('CountController', () => {
   let controller: CountController;
@@ -22,6 +24,8 @@ describe('CountController', () => {
   let teamInMatchService: TeamInMatchService;
   let playerService: PlayerService;
   let playerTypeService: PlayerTypeService;
+  let advancementService: AdvancementService;
+  let playerHasAdvancementService: PlayerHasAdvancementService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +42,11 @@ describe('CountController', () => {
         { provide: TeamInMatchService, useValue: mock<TeamInMatchService>() },
         { provide: PlayerService, useValue: mock<PlayerService>() },
         { provide: PlayerTypeService, useValue: mock<PlayerTypeService>() },
+        { provide: AdvancementService, useValue: mock<AdvancementService>() },
+        {
+          provide: PlayerHasAdvancementService,
+          useValue: mock<PlayerHasAdvancementService>(),
+        },
       ],
       controllers: [CountController],
     }).compile();
@@ -54,6 +63,10 @@ describe('CountController', () => {
     teamInMatchService = module.get<TeamInMatchService>(TeamInMatchService);
     playerService = module.get<PlayerService>(PlayerService);
     playerTypeService = module.get<PlayerTypeService>(PlayerTypeService);
+    advancementService = module.get<AdvancementService>(AdvancementService);
+    playerHasAdvancementService = module.get<PlayerHasAdvancementService>(
+      PlayerHasAdvancementService,
+    );
   });
 
   it('should be defined', () => {
@@ -71,6 +84,8 @@ describe('CountController', () => {
       teamInMatchService.count = jest.fn().mockReturnValue(777);
       playerService.count = jest.fn().mockReturnValue(888);
       playerTypeService.count = jest.fn().mockReturnValue(999);
+      advancementService.count = jest.fn().mockReturnValue(10);
+      playerHasAdvancementService.count = jest.fn().mockReturnValue(11);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
         coaches: 111,
@@ -82,6 +97,8 @@ describe('CountController', () => {
         teamsInMatches: 777,
         players: 888,
         playerTypes: 999,
+        advancements: 10,
+        playerHasAdvancements: 11,
       });
     });
   });
