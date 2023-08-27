@@ -58,7 +58,9 @@ export class PlayerService extends ExternallyIdentifiablePersistenceService<
   }
 
   async create(input: Player): Promise<Player> {
-    // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
+    if (input.id) {
+      throw new Error(`Attempting to create player with existing ID ${input.id}`);
+    }
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax
     const playerType = await this.playerTypeService.findByReference(
       input.playerType,

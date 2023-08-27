@@ -36,7 +36,9 @@ export class CompetitionService extends ExternallyIdentifiablePersistenceService
   }
 
   async create(input: Competition): Promise<Competition> {
-    // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
+    if (input.id) {
+      throw new Error(`Attempting to create competition with existing ID ${input.id}`);
+    }
     return await this.prisma.competition.create({
       data: {
         externalIds: this.createAllOf(input.externalIds),

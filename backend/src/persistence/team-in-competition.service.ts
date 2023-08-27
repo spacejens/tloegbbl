@@ -77,7 +77,9 @@ export class TeamInCompetitionService extends IdentifiablePersistenceService<
   }
 
   async create(input: TeamInCompetition): Promise<TeamInCompetition> {
-    // TODO Should enforce that input is missing DB ID, otherwise something has gone wrong
+    if (input.id) {
+      throw new Error(`Attempting to create team in competition with existing ID ${input.id}`);
+    }
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax
     const team = await this.teamService.findByReference(input.team);
     if (!team) {

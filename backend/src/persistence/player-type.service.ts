@@ -36,7 +36,9 @@ export class PlayerTypeService extends ExternallyIdentifiablePersistenceService<
   }
 
   async create(input: PlayerType): Promise<PlayerType> {
-    // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
+    if (input.id) {
+      throw new Error(`Attempting to create player type with existing ID ${input.id}`);
+    }
     return await this.prisma.playerType.create({
       data: {
         externalIds: this.createAllOf(input.externalIds),

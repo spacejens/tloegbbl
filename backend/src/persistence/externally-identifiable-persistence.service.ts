@@ -41,6 +41,9 @@ export abstract class ExternallyIdentifiablePersistenceService<
   }
 
   createAllOf(inputExternalIds: ExternalId[]) {
+    if (inputExternalIds && inputExternalIds.filter((extId) => extId.id).length > 0) {
+      throw new Error(`Attempting to create external IDs that already exist in DB`);
+    }
     return {
       createMany: {
         data: inputExternalIds

@@ -63,7 +63,9 @@ export class TeamService extends ExternallyIdentifiablePersistenceService<
   }
 
   async create(input: Team): Promise<Team> {
-    // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
+    if (input.id) {
+      throw new Error(`Attempting to create team with existing ID ${input.id}`);
+    }
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax
     const headCoach = await this.coachService.findByReference(input.headCoach);
     const coCoach = input.coCoach

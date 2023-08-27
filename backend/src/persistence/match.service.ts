@@ -51,7 +51,9 @@ export class MatchService extends ExternallyIdentifiablePersistenceService<
   }
 
   async create(input: Match): Promise<Match> {
-    // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
+    if (input.id) {
+      throw new Error(`Attempting to create match with existing ID ${input.id}`);
+    }
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax
     const competition = await this.competitionService.findByReference(
       input.competition,

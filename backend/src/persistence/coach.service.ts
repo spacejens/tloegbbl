@@ -36,7 +36,9 @@ export class CoachService extends ExternallyIdentifiablePersistenceService<
   }
 
   async create(input: Coach): Promise<Coach> {
-    // TODO Should enforce that input and external IDs are all missing DB IDs, otherwise something has gone wrong
+    if (input.id) {
+      throw new Error(`Attempting to create coach with existing ID ${input.id}`);
+    }
     return await this.prisma.coach.create({
       data: {
         externalIds: this.createAllOf(input.externalIds),
