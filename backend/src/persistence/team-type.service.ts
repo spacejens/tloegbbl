@@ -49,7 +49,9 @@ export class TeamTypeService extends ExternallyIdentifiablePersistenceService<
   }
 
   async update(input: TeamType): Promise<TeamType> {
-    // TODO Need to enforce that input has an ID, otherwise this might update all team types?
+    if (!input.id) {
+      throw new Error(`Attempting up update team type without existing ID: ${JSON.stringify(input)}`);
+    }
     // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
     return await this.prisma.teamType.update({
       where: {

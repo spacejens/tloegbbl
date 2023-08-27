@@ -111,7 +111,9 @@ export class TeamInCompetitionService extends IdentifiablePersistenceService<
   }
 
   async update(input: TeamInCompetition): Promise<TeamInCompetition> {
-    // TODO Need to enforce that input has an ID, otherwise this might update all records?
+    if (!input.id) {
+      throw new Error(`Attempting up update team in competition without existing ID: ${JSON.stringify(input)}`);
+    }
     return await this.prisma.teamInCompetition.update({
       where: {
         id: input.id,
