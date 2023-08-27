@@ -50,8 +50,8 @@ export class PlayerService extends ExternallyIdentifiablePersistenceService<
           some: {
             externalId: externalId.externalId,
             externalSystem: externalId.externalSystem,
-          }
-        }
+          },
+        },
       },
       include: this.fieldsNeededForTheDto(),
     });
@@ -59,7 +59,9 @@ export class PlayerService extends ExternallyIdentifiablePersistenceService<
 
   async create(input: Player): Promise<Player> {
     if (input.id) {
-      throw new Error(`Attempting to create player with existing ID ${input.id}`);
+      throw new Error(
+        `Attempting to create player with existing ID ${input.id}`,
+      );
     }
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax
     const playerType = await this.playerTypeService.findByReference(
@@ -87,7 +89,11 @@ export class PlayerService extends ExternallyIdentifiablePersistenceService<
 
   async update(input: Player): Promise<Player> {
     if (!input.id) {
-      throw new Error(`Attempting up update player without existing ID: ${JSON.stringify(input)}`);
+      throw new Error(
+        `Attempting up update player without existing ID: ${JSON.stringify(
+          input,
+        )}`,
+      );
     }
     // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
     return await this.prisma.player.update({

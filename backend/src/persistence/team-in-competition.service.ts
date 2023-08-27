@@ -78,7 +78,9 @@ export class TeamInCompetitionService extends IdentifiablePersistenceService<
 
   async create(input: TeamInCompetition): Promise<TeamInCompetition> {
     if (input.id) {
-      throw new Error(`Attempting to create team in competition with existing ID ${input.id}`);
+      throw new Error(
+        `Attempting to create team in competition with existing ID ${input.id}`,
+      );
     }
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax
     const team = await this.teamService.findByReference(input.team);
@@ -112,7 +114,11 @@ export class TeamInCompetitionService extends IdentifiablePersistenceService<
 
   async update(input: TeamInCompetition): Promise<TeamInCompetition> {
     if (!input.id) {
-      throw new Error(`Attempting up update team in competition without existing ID: ${JSON.stringify(input)}`);
+      throw new Error(
+        `Attempting up update team in competition without existing ID: ${JSON.stringify(
+          input,
+        )}`,
+      );
     }
     return await this.prisma.teamInCompetition.update({
       where: {

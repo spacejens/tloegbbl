@@ -28,8 +28,8 @@ export class CoachService extends ExternallyIdentifiablePersistenceService<
           some: {
             externalId: externalId.externalId,
             externalSystem: externalId.externalSystem,
-          }
-        }
+          },
+        },
       },
       include: this.fieldsNeededForTheDto(),
     });
@@ -37,7 +37,9 @@ export class CoachService extends ExternallyIdentifiablePersistenceService<
 
   async create(input: Coach): Promise<Coach> {
     if (input.id) {
-      throw new Error(`Attempting to create coach with existing ID ${input.id}`);
+      throw new Error(
+        `Attempting to create coach with existing ID ${input.id}`,
+      );
     }
     return await this.prisma.coach.create({
       data: {
@@ -50,7 +52,11 @@ export class CoachService extends ExternallyIdentifiablePersistenceService<
 
   async update(input: Coach): Promise<Coach> {
     if (!input.id) {
-      throw new Error(`Attempting up update coach without existing ID: ${JSON.stringify(input)}`);
+      throw new Error(
+        `Attempting up update coach without existing ID: ${JSON.stringify(
+          input,
+        )}`,
+      );
     }
     // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
     return await this.prisma.coach.update({

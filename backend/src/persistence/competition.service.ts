@@ -28,8 +28,8 @@ export class CompetitionService extends ExternallyIdentifiablePersistenceService
           some: {
             externalId: externalId.externalId,
             externalSystem: externalId.externalSystem,
-          }
-        }
+          },
+        },
       },
       include: this.fieldsNeededForTheDto(),
     });
@@ -37,7 +37,9 @@ export class CompetitionService extends ExternallyIdentifiablePersistenceService
 
   async create(input: Competition): Promise<Competition> {
     if (input.id) {
-      throw new Error(`Attempting to create competition with existing ID ${input.id}`);
+      throw new Error(
+        `Attempting to create competition with existing ID ${input.id}`,
+      );
     }
     return await this.prisma.competition.create({
       data: {
@@ -50,7 +52,11 @@ export class CompetitionService extends ExternallyIdentifiablePersistenceService
 
   async update(input: Competition): Promise<Competition> {
     if (!input.id) {
-      throw new Error(`Attempting up update competition without existing ID: ${JSON.stringify(input)}`);
+      throw new Error(
+        `Attempting up update competition without existing ID: ${JSON.stringify(
+          input,
+        )}`,
+      );
     }
     // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
     return await this.prisma.competition.update({

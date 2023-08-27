@@ -139,9 +139,7 @@ describe('CoachService', () => {
     });
 
     it('should return undefined if not found', async () => {
-      prismaService.coach.findFirst = jest
-        .fn()
-        .mockReturnValue(undefined);
+      prismaService.coach.findFirst = jest.fn().mockReturnValue(undefined);
       prismaService.coach.findUnique = jest.fn();
       const result = await service.findByExternalId({
         externalId: 'ExtId',

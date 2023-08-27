@@ -28,8 +28,8 @@ export class TeamTypeService extends ExternallyIdentifiablePersistenceService<
           some: {
             externalId: externalId.externalId,
             externalSystem: externalId.externalSystem,
-          }
-        }
+          },
+        },
       },
       include: this.fieldsNeededForTheDto(),
     });
@@ -37,7 +37,9 @@ export class TeamTypeService extends ExternallyIdentifiablePersistenceService<
 
   async create(input: TeamType): Promise<TeamType> {
     if (input.id) {
-      throw new Error(`Attempting to create team type with existing ID ${input.id}`);
+      throw new Error(
+        `Attempting to create team type with existing ID ${input.id}`,
+      );
     }
     return await this.prisma.teamType.create({
       data: {
@@ -50,7 +52,11 @@ export class TeamTypeService extends ExternallyIdentifiablePersistenceService<
 
   async update(input: TeamType): Promise<TeamType> {
     if (!input.id) {
-      throw new Error(`Attempting up update team type without existing ID: ${JSON.stringify(input)}`);
+      throw new Error(
+        `Attempting up update team type without existing ID: ${JSON.stringify(
+          input,
+        )}`,
+      );
     }
     // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
     return await this.prisma.teamType.update({

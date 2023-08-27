@@ -55,8 +55,8 @@ export class TeamService extends ExternallyIdentifiablePersistenceService<
           some: {
             externalId: externalId.externalId,
             externalSystem: externalId.externalSystem,
-          }
-        }
+          },
+        },
       },
       include: this.fieldsNeededForTheDto(),
     });
@@ -100,7 +100,11 @@ export class TeamService extends ExternallyIdentifiablePersistenceService<
 
   async update(input: Team): Promise<Team> {
     if (!input.id) {
-      throw new Error(`Attempting up update team without existing ID: ${JSON.stringify(input)}`);
+      throw new Error(
+        `Attempting up update team without existing ID: ${JSON.stringify(
+          input,
+        )}`,
+      );
     }
     // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
     return await this.prisma.team.update({

@@ -43,8 +43,8 @@ export class MatchService extends ExternallyIdentifiablePersistenceService<
           some: {
             externalId: externalId.externalId,
             externalSystem: externalId.externalSystem,
-          }
-        }
+          },
+        },
       },
       include: this.fieldsNeededForTheDto(),
     });
@@ -52,7 +52,9 @@ export class MatchService extends ExternallyIdentifiablePersistenceService<
 
   async create(input: Match): Promise<Match> {
     if (input.id) {
-      throw new Error(`Attempting to create match with existing ID ${input.id}`);
+      throw new Error(
+        `Attempting to create match with existing ID ${input.id}`,
+      );
     }
     // TODO Should get related entities to connect to in some cleaner way, using more advanced Prisma syntax
     const competition = await this.competitionService.findByReference(
@@ -74,7 +76,11 @@ export class MatchService extends ExternallyIdentifiablePersistenceService<
 
   async update(input: Match): Promise<Match> {
     if (!input.id) {
-      throw new Error(`Attempting up update match without existing ID: ${JSON.stringify(input)}`);
+      throw new Error(
+        `Attempting up update match without existing ID: ${JSON.stringify(
+          input,
+        )}`,
+      );
     }
     // TODO Test/check with external IDs in the DB that the input doesn't know about (currently prevented by import service finding first)
     return await this.prisma.match.update({
