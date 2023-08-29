@@ -12,6 +12,7 @@ import { PlayerService } from './player.service';
 import { PlayerTypeService } from './player-type.service';
 import { AdvancementService } from './advancement.service';
 import { PlayerHasAdvancementService } from './player-has-advancement.service';
+import { PlayerTypeHasAdvancementService } from './player-type-has-advancement.service';
 
 describe('CountController', () => {
   let controller: CountController;
@@ -26,6 +27,7 @@ describe('CountController', () => {
   let playerTypeService: PlayerTypeService;
   let advancementService: AdvancementService;
   let playerHasAdvancementService: PlayerHasAdvancementService;
+  let playerTypeHasAdvancementService: PlayerTypeHasAdvancementService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,6 +49,10 @@ describe('CountController', () => {
           provide: PlayerHasAdvancementService,
           useValue: mock<PlayerHasAdvancementService>(),
         },
+        {
+          provide: PlayerTypeHasAdvancementService,
+          useValue: mock<PlayerTypeHasAdvancementService>(),
+        },
       ],
       controllers: [CountController],
     }).compile();
@@ -67,6 +73,10 @@ describe('CountController', () => {
     playerHasAdvancementService = module.get<PlayerHasAdvancementService>(
       PlayerHasAdvancementService,
     );
+    playerTypeHasAdvancementService =
+      module.get<PlayerTypeHasAdvancementService>(
+        PlayerTypeHasAdvancementService,
+      );
   });
 
   it('should be defined', () => {
@@ -86,6 +96,7 @@ describe('CountController', () => {
       playerTypeService.count = jest.fn().mockReturnValue(999);
       advancementService.count = jest.fn().mockReturnValue(10);
       playerHasAdvancementService.count = jest.fn().mockReturnValue(11);
+      playerTypeHasAdvancementService.count = jest.fn().mockReturnValue(12);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
         coaches: 111,
@@ -99,6 +110,7 @@ describe('CountController', () => {
         playerTypes: 999,
         advancements: 10,
         playerHasAdvancements: 11,
+        playerTypeHasAdvancements: 12,
       });
     });
   });

@@ -3,11 +3,8 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { BblTeamReference } from './teams.service';
 import { HTMLElement } from 'node-html-parser';
-import { BblPlayerType, PlayerTypesService } from './player-types.service';
-import {
-  AdvancementsService,
-  BblAdvancementReference,
-} from './advancements.service';
+import { BblPlayerTypeReference } from './player-types.service';
+import { AdvancementsService, BblAdvancement } from './advancements.service';
 
 export type BblPlayerReference = {
   id: string;
@@ -15,16 +12,15 @@ export type BblPlayerReference = {
 
 export type BblPlayer = BblPlayerReference & {
   name: string;
-  playerType: BblPlayerType;
+  playerType: BblPlayerTypeReference;
   team: BblTeamReference;
-  advancements: BblAdvancementReference[];
+  advancements: BblAdvancement[];
 };
 
 @Injectable()
 export class PlayersService {
   constructor(
     private readonly fileReaderService: FileReaderService,
-    private readonly playerTypeService: PlayerTypesService,
     private readonly advancementService: AdvancementsService,
     private readonly api: ApiClientService,
   ) {}
@@ -69,7 +65,6 @@ export class PlayersService {
           'typID',
           playerLinkElements[0].getAttribute('href'),
         ),
-        name: playerLinkElements[0].innerText,
       };
       // Find team
       const team = {
@@ -79,7 +74,7 @@ export class PlayersService {
         ),
       };
       // Find advancements
-      const advancements = Array<BblAdvancementReference>();
+      const advancements = Array<BblAdvancement>();
       const advancementElements = playerFile.querySelectorAll(
         'table.tblist td.rtd9 span',
       );
@@ -114,7 +109,6 @@ export class PlayersService {
   }
 
   async uploadPlayer(player: BblPlayer): Promise<void> {
-    await this.playerTypeService.uploadPlayerType(player.playerType);
     // TODO Ensure any sustained injuries have been uploaded before connecting players to them
     // Upload the player data
     const result = await this.api.mutation(

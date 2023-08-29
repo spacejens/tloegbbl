@@ -89,6 +89,7 @@ model Advancement {
   name                    String
   externalIds             ExternalAdvancementId[]
   players                 PlayerHasAdvancement[]
+  playerTypes             PlayerTypeHasAdvancement[]
 
   @@map("advancement")
 }
@@ -110,6 +111,7 @@ model PlayerType {
   name                    String
   externalIds             ExternalPlayerTypeId[]
   players                 Player[]
+  advancements            PlayerTypeHasAdvancement[]
 
   @@map("player_type")
 }
@@ -126,7 +128,17 @@ model ExternalPlayerTypeId {
   @@map("external_player_type_id")
 }
 
-// TODO Add concept of player types having advancements
+model PlayerTypeHasAdvancement {
+  id                      Int                       @default(autoincrement()) @id
+  playerType              PlayerType                @relation(fields: [playerTypeId], references: [id])
+  playerTypeId            Int                       @map("player_type_id")
+  advancement             Advancement               @relation(fields: [advancementId], references: [id])
+  advancementId           Int                       @map("advancement_id")
+
+  @@unique([playerTypeId, advancementId])
+
+  @@map("player_type_has_advancement")
+}
 
 model Player {
   id                      Int                       @default(autoincrement()) @id

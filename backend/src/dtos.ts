@@ -76,6 +76,7 @@ export class Advancement extends AdvancementReference {
   @Field()
   name: string;
   // TODO Include array of PlayerHasAdvancement records? Or should API instead query using a partial PlayerHasAdvancementReference?
+  // TODO Include array of PlayerTypeHasAdvancement records? Or should API instead query using a partial PlayerHasAdvancementReference?
 }
 
 @InputType('PlayerTypeReferenceInput')
@@ -88,7 +89,21 @@ export class PlayerType extends PlayerTypeReference {
   @Field()
   name: string;
   // TODO Add many-to-many relation between player type and team type (explicit, to store e.g. number and cost of player type)
+  // TODO Include array of PlayerTypeHasAdvancement records? Or should API instead query using a partial PlayerHasAdvancementReference?
 }
+
+@InputType('PlayerTypeHasAdvancementReferenceInput')
+@ObjectType()
+export class PlayerTypeHasAdvancementReference extends Identifiable {
+  @Field(() => PlayerTypeReference, { nullable: true })
+  playerType?: PlayerTypeReference;
+  @Field(() => AdvancementReference, { nullable: true })
+  advancement?: AdvancementReference;
+}
+
+@InputType('PlayerTypeHasAdvancementInput')
+@ObjectType()
+export class PlayerTypeHasAdvancement extends PlayerTypeHasAdvancementReference {}
 
 @InputType('PlayerReferenceInput')
 @ObjectType()

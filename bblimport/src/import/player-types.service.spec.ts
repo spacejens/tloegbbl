@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PlayerTypesService } from './player-types.service';
 import { mock } from 'jest-mock-extended';
 import { ApiClientService } from '../api-client/api-client.service';
+import { FileReaderService } from './filereader.service';
+import { AdvancementsService } from './advancements.service';
 
 describe('PlayerTypesService', () => {
   let service: PlayerTypesService;
@@ -10,7 +12,9 @@ describe('PlayerTypesService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PlayerTypesService,
+        { provide: FileReaderService, useValue: mock<FileReaderService>() },
         { provide: ApiClientService, useValue: mock<ApiClientService>() },
+        { provide: AdvancementsService, useValue: mock<AdvancementsService>() },
       ],
     }).compile();
 
