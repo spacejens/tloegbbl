@@ -62,7 +62,7 @@ export class PlayerTypesService {
           }
         }
       }
-      // TODO Also import which team types the player type can play for
+      // TODO Also import which team types the player type can play for (table.tblist td.small a)
       // Assemble the result
       playerTypes.push({
         id: playerTypeId,
