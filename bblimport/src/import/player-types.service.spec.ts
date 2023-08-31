@@ -4,6 +4,7 @@ import { mock } from 'jest-mock-extended';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { AdvancementsService } from './advancements.service';
+import { TeamTypesService } from './team-types.service';
 
 describe('PlayerTypesService', () => {
   let service: PlayerTypesService;
@@ -15,6 +16,7 @@ describe('PlayerTypesService', () => {
         { provide: FileReaderService, useValue: mock<FileReaderService>() },
         { provide: ApiClientService, useValue: mock<ApiClientService>() },
         { provide: AdvancementsService, useValue: mock<AdvancementsService>() },
+        { provide: TeamTypesService, useValue: mock<TeamTypesService>() },
       ],
     }).compile();
 

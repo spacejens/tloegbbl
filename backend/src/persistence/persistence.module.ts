@@ -14,6 +14,7 @@ import { PlayerTypeService } from './player-type.service';
 import { AdvancementService } from './advancement.service';
 import { PlayerHasAdvancementService } from './player-has-advancement.service';
 import { PlayerTypeHasAdvancementService } from './player-type-has-advancement.service';
+import { PlayerTypeInTeamTypeService } from './player-type-in-team-type.service';
 
 @Module({
   providers: [
@@ -30,6 +31,7 @@ import { PlayerTypeHasAdvancementService } from './player-type-has-advancement.s
     AdvancementService,
     PlayerHasAdvancementService,
     PlayerTypeHasAdvancementService,
+    PlayerTypeInTeamTypeService,
   ],
   controllers: [CountController, RawDataController],
   exports: [
@@ -45,6 +47,7 @@ import { PlayerTypeHasAdvancementService } from './player-type-has-advancement.s
     AdvancementService,
     PlayerHasAdvancementService,
     PlayerTypeHasAdvancementService,
+    PlayerTypeInTeamTypeService,
   ],
 })
 export class PersistenceModule {}

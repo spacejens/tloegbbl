@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { AdvancementsService, BblAdvancement } from './advancements.service';
+import { BblTeamType, TeamTypesService } from './team-types.service';
 
 export type BblPlayerTypeReference = {
   id: string;
@@ -9,6 +10,7 @@ export type BblPlayerTypeReference = {
 
 export type BblPlayerType = BblPlayerTypeReference & {
   name: string;
+  teamTypes: BblTeamType[];
   advancements: BblAdvancement[];
 };
 
@@ -18,6 +20,7 @@ export class PlayerTypesService {
     private readonly fileReaderService: FileReaderService,
     private readonly api: ApiClientService,
     private readonly advancementService: AdvancementsService,
+    private readonly teamTypesService: TeamTypesService,
   ) {}
 
   getPlayerTypes(): BblPlayerType[] {
@@ -62,11 +65,24 @@ export class PlayerTypesService {
           }
         }
       }
-      // TODO Also import which team types the player type can play for (table.tblist td.small a)
+      // Find team types
+      const teamTypes = Array<BblTeamType>();
+      const teamTypeElements = playerTypeFile.querySelectorAll(
+        'table.tblist td.small a',
+      );
+      for (const teamTypeElement of teamTypeElements) {
+        teamTypes.push({
+          id: this.fileReaderService.findAnchorInHref(
+            teamTypeElement.getAttribute('href'),
+          ),
+          name: teamTypeElement.innerText,
+        });
+      }
       // Assemble the result
       playerTypes.push({
         id: playerTypeId,
         name: playerTypeName,
+        teamTypes: teamTypes,
         advancements: advancements,
       });
     }
@@ -138,6 +154,41 @@ export class PlayerTypesService {
         ],
       );
       console.log(JSON.stringify(advancementResult.data));
+    }
+    for (const teamType of playerType.teamTypes) {
+      await this.teamTypesService.uploadTeamType(teamType);
+      const teamTypeResult = await this.api.mutation(
+        'importPlayerTypeInTeamType',
+        'playerTypeInTeamType',
+        {
+          playerType: {
+            externalIds: [this.api.externalId(playerType.id)],
+          },
+          teamType: {
+            externalIds: [this.api.externalId(teamType.id)],
+          },
+        },
+        [
+          'id',
+          {
+            playerType: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+          {
+            teamType: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+        ],
+      );
+      console.log(JSON.stringify(teamTypeResult.data));
     }
   }
 }

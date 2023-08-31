@@ -38,6 +38,7 @@ model TeamType {
   id                      Int                       @default(autoincrement()) @id
   name                    String
   externalIds             ExternalTeamTypeId[]
+  playerTypes             PlayerTypeInTeamType[]
   teams                   Team[]
 
   @@map("team_type")
@@ -110,6 +111,7 @@ model PlayerType {
   id                      Int                       @default(autoincrement()) @id
   name                    String
   externalIds             ExternalPlayerTypeId[]
+  teamTypes               PlayerTypeInTeamType[]
   players                 Player[]
   advancements            PlayerTypeHasAdvancement[]
 
@@ -126,6 +128,18 @@ model ExternalPlayerTypeId {
   @@unique([externalId, externalSystem])
 
   @@map("external_player_type_id")
+}
+
+model PlayerTypeInTeamType {
+  id                      Int                       @default(autoincrement()) @id
+  playerType              PlayerType                @relation(fields: [playerTypeId], references: [id])
+  playerTypeId            Int                       @map("player_type_id")
+  teamType                TeamType                  @relation(fields: [teamTypeId], references: [id])
+  teamTypeId              Int                       @map("team_type_id")
+
+  @@unique([playerTypeId, teamTypeId])
+
+  @@map("player_type_in_team_type")
 }
 
 model PlayerTypeHasAdvancement {

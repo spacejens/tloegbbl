@@ -13,6 +13,7 @@ import { PlayerTypeService } from './player-type.service';
 import { AdvancementService } from './advancement.service';
 import { PlayerHasAdvancementService } from './player-has-advancement.service';
 import { PlayerTypeHasAdvancementService } from './player-type-has-advancement.service';
+import { PlayerTypeInTeamTypeService } from './player-type-in-team-type.service';
 
 describe('CountController', () => {
   let controller: CountController;
@@ -28,6 +29,7 @@ describe('CountController', () => {
   let advancementService: AdvancementService;
   let playerHasAdvancementService: PlayerHasAdvancementService;
   let playerTypeHasAdvancementService: PlayerTypeHasAdvancementService;
+  let playerTypeInTeamTypeService: PlayerTypeInTeamTypeService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -53,6 +55,10 @@ describe('CountController', () => {
           provide: PlayerTypeHasAdvancementService,
           useValue: mock<PlayerTypeHasAdvancementService>(),
         },
+        {
+          provide: PlayerTypeInTeamTypeService,
+          useValue: mock<PlayerTypeInTeamTypeService>(),
+        },
       ],
       controllers: [CountController],
     }).compile();
@@ -77,6 +83,9 @@ describe('CountController', () => {
       module.get<PlayerTypeHasAdvancementService>(
         PlayerTypeHasAdvancementService,
       );
+    playerTypeInTeamTypeService = module.get<PlayerTypeInTeamTypeService>(
+      PlayerTypeInTeamTypeService,
+    );
   });
 
   it('should be defined', () => {
@@ -97,6 +106,7 @@ describe('CountController', () => {
       advancementService.count = jest.fn().mockReturnValue(10);
       playerHasAdvancementService.count = jest.fn().mockReturnValue(11);
       playerTypeHasAdvancementService.count = jest.fn().mockReturnValue(12);
+      playerTypeInTeamTypeService.count = jest.fn().mockReturnValue(13);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
         coaches: 111,
@@ -111,6 +121,7 @@ describe('CountController', () => {
         advancements: 10,
         playerHasAdvancements: 11,
         playerTypeHasAdvancements: 12,
+        playerTypeInTeamTypes: 13,
       });
     });
   });
