@@ -94,30 +94,30 @@ describe('CountController', () => {
 
   describe('countEverything', () => {
     it('should count every type of data', async () => {
-      coachService.count = jest.fn().mockReturnValue(111);
-      teamTypeService.count = jest.fn().mockReturnValue(222);
-      teamService.count = jest.fn().mockReturnValue(333);
-      competitionService.count = jest.fn().mockReturnValue(444);
-      teamInCompetitionService.count = jest.fn().mockReturnValue(555);
-      matchService.count = jest.fn().mockReturnValue(666);
-      teamInMatchService.count = jest.fn().mockReturnValue(777);
-      playerService.count = jest.fn().mockReturnValue(888);
-      playerTypeService.count = jest.fn().mockReturnValue(999);
+      coachService.count = jest.fn().mockReturnValue(1);
+      teamTypeService.count = jest.fn().mockReturnValue(2);
+      teamService.count = jest.fn().mockReturnValue(3);
+      competitionService.count = jest.fn().mockReturnValue(4);
+      teamInCompetitionService.count = jest.fn().mockReturnValue(5);
+      matchService.count = jest.fn().mockReturnValue(6);
+      teamInMatchService.count = jest.fn().mockReturnValue(7);
+      playerService.count = jest.fn().mockReturnValue(8);
+      playerTypeService.count = jest.fn().mockReturnValue(9);
       advancementService.count = jest.fn().mockReturnValue(10);
       playerHasAdvancementService.count = jest.fn().mockReturnValue(11);
       playerTypeHasAdvancementService.count = jest.fn().mockReturnValue(12);
       playerTypeInTeamTypeService.count = jest.fn().mockReturnValue(13);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
-        coaches: 111,
-        teamTypes: 222,
-        teams: 333,
-        competitions: 444,
-        teamsInCompetitions: 555,
-        matches: 666,
-        teamsInMatches: 777,
-        players: 888,
-        playerTypes: 999,
+        coaches: 1,
+        teamTypes: 2,
+        teams: 3,
+        competitions: 4,
+        teamsInCompetitions: 5,
+        matches: 6,
+        teamsInMatches: 7,
+        players: 8,
+        playerTypes: 9,
         advancements: 10,
         playerHasAdvancements: 11,
         playerTypeHasAdvancements: 12,
