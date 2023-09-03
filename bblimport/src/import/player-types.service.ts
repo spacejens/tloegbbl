@@ -25,15 +25,23 @@ export class PlayerTypesService {
 
   getPlayerTypes(): BblPlayerType[] {
     // Loop over all the player type files in the directory
-    // Ignoring files (with lowercase typid) only linked from team reference list, only interested in league relevant data
     const playerTypes = Array<BblPlayerType>();
-    const playerTypeFilenames = this.fileReaderService.listFiles(
-      'default.asp?p=pt&typID=',
-    );
+    const playerTypeFilenames = this.fileReaderService
+      .listFiles('default.asp?p=pt&typID=')
+      .concat(this.fileReaderService.listFiles('default.asp?p=pt&typid='));
     for (const playerTypeFilename of playerTypeFilenames) {
-      const playerTypeId = playerTypeFilename.slice(
-        playerTypeFilename.lastIndexOf('=') + 1,
-      );
+      let playerTypeId;
+      if (playerTypeFilename.indexOf('&typ=') >= 0) {
+        const firstSlice = playerTypeFilename.slice(
+          0,
+          playerTypeFilename.indexOf('&typ='),
+        );
+        playerTypeId = firstSlice.slice(firstSlice.lastIndexOf('=') + 1);
+      } else {
+        playerTypeId = playerTypeFilename.slice(
+          playerTypeFilename.lastIndexOf('=') + 1,
+        );
+      }
       const playerTypeFile =
         this.fileReaderService.readFile(playerTypeFilename);
       // Find player type name
