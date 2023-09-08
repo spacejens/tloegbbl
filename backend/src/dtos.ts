@@ -200,3 +200,22 @@ export class TeamInMatchReference extends Identifiable {
 @InputType('TeamInMatchInput')
 @ObjectType()
 export class TeamInMatch extends TeamInMatchReference {}
+
+@InputType('MatchEventReferenceInput')
+@ObjectType()
+export class MatchEventReference extends ExternallyIdentifiable {}
+
+@InputType('MatchEventInput')
+@ObjectType()
+export class MatchEvent extends MatchEventReference {
+  @Field(() => MatchReference)
+  match: MatchReference;
+  @Field(() => TeamReference, { nullable: true })
+  actingTeam?: TeamReference;
+  @Field(() => PlayerReference, { nullable: true })
+  actingPlayer?: PlayerReference;
+  @Field(() => TeamReference, { nullable: true })
+  consequenceTeam?: TeamReference;
+  @Field(() => PlayerReference, { nullable: true })
+  consequencePlayer?: PlayerReference;
+}

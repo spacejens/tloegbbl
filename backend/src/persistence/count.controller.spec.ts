@@ -14,6 +14,7 @@ import { AdvancementService } from './advancement.service';
 import { PlayerHasAdvancementService } from './player-has-advancement.service';
 import { PlayerTypeHasAdvancementService } from './player-type-has-advancement.service';
 import { PlayerTypeInTeamTypeService } from './player-type-in-team-type.service';
+import { MatchEventService } from './match-event.service';
 
 describe('CountController', () => {
   let controller: CountController;
@@ -30,6 +31,7 @@ describe('CountController', () => {
   let playerHasAdvancementService: PlayerHasAdvancementService;
   let playerTypeHasAdvancementService: PlayerTypeHasAdvancementService;
   let playerTypeInTeamTypeService: PlayerTypeInTeamTypeService;
+  let matchEventService: MatchEventService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -59,6 +61,7 @@ describe('CountController', () => {
           provide: PlayerTypeInTeamTypeService,
           useValue: mock<PlayerTypeInTeamTypeService>(),
         },
+        { provide: MatchEventService, useValue: mock<MatchEventService>() },
       ],
       controllers: [CountController],
     }).compile();
@@ -86,6 +89,7 @@ describe('CountController', () => {
     playerTypeInTeamTypeService = module.get<PlayerTypeInTeamTypeService>(
       PlayerTypeInTeamTypeService,
     );
+    matchEventService = module.get<MatchEventService>(MatchEventService);
   });
 
   it('should be defined', () => {
@@ -107,6 +111,7 @@ describe('CountController', () => {
       playerHasAdvancementService.count = jest.fn().mockReturnValue(11);
       playerTypeHasAdvancementService.count = jest.fn().mockReturnValue(12);
       playerTypeInTeamTypeService.count = jest.fn().mockReturnValue(13);
+      matchEventService.count = jest.fn().mockReturnValue(14);
       const result = await controller.countEverything();
       expect(result).toStrictEqual({
         coaches: 1,
@@ -122,6 +127,7 @@ describe('CountController', () => {
         playerHasAdvancements: 11,
         playerTypeHasAdvancements: 12,
         playerTypeInTeamTypes: 13,
+        matchEvents: 14,
       });
     });
   });

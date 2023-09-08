@@ -3,6 +3,19 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { BblCompetitionReference } from './competitions.service';
 import { BblTeamReference } from './teams.service';
+import { BblPlayerReference } from './players.service';
+import { HTMLElement } from 'node-html-parser';
+
+export type BblMatchEventReference = {
+  id: string;
+};
+
+export type BblMatchEvent = BblMatchEventReference & {
+  actingTeam?: BblTeamReference;
+  actingPlayer?: BblPlayerReference;
+  consequenceTeam?: BblTeamReference;
+  consequencePlayer?: BblPlayerReference;
+};
 
 export type BblMatchReference = {
   id: string;
@@ -12,6 +25,7 @@ export type BblMatch = BblMatchReference & {
   name: string;
   competition: BblCompetitionReference;
   teams: BblTeamReference[];
+  matchEvents: BblMatchEvent[];
 };
 
 @Injectable()
@@ -67,6 +81,62 @@ export class MatchesService {
           ),
         });
       }
+      // Find match events
+      const matchEvents = Array<BblMatchEvent>();
+      const matchReportRowElements = matchFile.querySelectorAll(
+        'table.tblist tr.trborder',
+      );
+      for (const matchReportRowElement of matchReportRowElements.slice(1)) {
+        // First row is team logos, skipped it
+        const matchReportColumnElements = matchReportRowElement.childNodes
+          .filter((childNode) => childNode instanceof HTMLElement)
+          .map((childNode) => childNode as HTMLElement)
+          .filter((childElement) => childElement.tagName === 'TD');
+        if (matchReportColumnElements.length != 3) {
+          throw new Error(
+            `Did not expect to find ${matchReportColumnElements.length} columns for match report row in match ${matchId}`,
+          );
+        }
+        const eventType = matchReportColumnElements[1].innerText;
+        // TODO Interpret the type of events (to an enum)
+        // TODO Event type sometimes changed by text elements (e.g. for fouls)
+        this.fileReaderService
+          .split(matchReportColumnElements[0].childNodes)
+          .forEach((eventElements, index) => {
+            // TODO Skip eventElements that are just the empty image (i.e. no event)
+            const eventId = `M${matchId}-T${teams[0].id}-${eventType}-#${index}`;
+            const playerIds = eventElements
+              .filter((element) => element instanceof HTMLElement)
+              .map((element) => element as HTMLElement)
+              .filter((element) => element.tagName === 'A')
+              .map((aTag) =>
+                this.fileReaderService.findQueryParamInHref(
+                  'pid',
+                  aTag.getAttribute('href'),
+                ),
+              );
+            let playerId: string;
+            if (playerIds.length > 1) {
+              throw new Error(
+                `Did not expect multiple player links for event ${eventId}`,
+              );
+            } else if (playerIds.length === 1) {
+              playerId = playerIds[0];
+            } else {
+              playerId = undefined;
+            }
+            // TODO For some event types, the report shows consequence team/player instead
+            matchEvents.push({
+              id: eventId,
+              actingTeam: teams[0],
+              actingPlayer: {
+                id: playerId,
+              },
+              // TODO Find acting player for event, if any
+            });
+          });
+        // TODO Interpret other team's column as well (probably extract function and call it twice)
+      }
       // Assemble the result
       matches.push({
         id: matchId,
@@ -75,9 +145,18 @@ export class MatchesService {
           id: competition.id,
         },
         teams: teams,
+        matchEvents: this.consolidateMatchEvents(matchEvents),
       });
     }
     return matches;
+  }
+
+  private consolidateMatchEvents(
+    matchEvents: BblMatchEvent[],
+  ): BblMatchEvent[] {
+    // TODO Consolidate into a smaller set, joining events that belong together
+    // TODO Avoid consolidation for matches that are linked to other matches (multiplayer games)
+    return matchEvents;
   }
 
   async uploadMatches(matches: BblMatch[]): Promise<void> {
@@ -148,6 +227,89 @@ export class MatchesService {
         ],
       );
       console.log(JSON.stringify(teamResult.data));
+    }
+    for (const matchEvent of match.matchEvents) {
+      const eventResult = await this.api.mutation(
+        'importMatchEvent',
+        'matchEvent',
+        {
+          externalIds: [this.api.externalId(matchEvent.id)],
+          match: {
+            externalIds: [this.api.externalId(match.id)],
+          },
+          actingTeam: matchEvent.actingTeam
+            ? {
+                externalIds: [this.api.externalId(matchEvent.actingTeam.id)],
+              }
+            : undefined,
+          actingPlayer: matchEvent.actingPlayer
+            ? {
+                externalIds: [this.api.externalId(matchEvent.actingPlayer.id)],
+              }
+            : undefined,
+          consequenceTeam: matchEvent.consequenceTeam
+            ? {
+                externalIds: [
+                  this.api.externalId(matchEvent.consequenceTeam.id),
+                ],
+              }
+            : undefined,
+          consequencePlayer: matchEvent.consequencePlayer
+            ? {
+                externalIds: [
+                  this.api.externalId(matchEvent.consequencePlayer.id),
+                ],
+              }
+            : undefined,
+        },
+        [
+          'id',
+          {
+            externalIds: ['id', 'externalId', 'externalSystem'],
+          },
+          {
+            match: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+          {
+            actingTeam: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+          {
+            actingPlayer: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+          {
+            consequenceTeam: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+          {
+            consequencePlayer: [
+              'id',
+              {
+                externalIds: ['id', 'externalId', 'externalSystem'],
+              },
+            ],
+          },
+        ],
+      );
+      console.log(JSON.stringify(eventResult.data));
     }
   }
 }

@@ -12,6 +12,7 @@ import { AdvancementService } from './advancement.service';
 import { PlayerHasAdvancementService } from './player-has-advancement.service';
 import { PlayerTypeHasAdvancementService } from './player-type-has-advancement.service';
 import { PlayerTypeInTeamTypeService } from './player-type-in-team-type.service';
+import { MatchEventService } from './match-event.service';
 
 @Controller('count')
 export class CountController {
@@ -29,6 +30,7 @@ export class CountController {
     private readonly playerHasAdvancementService: PlayerHasAdvancementService,
     private readonly playerTypeHasAdvancementService: PlayerTypeHasAdvancementService,
     private readonly playerTypeInTeamTypeService: PlayerTypeInTeamTypeService,
+    private readonly matchEventService: MatchEventService,
   ) {}
 
   @Get()
@@ -48,6 +50,7 @@ export class CountController {
       playerTypeHasAdvancements:
         await this.playerTypeHasAdvancementService.count(),
       playerTypeInTeamTypes: await this.playerTypeInTeamTypeService.count(),
+      matchEvents: await this.matchEventService.count(),
       // TODO Count all (?) types of data
     };
   }

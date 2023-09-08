@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FileReaderService } from './filereader.service';
+import { HTMLElement, TextNode } from 'node-html-parser';
 
 describe('FileReaderService', () => {
   let fileReaderService: FileReaderService;
@@ -111,6 +112,64 @@ describe('FileReaderService', () => {
       expect(
         fileReaderService.findQueryParamInHref('something', 'page.asp'),
       ).toBe(undefined);
+    });
+  });
+
+  describe('split', () => {
+    it('should handle empty input', () => {
+      expect(fileReaderService.split([])).toEqual([]);
+    });
+
+    it('should return empty if input is just a splitter', () => {
+      const splitter = new HTMLElement('BR', {});
+      expect(fileReaderService.split([splitter])).toEqual([]);
+    });
+
+    it('should return input unchanged when there are no splitters', () => {
+      const pic = new HTMLElement('IMG', { class: 'pic' });
+      const txt = new TextNode('txt');
+      expect(fileReaderService.split([pic, txt])).toEqual([[pic, txt]]);
+    });
+
+    it('should split where there are splitters', () => {
+      const pic = new HTMLElement('IMG', { class: 'pic' });
+      const splitter1 = new HTMLElement('BR', {});
+      const txt = new TextNode('txt');
+      const span = new HTMLElement('SPAN', {});
+      const splitter2 = new HTMLElement('BR', {});
+      const link = new HTMLElement('A', {});
+      const bold = new HTMLElement('B', {});
+      expect(
+        fileReaderService.split([
+          pic,
+          splitter1,
+          txt,
+          span,
+          splitter2,
+          link,
+          bold,
+        ]),
+      ).toEqual([[pic], [txt, span], [link, bold]]);
+    });
+  });
+
+  describe('hasTagName', () => {
+    it('should be false for text nodes', () => {
+      expect(fileReaderService.hasTagName('BR')(new TextNode('txt'))).toBe(
+        false,
+      );
+    });
+
+    it('should be true for HTML nodes of correct tag type', () => {
+      expect(
+        fileReaderService.hasTagName('BR')(new HTMLElement('BR', {})),
+      ).toBe(true);
+    });
+
+    it('should be false for HTML nodes of wrong tag type', () => {
+      expect(
+        fileReaderService.hasTagName('BR')(new HTMLElement('IMG', {})),
+      ).toBe(false);
     });
   });
 });

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { readFileSync, readdirSync } from 'fs';
-import { parse, HTMLElement } from 'node-html-parser';
+import { parse, HTMLElement, Node } from 'node-html-parser';
 import { join } from 'path';
 
 @Injectable()
@@ -51,5 +51,36 @@ export class FileReaderService {
 
   findAnchorInHref(href: string): string {
     return href.substring(href.lastIndexOf('#') + 1);
+  }
+
+  split(
+    nodes: Node[],
+    splitBy: (node: Node) => boolean = this.hasTagName('BR'),
+  ): Array<Node[]> {
+    const output = Array<Node[]>();
+    let start: number = 0;
+    let current: number = 0;
+    for (const node of nodes) {
+      if (splitBy(node)) {
+        if (current > start) {
+          output.push(nodes.slice(start, current));
+          start = current + 1;
+        } else {
+          start += 1;
+        }
+      }
+      current += 1;
+    }
+    // Add any leftovers after last splitBy match (or from beginning, if no splitBy matches found)
+    if (nodes.length > start) {
+      output.push(nodes.slice(start));
+    }
+    return output;
+  }
+
+  hasTagName(tagName: string): (node: Node) => boolean {
+    // Higher order function, so it can be used to create filters
+    return (node: Node) =>
+      node instanceof HTMLElement && node.tagName === tagName;
   }
 }
