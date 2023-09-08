@@ -132,7 +132,6 @@ export class MatchesService {
               actingPlayer: {
                 id: playerId,
               },
-              // TODO Find acting player for event, if any
             });
           });
         // TODO Interpret other team's column as well (probably extract function and call it twice)
