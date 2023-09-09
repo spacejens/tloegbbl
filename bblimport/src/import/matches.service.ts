@@ -181,7 +181,6 @@ export class MatchesService {
           },
         });
       });
-    // TODO Interpret other team's column as well (probably extract function and call it twice)
     return matchEvents;
   }
 
