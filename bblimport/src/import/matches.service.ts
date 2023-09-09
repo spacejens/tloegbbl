@@ -6,6 +6,35 @@ import { BblTeamReference } from './teams.service';
 import { BblPlayerReference } from './players.service';
 import { HTMLElement } from 'node-html-parser';
 
+export enum ActionType {
+  // Actions that give star player points
+  CASUALTY = 'CASUALTY',
+  COMPLETION = 'COMPLETION', // TODO Need separate (more specific) enum for ball completion? And the ability to have an unknown completion, for TourPlay?
+  TTM_COMPLETION = 'TTM_COMPLETION',
+  DEFLECTION = 'DEFLECTION',
+  INTERCEPTION = 'INTERCEPTION',
+  TOUCHDOWN = 'TOUCHDOWN',
+  MVP = 'MVP',
+  // Other actions
+  FOUL = 'FOUL',
+  SENT_OFF = 'SENT_OFF',
+}
+
+export enum ConsequenceType {
+  // Serious injury can be either unspecified or specified
+  SERIOUS_INJURY = 'SERIOUS_INJURY',
+  MISS_NEXT_GAME = 'MISS_NEXT_GAME',
+  NIGGLING_INJURY = 'NIGGLING_INJURY',
+  MOVEMENT_REDUCTION = 'MOVEMENT_REDUCTION',
+  STRENGTH_REDUCTION = 'STRENGTH_REDUCTION',
+  AGILITY_REDUCTION = 'AGILITY_REDUCTION',
+  PASSING_REDUCTION = 'PASSING_REDUCTION',
+  ARMOUR_REDUCTION = 'ARMOUR_REDUCTION',
+  // For other types of casualties, the consequences are known
+  BADLY_HURT = 'BADLY_HURT',
+  DEATH = 'DEATH',
+}
+
 export type BblMatchEventReference = {
   id: string;
 };
@@ -151,8 +180,89 @@ export class MatchesService {
         // Parse the event
         const eventId = `M${matchId}-${team.id}-${rowTypeText}-#${index}`;
         // Parse event type
-        // TODO Find event type enum, based on row type text (should casualty event type be just CAS with a separate consequence enum?)
-        // TODO Event type sometimes changed by non-player text elements (e.g. for fouls)
+        let actionType: ActionType;
+        let consequenceType: ConsequenceType;
+        let isConsequenceRow: boolean = false;
+        switch (rowTypeText) {
+          case 'TD Scorers':
+            actionType = ActionType.TOUCHDOWN;
+            break;
+          case 'Completions by':
+            actionType = ActionType.COMPLETION;
+            break;
+          case 'TTM Completions by':
+            actionType = ActionType.TTM_COMPLETION;
+            break;
+          case 'Interceptions by':
+            actionType = ActionType.INTERCEPTION;
+            break;
+          case 'Deflections by':
+            actionType = ActionType.DEFLECTION;
+            break;
+          case 'Foulers (no cas)':
+            actionType = ActionType.FOUL;
+            break;
+          case 'Sent off':
+            actionType = ActionType.SENT_OFF;
+            break;
+          case "Badly Hurt'ers":
+            actionType = ActionType.CASUALTY;
+            consequenceType = ConsequenceType.BADLY_HURT;
+            break;
+          case 'Serious/LastingHurters/Injurers':
+            actionType = ActionType.CASUALTY;
+            consequenceType = ConsequenceType.SERIOUS_INJURY; // Exact injury unknown
+            break;
+          case 'Killers':
+            actionType = ActionType.CASUALTY;
+            consequenceType = ConsequenceType.DEATH;
+            break;
+          case 'MVP awards to':
+            actionType = ActionType.MVP;
+            break;
+          case 'Miss Next Game':
+            consequenceType = ConsequenceType.MISS_NEXT_GAME;
+            isConsequenceRow = true;
+            break;
+          case 'Niggling Injury':
+            consequenceType = ConsequenceType.NIGGLING_INJURY;
+            isConsequenceRow = true;
+            break;
+          case '-1 MA':
+            consequenceType = ConsequenceType.MOVEMENT_REDUCTION;
+            isConsequenceRow = true;
+            break;
+          case '-1 ST':
+            consequenceType = ConsequenceType.STRENGTH_REDUCTION;
+            isConsequenceRow = true;
+            break;
+          case '-1 AG':
+            consequenceType = ConsequenceType.AGILITY_REDUCTION;
+            isConsequenceRow = true;
+            break;
+          case '-1 PA':
+            consequenceType = ConsequenceType.PASSING_REDUCTION;
+            isConsequenceRow = true;
+            break;
+          case '-1 AV':
+            consequenceType = ConsequenceType.ARMOUR_REDUCTION;
+            isConsequenceRow = true;
+            break;
+          case 'Death':
+            consequenceType = ConsequenceType.DEATH;
+            isConsequenceRow = true;
+            break;
+          default:
+            throw new Error(
+              `Match ${matchId} has unknown match event row type text: ${rowTypeText}`,
+            );
+        }
+        // TODO Remove dummy assignments once action/consequence types are sent to backend (and no longer unused here)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const _actionType = actionType;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const _consequenceType = consequenceType;
+        // TODO Event type sometimes changed by non-player text elements (e.g. for fouls, random events)
         // Find player ID, if any
         const playerIds = eventElements
           .filter((element) => element instanceof HTMLElement)
@@ -174,14 +284,23 @@ export class MatchesService {
         } else {
           playerId = undefined;
         }
-        // TODO For some event types, the report shows consequence team/player instead
-        matchEvents.push({
-          id: eventId,
-          actingTeam: team,
-          actingPlayer: {
-            id: playerId,
-          },
-        });
+        if (isConsequenceRow) {
+          matchEvents.push({
+            id: eventId,
+            consequenceTeam: team,
+            consequencePlayer: {
+              id: playerId,
+            },
+          });
+        } else {
+          matchEvents.push({
+            id: eventId,
+            actingTeam: team,
+            actingPlayer: {
+              id: playerId,
+            },
+          });
+        }
       });
     return matchEvents;
   }
@@ -190,6 +309,8 @@ export class MatchesService {
     matchEvents: BblMatchEvent[],
   ): BblMatchEvent[] {
     // TODO Consolidate into a smaller set, joining events that belong together
+    // TODO In case of serious injuries, the acting row's exact consequence will be unknown, but consolidate anyway (when possible)
+    // TODO If the same player caused every injury of a severity level, consolidate to all the consequence rows
     // TODO Avoid consolidation for matches that are linked to other matches (multiplayer games)
     return matchEvents;
   }
