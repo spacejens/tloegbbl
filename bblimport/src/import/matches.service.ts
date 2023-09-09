@@ -142,7 +142,15 @@ export class MatchesService {
     this.fileReaderService
       .split(columnElements.childNodes)
       .forEach((eventElements, index) => {
-        // TODO Skip eventElements that are just the empty image (i.e. no event)
+        // Skip elements that are just the empty image element (i.e. no event)
+        if (
+          eventElements.length === 1 &&
+          eventElements[0] instanceof HTMLElement &&
+          eventElements[0].tagName === 'IMG'
+        ) {
+          return;
+        }
+        // Parse the event
         const eventId = `M${matchId}-T${team.id}-${eventType}-#${index}`;
         const playerIds = eventElements
           .filter((element) => element instanceof HTMLElement)
