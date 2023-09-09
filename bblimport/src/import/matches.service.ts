@@ -42,8 +42,10 @@ export type BblMatchEventReference = {
 export type BblMatchEvent = BblMatchEventReference & {
   actingTeam?: BblTeamReference;
   actingPlayer?: BblPlayerReference;
+  actionType?: ActionType;
   consequenceTeam?: BblTeamReference;
   consequencePlayer?: BblPlayerReference;
+  consequenceType?: ConsequenceType;
 };
 
 export type BblMatchReference = {
@@ -257,11 +259,6 @@ export class MatchesService {
               `Match ${matchId} has unknown match event row type text: ${rowTypeText}`,
             );
         }
-        // TODO Remove dummy assignments once action/consequence types are sent to backend (and no longer unused here)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const _actionType = actionType;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const _consequenceType = consequenceType;
         // TODO Event type sometimes changed by non-player text elements (e.g. for fouls, random events)
         // Find player ID, if any
         const playerIds = eventElements
@@ -287,10 +284,12 @@ export class MatchesService {
         if (isConsequenceRow) {
           matchEvents.push({
             id: eventId,
+            actionType: actionType,
             consequenceTeam: team,
             consequencePlayer: {
               id: playerId,
             },
+            consequenceType: consequenceType,
           });
         } else {
           matchEvents.push({
@@ -299,6 +298,8 @@ export class MatchesService {
             actingPlayer: {
               id: playerId,
             },
+            actionType: actionType,
+            consequenceType: consequenceType,
           });
         }
       });
@@ -390,6 +391,7 @@ export class MatchesService {
         'importMatchEvent',
         'matchEvent',
         {
+          // TODO Send action/consequence type to backend
           externalIds: [this.api.externalId(matchEvent.id)],
           match: {
             externalIds: [this.api.externalId(match.id)],
