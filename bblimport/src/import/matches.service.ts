@@ -100,41 +100,22 @@ export class MatchesService {
         const eventType = matchReportColumnElements[1].innerText;
         // TODO Interpret the type of events (to an enum)
         // TODO Event type sometimes changed by text elements (e.g. for fouls)
-        this.fileReaderService
-          .split(matchReportColumnElements[0].childNodes)
-          .forEach((eventElements, index) => {
-            // TODO Skip eventElements that are just the empty image (i.e. no event)
-            const eventId = `M${matchId}-T${teams[0].id}-${eventType}-#${index}`;
-            const playerIds = eventElements
-              .filter((element) => element instanceof HTMLElement)
-              .map((element) => element as HTMLElement)
-              .filter((element) => element.tagName === 'A')
-              .map((aTag) =>
-                this.fileReaderService.findQueryParamInHref(
-                  'pid',
-                  aTag.getAttribute('href'),
-                ),
-              );
-            let playerId: string;
-            if (playerIds.length > 1) {
-              throw new Error(
-                `Did not expect multiple player links for event ${eventId}`,
-              );
-            } else if (playerIds.length === 1) {
-              playerId = playerIds[0];
-            } else {
-              playerId = undefined;
-            }
-            // TODO For some event types, the report shows consequence team/player instead
-            matchEvents.push({
-              id: eventId,
-              actingTeam: teams[0],
-              actingPlayer: {
-                id: playerId,
-              },
-            });
-          });
-        // TODO Interpret other team's column as well (probably extract function and call it twice)
+        matchEvents.push(
+          ...this.extractMatchEvents(
+            matchReportColumnElements[0],
+            teams[0],
+            eventType,
+            matchId,
+          ),
+        );
+        matchEvents.push(
+          ...this.extractMatchEvents(
+            matchReportColumnElements[2],
+            teams[1],
+            eventType,
+            matchId,
+          ),
+        );
       }
       // Assemble the result
       matches.push({
@@ -148,6 +129,52 @@ export class MatchesService {
       });
     }
     return matches;
+  }
+
+  // TODO Event type should be enum in function argument
+  private extractMatchEvents(
+    columnElements: HTMLElement,
+    team: BblTeamReference,
+    eventType: string,
+    matchId: string,
+  ): BblMatchEvent[] {
+    const matchEvents = Array<BblMatchEvent>();
+    this.fileReaderService
+      .split(columnElements.childNodes)
+      .forEach((eventElements, index) => {
+        // TODO Skip eventElements that are just the empty image (i.e. no event)
+        const eventId = `M${matchId}-T${team.id}-${eventType}-#${index}`;
+        const playerIds = eventElements
+          .filter((element) => element instanceof HTMLElement)
+          .map((element) => element as HTMLElement)
+          .filter((element) => element.tagName === 'A')
+          .map((aTag) =>
+            this.fileReaderService.findQueryParamInHref(
+              'pid',
+              aTag.getAttribute('href'),
+            ),
+          );
+        let playerId: string;
+        if (playerIds.length > 1) {
+          throw new Error(
+            `Did not expect multiple player links for event ${eventId}`,
+          );
+        } else if (playerIds.length === 1) {
+          playerId = playerIds[0];
+        } else {
+          playerId = undefined;
+        }
+        // TODO For some event types, the report shows consequence team/player instead
+        matchEvents.push({
+          id: eventId,
+          actingTeam: team,
+          actingPlayer: {
+            id: playerId,
+          },
+        });
+      });
+    // TODO Interpret other team's column as well (probably extract function and call it twice)
+    return matchEvents;
   }
 
   private consolidateMatchEvents(
