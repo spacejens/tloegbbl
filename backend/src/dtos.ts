@@ -1,4 +1,14 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import {
+  MatchEventActionType,
+  MatchEventConsequenceType,
+} from '@prisma/client';
 
 @InputType('Identifiable')
 @ObjectType()
@@ -201,6 +211,14 @@ export class TeamInMatchReference extends Identifiable {
 @ObjectType()
 export class TeamInMatch extends TeamInMatchReference {}
 
+registerEnumType(MatchEventActionType, {
+  name: 'MatchEventActionType',
+});
+
+registerEnumType(MatchEventConsequenceType, {
+  name: 'MatchEventConsequenceType',
+});
+
 @InputType('MatchEventReferenceInput')
 @ObjectType()
 export class MatchEventReference extends ExternallyIdentifiable {}
@@ -214,8 +232,12 @@ export class MatchEvent extends MatchEventReference {
   actingTeam?: TeamReference;
   @Field(() => PlayerReference, { nullable: true })
   actingPlayer?: PlayerReference;
+  @Field(() => MatchEventActionType, { nullable: true })
+  actionType?: MatchEventActionType;
   @Field(() => TeamReference, { nullable: true })
   consequenceTeam?: TeamReference;
   @Field(() => PlayerReference, { nullable: true })
   consequencePlayer?: PlayerReference;
+  @Field(() => MatchEventConsequenceType, { nullable: true })
+  consequenceType?: MatchEventConsequenceType;
 }

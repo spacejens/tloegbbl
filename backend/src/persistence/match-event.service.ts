@@ -97,6 +97,8 @@ export class MatchEventService extends ExternallyIdentifiablePersistenceService<
     return await this.prisma.matchEvent.create({
       data: {
         externalIds: this.createAllOf(input.externalIds),
+        actionType: input.actionType,
+        consequenceType: input.consequenceType,
         match: {
           connect: {
             id: match.id,
@@ -150,6 +152,8 @@ export class MatchEventService extends ExternallyIdentifiablePersistenceService<
       },
       data: {
         externalIds: this.createAnonymousOf(input.externalIds),
+        actionType: input.actionType,
+        consequenceType: input.consequenceType,
         // TODO Support changing/adding acting/consequence team for match event?
         // TODO Support changing/adding acting/consequence player for match event?
       },

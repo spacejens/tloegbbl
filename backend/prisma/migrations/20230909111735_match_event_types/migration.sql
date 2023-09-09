@@ -1,0 +1,9 @@
+-- CreateEnum
+CREATE TYPE "MatchEventActionType" AS ENUM ('CASUALTY', 'COMPLETION', 'TTM_COMPLETION', 'DEFLECTION', 'INTERCEPTION', 'TOUCHDOWN', 'MVP', 'FOUL', 'SENT_OFF');
+
+-- CreateEnum
+CREATE TYPE "MatchEventConsequenceType" AS ENUM ('SERIOUS_INJURY', 'MISS_NEXT_GAME', 'NIGGLING_INJURY', 'MOVEMENT_REDUCTION', 'STRENGTH_REDUCTION', 'AGILITY_REDUCTION', 'PASSING_REDUCTION', 'ARMOUR_REDUCTION', 'BADLY_HURT', 'DEATH');
+
+-- AlterTable
+ALTER TABLE "match_event" ADD COLUMN     "action_type" "MatchEventActionType",
+ADD COLUMN     "consequence_type" "MatchEventConsequenceType";

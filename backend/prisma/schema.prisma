@@ -265,6 +265,31 @@ model TeamInMatch {
   @@map("team_in_match")
 }
 
+enum MatchEventActionType {
+  CASUALTY
+  COMPLETION
+  TTM_COMPLETION
+  DEFLECTION
+  INTERCEPTION
+  TOUCHDOWN
+  MVP
+  FOUL
+  SENT_OFF
+}
+
+enum MatchEventConsequenceType {
+  SERIOUS_INJURY
+  MISS_NEXT_GAME
+  NIGGLING_INJURY
+  MOVEMENT_REDUCTION
+  STRENGTH_REDUCTION
+  AGILITY_REDUCTION
+  PASSING_REDUCTION
+  ARMOUR_REDUCTION
+  BADLY_HURT
+  DEATH
+}
+
 model MatchEvent {
   id                      Int                       @default(autoincrement()) @id
   externalIds             ExternalMatchEventId[]
@@ -274,10 +299,12 @@ model MatchEvent {
   actingTeamId            Int?                      @map("acting_team_id")
   actingPlayer            Player?                   @relation(fields: [actingPlayerId], references: [id], name: "actingMatchEvents")
   actingPlayerId          Int?                      @map("acting_player_id")
+  actionType              MatchEventActionType?     @map("action_type")
   consequenceTeam         Team?                     @relation(fields: [consequenceTeamId], references: [id], name: "consequenceMatchEvents")
   consequenceTeamId       Int?                      @map("consequence_team_id")
   consequencePlayer       Player?                   @relation(fields: [consequencePlayerId], references: [id], name: "consequenceMatchEvents")
   consequencePlayerId     Int?                      @map("consequence_player_id")
+  consequenceType         MatchEventConsequenceType?  @map("consequence_type")
 
   @@map("match_event")
 }
