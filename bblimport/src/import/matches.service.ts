@@ -97,14 +97,12 @@ export class MatchesService {
             `Did not expect to find ${matchReportColumnElements.length} columns for match report row in match ${matchId}`,
           );
         }
-        const eventType = matchReportColumnElements[1].innerText;
-        // TODO Interpret the type of events (to an enum)
-        // TODO Event type sometimes changed by text elements (e.g. for fouls)
+        const rowTypeText = matchReportColumnElements[1].innerText;
         matchEvents.push(
           ...this.extractMatchEvents(
             matchReportColumnElements[0],
             teams[0],
-            eventType,
+            rowTypeText,
             matchId,
           ),
         );
@@ -112,7 +110,7 @@ export class MatchesService {
           ...this.extractMatchEvents(
             matchReportColumnElements[2],
             teams[1],
-            eventType,
+            rowTypeText,
             matchId,
           ),
         );
@@ -135,7 +133,7 @@ export class MatchesService {
   private extractMatchEvents(
     columnElements: HTMLElement,
     team: BblTeamReference,
-    eventType: string,
+    rowTypeText: string,
     matchId: string,
   ): BblMatchEvent[] {
     const matchEvents = Array<BblMatchEvent>();
@@ -151,7 +149,11 @@ export class MatchesService {
           return;
         }
         // Parse the event
-        const eventId = `M${matchId}-${team.id}-${eventType}-#${index}`;
+        const eventId = `M${matchId}-${team.id}-${rowTypeText}-#${index}`;
+        // Parse event type
+        // TODO Find event type enum, based on row type text (should casualty event type be just CAS with a separate consequence enum?)
+        // TODO Event type sometimes changed by non-player text elements (e.g. for fouls)
+        // Find player ID, if any
         const playerIds = eventElements
           .filter((element) => element instanceof HTMLElement)
           .map((element) => element as HTMLElement)
