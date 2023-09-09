@@ -151,7 +151,7 @@ export class MatchesService {
           return;
         }
         // Parse the event
-        const eventId = `M${matchId}-T${team.id}-${eventType}-#${index}`;
+        const eventId = `M${matchId}-${team.id}-${eventType}-#${index}`;
         const playerIds = eventElements
           .filter((element) => element instanceof HTMLElement)
           .map((element) => element as HTMLElement)
