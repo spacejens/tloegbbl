@@ -1,4 +1,5 @@
-import { YogaDriver, YogaDriverConfig } from '@graphql-yoga/nestjs';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { CoachResolver } from './coach.resolver';
@@ -20,11 +21,13 @@ import { MatchEventResolver } from './match-event.resolver';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<YogaDriverConfig>({
-      driver: YogaDriver,
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       path: 'api',
-      graphiql: {
-        defaultQuery: `{
+      playground: false,
+      plugins: [
+        ApolloServerPluginLandingPageLocalDefault({
+          document: `{
   singleCoach: coach(id: 2) {
     id,
     externalIds {
@@ -38,8 +41,11 @@ import { MatchEventResolver } from './match-event.resolver';
     name,
   }
 }`,
-      },
+        }),
+      ],
       autoSchemaFile: true, // Auto-generate in-memory schema file, doesn't have source folder in Docker
+      sortSchema: true,
+      introspection: true,
     }),
     PersistenceModule,
     ImportModule,
