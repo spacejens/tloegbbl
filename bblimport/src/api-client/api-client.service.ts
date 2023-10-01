@@ -1,6 +1,6 @@
-import { HttpWrapperService } from './http-wrapper.service';
 import { Injectable } from '@nestjs/common';
-import { AxiosResponse } from 'axios';
+import { ApolloApiClientService } from './apollo-api-client.service';
+import { FetchResult, gql } from '@apollo/client/core';
 
 export type ReturnedFields = ReturnedField[];
 
@@ -10,7 +10,7 @@ export type ReturnedSubfield = { [fieldName: string]: ReturnedFields };
 
 @Injectable()
 export class ApiClientService {
-  constructor(private readonly httpService: HttpWrapperService) {}
+  constructor(private readonly apollo: ApolloApiClientService) {}
 
   // TODO Replace this implementation with actual generated (from schema) GraphQL code of some kind
 
@@ -28,27 +28,19 @@ export class ApiClientService {
     argumentName: string,
     argument: any,
     returnedFields: ReturnedFields,
-  ): Promise<AxiosResponse<any, any>> {
+  ): Promise<FetchResult<any>> {
     const query: string = `mutation {${name}(${argumentName}: ${this.formatArgument(
       argument,
     )}) ${this.formatReturnedFields(returnedFields)}}`;
-    const result = await this.httpService.post(
-      // TODO Get API URL from configuration
-      'http://localhost:3000/api',
-      {
-        query: query,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-    if (result.status != 200 || result.data.errors) {
+    console.log(`SENDING ${query}\nGQL ${JSON.stringify(gql(query))}`);
+    const result = await this.apollo.mutate({
+      mutation: gql(query),
+    });
+    if (result.errors) {
       throw new Error(
-        `Unexpected result from mutation API: ${result.status} ${
-          result.statusText
-        } ${JSON.stringify(result.data)}`,
+        `Unexpected result from mutation API: ${result.errors} ${JSON.stringify(
+          result.data,
+        )}`,
       );
     }
     return result;
