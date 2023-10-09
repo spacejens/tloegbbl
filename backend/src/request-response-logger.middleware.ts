@@ -22,9 +22,9 @@ export class RequestResponseLoggerMiddleware implements NestMiddleware {
     res.on('finish', () => {
       const resLength: string = res.get('content-length');
       console.log(
-        `\n${req.originalUrl}\n${JSON.stringify(
-          req.body,
-        )}\n${resContent}HTTP ${res.statusCode}, ${resLength} bytes`,
+        `\n${req.originalUrl}\n${JSON.stringify(req.body)}\n${resContent}HTTP ${
+          res.statusCode
+        }, ${resLength} bytes`,
       );
     });
     next();
