@@ -18,7 +18,7 @@ export class AdvancementResolver {
     private advancementService: AdvancementService,
   ) {}
 
-  @Mutation(() => Advancement)
+  @Mutation(() => Advancement, { name: 'advancement' })
   async importAdvancement(
     @Args('advancement', { type: () => Advancement }) advancement: Advancement,
   ): Promise<Advancement> {

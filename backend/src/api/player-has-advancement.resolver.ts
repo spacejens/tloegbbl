@@ -10,7 +10,7 @@ export class PlayerHasAdvancementResolver {
     private playerHasAdvancementService: PlayerHasAdvancementService,
   ) {}
 
-  @Mutation(() => PlayerHasAdvancement)
+  @Mutation(() => PlayerHasAdvancement, { name: 'playerHasAdvancement' })
   async importPlayerHasAdvancement(
     @Args('playerHasAdvancement', { type: () => PlayerHasAdvancement })
     playerHasAdvancement: PlayerHasAdvancement,

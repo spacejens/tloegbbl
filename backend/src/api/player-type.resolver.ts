@@ -18,7 +18,7 @@ export class PlayerTypeResolver {
     private playerTypeService: PlayerTypeService,
   ) {}
 
-  @Mutation(() => PlayerType)
+  @Mutation(() => PlayerType, { name: 'playerType' })
   async importPlayerType(
     @Args('playerType', { type: () => PlayerType }) playerType: PlayerType,
   ): Promise<PlayerType> {

@@ -10,7 +10,7 @@ export class TeamInMatchResolver {
     private teamInMatchService: TeamInMatchService,
   ) {}
 
-  @Mutation(() => TeamInMatch)
+  @Mutation(() => TeamInMatch, { name: 'teamInMatch' })
   async importTeamInMatch(
     @Args('teamInMatch', { type: () => TeamInMatch })
     teamInMatch: TeamInMatch,

@@ -10,7 +10,7 @@ export class PlayerTypeInTeamTypeResolver {
     private playerTypeInTeamTypeService: PlayerTypeInTeamTypeService,
   ) {}
 
-  @Mutation(() => PlayerTypeInTeamType)
+  @Mutation(() => PlayerTypeInTeamType, { name: 'playerTypeInTeamType' })
   async importPlayerTypeInTeamType(
     @Args('playerTypeInTeamType', { type: () => PlayerTypeInTeamType })
     playerTypeInTeamType: PlayerTypeInTeamType,

@@ -18,7 +18,7 @@ export class CoachResolver {
     private coachImportService: CoachImportService,
   ) {}
 
-  @Mutation(() => Coach)
+  @Mutation(() => Coach, { name: 'coach' })
   async importCoach(
     @Args('coach', { type: () => Coach }) coach: Coach,
   ): Promise<Coach> {

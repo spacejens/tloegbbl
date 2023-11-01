@@ -122,7 +122,7 @@ export class TeamsService {
     await this.teamTypesService.uploadTeamType(team.teamType);
     // Upload the team data
     const result = await this.api.mutation(
-      'importTeam',
+      'team',
       'team',
       {
         name: team.name,

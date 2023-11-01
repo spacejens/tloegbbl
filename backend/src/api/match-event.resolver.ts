@@ -18,7 +18,7 @@ export class MatchEventResolver {
     private matchEventService: MatchEventService,
   ) {}
 
-  @Mutation(() => MatchEvent)
+  @Mutation(() => MatchEvent, { name: 'matchEvent' })
   async importMatchEvent(
     @Args('matchEvent', { type: () => MatchEvent }) matchEvent: MatchEvent,
   ): Promise<MatchEvent> {

@@ -73,7 +73,7 @@ export class CompetitionsService {
   async uploadCompetition(competition: BblCompetition): Promise<void> {
     // Upload the competition data
     const result = await this.api.mutation(
-      'importCompetition',
+      'competition',
       'competition',
       {
         name: competition.name,
@@ -90,7 +90,7 @@ export class CompetitionsService {
     console.log(JSON.stringify(result.data));
     for (const participant of competition.participants) {
       const participantResult = await this.api.mutation(
-        'importTeamInCompetition',
+        'teamInCompetition',
         'teamInCompetition',
         {
           team: {

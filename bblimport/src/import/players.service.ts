@@ -112,7 +112,7 @@ export class PlayersService {
     // TODO Ensure any sustained injuries have been uploaded before connecting players to them
     // Upload the player data
     const result = await this.api.mutation(
-      'importPlayer',
+      'player',
       'player',
       {
         name: player.name,
@@ -152,7 +152,7 @@ export class PlayersService {
     for (const advancement of player.advancements) {
       await this.advancementService.uploadAdvancement(advancement);
       const advancementResult = await this.api.mutation(
-        'importPlayerHasAdvancement',
+        'playerHasAdvancement',
         'playerHasAdvancement',
         {
           player: {

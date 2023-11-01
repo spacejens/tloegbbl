@@ -22,7 +22,7 @@ export class AdvancementsService {
     // TODO Can the duplicate upload detection be more clean? Would be nice with an object equality check of the whole advancement
     // Upload the team type data
     const result = await this.api.mutation(
-      'importAdvancement',
+      'advancement',
       'advancement',
       {
         name: advancement.name,

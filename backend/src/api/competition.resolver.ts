@@ -18,7 +18,7 @@ export class CompetitionResolver {
     private competitionService: CompetitionService,
   ) {}
 
-  @Mutation(() => Competition)
+  @Mutation(() => Competition, { name: 'competition' })
   async importCompetition(
     @Args('competition', { type: () => Competition }) competition: Competition,
   ): Promise<Competition> {

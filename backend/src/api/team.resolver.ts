@@ -18,7 +18,7 @@ export class TeamResolver {
     private teamService: TeamService,
   ) {}
 
-  @Mutation(() => Team)
+  @Mutation(() => Team, { name: 'team' })
   async importTeam(
     @Args('team', { type: () => Team }) team: Team,
   ): Promise<Team> {

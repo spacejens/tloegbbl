@@ -326,7 +326,7 @@ export class MatchesService {
   async uploadMatch(match: BblMatch): Promise<void> {
     // Upload the match data
     const result = await this.api.mutation(
-      'importMatch',
+      'match',
       'match',
       {
         name: match.name,
@@ -354,7 +354,7 @@ export class MatchesService {
     console.log(JSON.stringify(result.data));
     for (const team of match.teams) {
       const teamResult = await this.api.mutation(
-        'importTeamInMatch',
+        'teamInMatch',
         'teamInMatch',
         {
           team: {
@@ -388,7 +388,7 @@ export class MatchesService {
     }
     for (const matchEvent of match.matchEvents) {
       const eventResult = await this.api.mutation(
-        'importMatchEvent',
+        'matchEvent',
         'matchEvent',
         {
           // TODO Send action/consequence type to backend
