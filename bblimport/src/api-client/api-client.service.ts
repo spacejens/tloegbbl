@@ -32,18 +32,26 @@ export class ApiClientService {
     const query: string = `mutation {${name}(${argumentName}: ${this.formatArgument(
       argument,
     )}) ${this.formatReturnedFields(returnedFields)}}`;
-    console.log(`SENDING ${query}\nGQL ${JSON.stringify(gql(query))}`);
-    const result = await this.apollo.mutate({
-      mutation: gql(query),
-    });
-    if (result.errors) {
-      throw new Error(
-        `Unexpected result from mutation API: ${result.errors} ${JSON.stringify(
-          result.data,
+    try {
+      const result = await this.apollo.mutate({
+        mutation: gql(query),
+      });
+      if (result.errors) {
+        throw new Error(
+          `Unexpected result from mutation API: ${
+            result.errors
+          } ${JSON.stringify(result.data)}`,
+        );
+      }
+      return result;
+    } catch (e) {
+      console.error(
+        `Error while sending:\nQuery = ${query}\nGQL = ${JSON.stringify(
+          gql(query),
         )}`,
       );
+      throw e;
     }
-    return result;
   }
 
   private formatArgument(argument: any): string {
