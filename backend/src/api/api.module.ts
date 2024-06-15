@@ -18,6 +18,7 @@ import { PlayerHasAdvancementResolver } from './player-has-advancement.resolver'
 import { PlayerTypeHasAdvancementResolver } from './player-type-has-advancement.resolver';
 import { PlayerTypeInTeamTypeResolver } from './player-type-in-team-type.resolver';
 import { MatchEventResolver } from './match-event.resolver';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -43,7 +44,7 @@ import { MatchEventResolver } from './match-event.resolver';
 }`,
         }),
       ],
-      autoSchemaFile: true, // Auto-generate in-memory schema file, doesn't have source folder in Docker
+      autoSchemaFile: join(process.cwd(), '../graphql-schema/backend.graphql'),
       sortSchema: true,
       introspection: true,
     }),

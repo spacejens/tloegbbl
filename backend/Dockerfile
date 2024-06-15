@@ -28,6 +28,10 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 
+USER 0
+RUN mkdir -p /graphql-schema
+RUN chmod 777 /graphql-schema
+
 USER 1000
 EXPOSE ${PORT}
 

@@ -49,3 +49,8 @@ All data model and database structure changes are driven through [Prisma](https:
 - Develop and unit test functionality as normal
 - To generate SQL changes and update the database, use `npx prisma migrate dev --name <name of the change>`
 - Commit schema, generated code, and (ideally) your own code together to clarify the relationship between them
+
+## GraphQL schema generation
+
+The Docker Compose deployment generates a GraphQL schema file for the backend inside the backend image, in the `graphql-schema`
+directory. This file is manually copied to the directory with the same name in the repo.

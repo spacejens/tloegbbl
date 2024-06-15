@@ -1,0 +1,347 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Advancement {
+  externalIds: [ExternalId!]
+  id: Int
+  name: String!
+}
+
+input AdvancementInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+  name: String!
+}
+
+type AdvancementReference {
+  externalIds: [ExternalId!]
+  id: Int
+}
+
+input AdvancementReferenceInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+}
+
+type Coach {
+  externalIds: [ExternalId!]
+  id: Int
+  name: String!
+}
+
+input CoachInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+  name: String!
+}
+
+type CoachReference {
+  externalIds: [ExternalId!]
+  id: Int
+}
+
+input CoachReferenceInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+}
+
+type Competition {
+  externalIds: [ExternalId!]
+  id: Int
+  name: String!
+}
+
+input CompetitionInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+  name: String!
+}
+
+type CompetitionReference {
+  externalIds: [ExternalId!]
+  id: Int
+}
+
+input CompetitionReferenceInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+}
+
+type ExternalId {
+  externalId: String!
+  externalSystem: String!
+  id: Int
+}
+
+input ExternalIdInput {
+  externalId: String!
+  externalSystem: String!
+  id: Int
+}
+
+type Match {
+  competition: CompetitionReference!
+  externalIds: [ExternalId!]
+  id: Int
+  name: String!
+}
+
+type MatchEvent {
+  actingPlayer: PlayerReference
+  actingTeam: TeamReference
+  actionType: MatchEventActionType
+  consequencePlayer: PlayerReference
+  consequenceTeam: TeamReference
+  consequenceType: MatchEventConsequenceType
+  externalIds: [ExternalId!]
+  id: Int
+  match: MatchReference!
+}
+
+enum MatchEventActionType {
+  CASUALTY
+  COMPLETION
+  DEFLECTION
+  FOUL
+  INTERCEPTION
+  MVP
+  SENT_OFF
+  TOUCHDOWN
+  TTM_COMPLETION
+}
+
+enum MatchEventConsequenceType {
+  AGILITY_REDUCTION
+  ARMOUR_REDUCTION
+  BADLY_HURT
+  DEATH
+  MISS_NEXT_GAME
+  MOVEMENT_REDUCTION
+  NIGGLING_INJURY
+  PASSING_REDUCTION
+  SERIOUS_INJURY
+  STRENGTH_REDUCTION
+}
+
+input MatchEventInput {
+  actingPlayer: PlayerReferenceInput
+  actingTeam: TeamReferenceInput
+  actionType: MatchEventActionType
+  consequencePlayer: PlayerReferenceInput
+  consequenceTeam: TeamReferenceInput
+  consequenceType: MatchEventConsequenceType
+  externalIds: [ExternalIdInput!]
+  id: Int
+  match: MatchReferenceInput!
+}
+
+input MatchInput {
+  competition: CompetitionReferenceInput!
+  externalIds: [ExternalIdInput!]
+  id: Int
+  name: String!
+}
+
+type MatchReference {
+  externalIds: [ExternalId!]
+  id: Int
+}
+
+input MatchReferenceInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+}
+
+type Mutation {
+  advancement(advancement: AdvancementInput!): Advancement!
+  coach(coach: CoachInput!): Coach!
+  competition(competition: CompetitionInput!): Competition!
+  match(match: MatchInput!): Match!
+  matchEvent(matchEvent: MatchEventInput!): MatchEvent!
+  player(player: PlayerInput!): Player!
+  playerHasAdvancement(playerHasAdvancement: PlayerHasAdvancementInput!): PlayerHasAdvancement!
+  playerType(playerType: PlayerTypeInput!): PlayerType!
+  playerTypeHasAdvancement(playerTypeHasAdvancement: PlayerTypeHasAdvancementInput!): PlayerTypeHasAdvancement!
+  playerTypeInTeamType(playerTypeInTeamType: PlayerTypeInTeamTypeInput!): PlayerTypeInTeamType!
+  team(team: TeamInput!): Team!
+  teamInCompetition(teamInCompetition: TeamInCompetitionInput!): TeamInCompetition!
+  teamInMatch(teamInMatch: TeamInMatchInput!): TeamInMatch!
+  teamType(teamType: TeamTypeInput!): TeamType!
+}
+
+type Player {
+  externalIds: [ExternalId!]
+  id: Int
+  name: String!
+  playerType: PlayerTypeReference!
+  team: TeamReference!
+}
+
+type PlayerHasAdvancement {
+  advancement: AdvancementReference
+  id: Int
+  player: PlayerReference
+}
+
+input PlayerHasAdvancementInput {
+  advancement: AdvancementReferenceInput
+  id: Int
+  player: PlayerReferenceInput
+}
+
+input PlayerInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+  name: String!
+  playerType: PlayerTypeReferenceInput!
+  team: TeamReferenceInput!
+}
+
+type PlayerReference {
+  externalIds: [ExternalId!]
+  id: Int
+}
+
+input PlayerReferenceInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+}
+
+type PlayerType {
+  externalIds: [ExternalId!]
+  id: Int
+  name: String!
+}
+
+type PlayerTypeHasAdvancement {
+  advancement: AdvancementReference
+  id: Int
+  playerType: PlayerTypeReference
+}
+
+input PlayerTypeHasAdvancementInput {
+  advancement: AdvancementReferenceInput
+  id: Int
+  playerType: PlayerTypeReferenceInput
+}
+
+type PlayerTypeInTeamType {
+  id: Int
+  playerType: PlayerTypeReference
+  teamType: TeamTypeReference
+}
+
+input PlayerTypeInTeamTypeInput {
+  id: Int
+  playerType: PlayerTypeReferenceInput
+  teamType: TeamTypeReferenceInput
+}
+
+input PlayerTypeInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+  name: String!
+}
+
+type PlayerTypeReference {
+  externalIds: [ExternalId!]
+  id: Int
+}
+
+input PlayerTypeReferenceInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+}
+
+type Query {
+  advancement(id: Int!): Advancement!
+  coach(id: Int!): Coach
+  coaches: [Coach!]
+  competition(id: Int!): Competition!
+  match(id: Int!): Match!
+  matchEvent(id: Int!): MatchEvent!
+  player(id: Int!): Player!
+  playerHasAdvancement(id: Int!): PlayerHasAdvancement!
+  playerType(id: Int!): PlayerType!
+  playerTypeHasAdvancement(id: Int!): PlayerTypeHasAdvancement!
+  playerTypeInTeamType(id: Int!): PlayerTypeInTeamType!
+  team(id: Int!): Team!
+  teamInCompetition(id: Int!): TeamInCompetition!
+  teamInMatch(id: Int!): TeamInMatch!
+  teamType(id: Int!): TeamType
+}
+
+type Team {
+  coCoach: CoachReference
+  externalIds: [ExternalId!]
+  headCoach: CoachReference!
+  id: Int
+  name: String!
+  teamType: TeamTypeReference!
+}
+
+type TeamInCompetition {
+  competition: CompetitionReference
+  id: Int
+  team: TeamReference
+}
+
+input TeamInCompetitionInput {
+  competition: CompetitionReferenceInput
+  id: Int
+  team: TeamReferenceInput
+}
+
+type TeamInMatch {
+  id: Int
+  match: MatchReference
+  team: TeamReference
+}
+
+input TeamInMatchInput {
+  id: Int
+  match: MatchReferenceInput
+  team: TeamReferenceInput
+}
+
+input TeamInput {
+  coCoach: CoachReferenceInput
+  externalIds: [ExternalIdInput!]
+  headCoach: CoachReferenceInput!
+  id: Int
+  name: String!
+  teamType: TeamTypeReferenceInput!
+}
+
+type TeamReference {
+  externalIds: [ExternalId!]
+  id: Int
+}
+
+input TeamReferenceInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+}
+
+type TeamType {
+  externalIds: [ExternalId!]
+  id: Int
+  name: String!
+}
+
+input TeamTypeInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+  name: String!
+}
+
+type TeamTypeReference {
+  externalIds: [ExternalId!]
+  id: Int
+}
+
+input TeamTypeReferenceInput {
+  externalIds: [ExternalIdInput!]
+  id: Int
+}
