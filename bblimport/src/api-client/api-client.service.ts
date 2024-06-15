@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ApolloApiClientService } from './apollo-api-client.service';
 import { FetchResult, gql } from '@apollo/client/core';
+import { CoachInput, CoachReference } from './__generated__/graphql';
+import { gql as gql2 } from './__generated__/gql';
 
 export type ReturnedFields = ReturnedField[];
 
@@ -8,9 +10,27 @@ export type ReturnedField = string | ReturnedSubfield;
 
 export type ReturnedSubfield = { [fieldName: string]: ReturnedFields };
 
+const IMPORT_COACH = gql2(`
+  mutation coach($coach: CoachInput!) {
+    coach(coach: $coach) {
+      id,
+    }
+  }
+`);
+
 @Injectable()
 export class ApiClientService {
   constructor(private readonly apollo: ApolloApiClientService) {}
+
+  async importCoach(coach: CoachInput): Promise<CoachReference> {
+    const result = await this.apollo.mutate({
+      mutation: IMPORT_COACH,
+      variables: {
+        coach: coach,
+      }
+    });
+    return result.data;
+  }
 
   // TODO Replace this implementation with actual generated (from schema) GraphQL code of some kind
 
