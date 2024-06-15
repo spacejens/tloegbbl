@@ -11,7 +11,10 @@ export class ApolloApiClientService extends ApolloClient<NormalizedCacheObject> 
     super({
       // TODO Get API URL from configuration
       uri: 'http://localhost:3000/api',
-      cache: new InMemoryCache(),
+      // TODO Configure cache, see https://www.apollographql.com/docs/react/caching/cache-configuration/
+      cache: new InMemoryCache({
+        resultCaching: false,
+      }),
     });
   }
 }
