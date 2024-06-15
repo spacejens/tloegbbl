@@ -9,6 +9,7 @@ import { Injectable } from '@nestjs/common';
 export class ApolloApiClientService extends ApolloClient<NormalizedCacheObject> {
   constructor() {
     super({
+      // TODO Get API credentials from configuration
       // TODO Get API URL from configuration
       uri: 'http://localhost:3000/api',
       // TODO Configure cache, see https://www.apollographql.com/docs/react/caching/cache-configuration/
