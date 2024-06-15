@@ -54,3 +54,6 @@ All data model and database structure changes are driven through [Prisma](https:
 
 The Docker Compose deployment generates a GraphQL schema file for the backend inside the backend image, in the `graphql-schema`
 directory. This file is manually copied to the directory with the same name in the repo.
+
+When the backend schema has been updated, the client applications need to generate new code from it.
+This is done by using `pnpm run generate-graphql-types` inside each client application, and possibly updating code to fix issues.
