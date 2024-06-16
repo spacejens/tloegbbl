@@ -23,6 +23,30 @@ export class ApiClientService {
     );
   }
 
+  async post(
+    path: string,
+    argument: any,
+  ): Promise<AxiosResponse<any,any>> {
+    const result = await this.httpService.post(
+      // TODO Get API URL from configuration
+      'http://localhost:3000/' + path,
+      argument,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+    if (result.status != 201 || result.data.errors) {
+      throw new Error(
+        `Unexpected result from REST POST: ${result.status} ${
+          result.statusText
+        } ${JSON.stringify(result.data)}`,
+      );
+    }
+    return result;
+  }
+
   async mutation(
     name: string,
     argumentName: string,
