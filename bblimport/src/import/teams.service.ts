@@ -121,14 +121,15 @@ export class TeamsService {
     }
     await this.teamTypesService.uploadTeamType(team.teamType);
     // Upload the team data
-    const result = await this.api.mutation(
-      'importTeam',
+    const result = await this.api.post(
       'team',
       {
         name: team.name,
-        externalIds: [
+        externalIds: team.extraId ? [
           this.api.externalId(team.id),
           this.api.externalId(team.extraId),
+        ] : [
+          this.api.externalId(team.id),
         ],
         headCoach: {
           externalIds: [this.api.externalId(team.headCoach.name)],
@@ -142,37 +143,6 @@ export class TeamsService {
           externalIds: [this.api.externalId(team.teamType.id)],
         },
       },
-      [
-        'id',
-        {
-          externalIds: ['id', 'externalId', 'externalSystem'],
-        },
-        'name',
-        {
-          headCoach: [
-            'id',
-            {
-              externalIds: ['id', 'externalId', 'externalSystem'],
-            },
-          ],
-        },
-        {
-          coCoach: [
-            'id',
-            {
-              externalIds: ['id', 'externalId', 'externalSystem'],
-            },
-          ],
-        },
-        {
-          teamType: [
-            'id',
-            {
-              externalIds: ['id', 'externalId', 'externalSystem'],
-            },
-          ],
-        },
-      ],
     );
     console.log(JSON.stringify(result.data));
   }
