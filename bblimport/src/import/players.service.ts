@@ -127,9 +127,8 @@ export class PlayersService {
     console.log(JSON.stringify(result.data));
     for (const advancement of player.advancements) {
       await this.advancementService.uploadAdvancement(advancement);
-      const advancementResult = await this.api.mutation(
-        'importPlayerHasAdvancement',
-        'playerHasAdvancement',
+      const advancementResult = await this.api.post(
+        'player-has-advancement',
         {
           player: {
             externalIds: [this.api.externalId(player.id)],
@@ -138,25 +137,6 @@ export class PlayersService {
             externalIds: [this.api.externalId(advancement.name)],
           },
         },
-        [
-          'id',
-          {
-            player: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-          {
-            advancement: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-        ],
       );
       console.log(JSON.stringify(advancementResult.data));
     }
