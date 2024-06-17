@@ -81,9 +81,8 @@ export class CompetitionsService {
     );
     console.log(JSON.stringify(result.data));
     for (const participant of competition.participants) {
-      const participantResult = await this.api.mutation(
-        'importTeamInCompetition',
-        'teamInCompetition',
+      const participantResult = await this.api.post(
+        'team-in-competition',
         {
           team: {
             externalIds: [this.api.externalId(participant.id)],
@@ -92,25 +91,6 @@ export class CompetitionsService {
             externalIds: [this.api.externalId(competition.id)],
           },
         },
-        [
-          'id',
-          {
-            team: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-          {
-            competition: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-        ],
       );
       console.log(JSON.stringify(participantResult.data));
     }
