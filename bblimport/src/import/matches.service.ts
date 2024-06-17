@@ -351,9 +351,8 @@ export class MatchesService {
       console.log(JSON.stringify(teamResult.data));
     }
     for (const matchEvent of match.matchEvents) {
-      const eventResult = await this.api.mutation(
-        'importMatchEvent',
-        'matchEvent',
+      const eventResult = await this.api.post(
+        'match-event',
         {
           // TODO Send action/consequence type to backend
           externalIds: [this.api.externalId(matchEvent.id)],
@@ -385,52 +384,6 @@ export class MatchesService {
               }
             : undefined,
         },
-        [
-          'id',
-          {
-            externalIds: ['id', 'externalId', 'externalSystem'],
-          },
-          {
-            match: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-          {
-            actingTeam: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-          {
-            actingPlayer: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-          {
-            consequenceTeam: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-          {
-            consequencePlayer: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-        ],
       );
       console.log(JSON.stringify(eventResult.data));
     }
