@@ -137,9 +137,8 @@ export class PlayerTypesService {
     }
     for (const teamType of playerType.teamTypes) {
       await this.teamTypesService.uploadTeamType(teamType);
-      const teamTypeResult = await this.api.mutation(
-        'importPlayerTypeInTeamType',
-        'playerTypeInTeamType',
+      const teamTypeResult = await this.api.post(
+        'player-type-in-team-type',
         {
           playerType: {
             externalIds: [this.api.externalId(playerType.id)],
@@ -148,25 +147,6 @@ export class PlayerTypesService {
             externalIds: [this.api.externalId(teamType.id)],
           },
         },
-        [
-          'id',
-          {
-            playerType: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-          {
-            teamType: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-        ],
       );
       console.log(JSON.stringify(teamTypeResult.data));
     }
