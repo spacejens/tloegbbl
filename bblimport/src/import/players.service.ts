@@ -111,8 +111,7 @@ export class PlayersService {
   async uploadPlayer(player: BblPlayer): Promise<void> {
     // TODO Ensure any sustained injuries have been uploaded before connecting players to them
     // Upload the player data
-    const result = await this.api.mutation(
-      'importPlayer',
+    const result = await this.api.post(
       'player',
       {
         name: player.name,
@@ -124,29 +123,6 @@ export class PlayersService {
           externalIds: [this.api.externalId(player.team.id)],
         },
       },
-      [
-        'id',
-        {
-          externalIds: ['id', 'externalId', 'externalSystem'],
-        },
-        'name',
-        {
-          playerType: [
-            'id',
-            {
-              externalIds: ['id', 'externalId', 'externalSystem'],
-            },
-          ],
-        },
-        {
-          team: [
-            'id',
-            {
-              externalIds: ['id', 'externalId', 'externalSystem'],
-            },
-          ],
-        },
-      ],
     );
     console.log(JSON.stringify(result.data));
     for (const advancement of player.advancements) {
