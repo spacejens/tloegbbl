@@ -325,8 +325,7 @@ export class MatchesService {
 
   async uploadMatch(match: BblMatch): Promise<void> {
     // Upload the match data
-    const result = await this.api.mutation(
-      'importMatch',
+    const result = await this.api.post(
       'match',
       {
         name: match.name,
@@ -335,21 +334,6 @@ export class MatchesService {
           externalIds: [this.api.externalId(match.competition.id)],
         },
       },
-      [
-        'id',
-        {
-          externalIds: ['id', 'externalId', 'externalSystem'],
-        },
-        'name',
-        {
-          competition: [
-            'id',
-            {
-              externalIds: ['id', 'externalId', 'externalSystem'],
-            },
-          ],
-        },
-      ],
     );
     console.log(JSON.stringify(result.data));
     for (const team of match.teams) {
