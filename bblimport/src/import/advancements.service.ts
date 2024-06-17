@@ -21,21 +21,13 @@ export class AdvancementsService {
     this.uploadedAdvancements.push(advancement.name);
     // TODO Can the duplicate upload detection be more clean? Would be nice with an object equality check of the whole advancement
     // Upload the team type data
-    const result = await this.api.mutation(
-      'importAdvancement',
+    const result = await this.api.post(
       'advancement',
       {
         name: advancement.name,
         // TODO When uploading advancement, might need to ensure first letter is capitalized, and both forms are present as external IDs (loner/Loner)
         externalIds: [this.api.externalId(advancement.name)],
       },
-      [
-        'id',
-        {
-          externalIds: ['id', 'externalId', 'externalSystem'],
-        },
-        'name',
-      ],
     );
     console.log(JSON.stringify(result.data));
   }
