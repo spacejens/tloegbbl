@@ -6,12 +6,13 @@ import { TeamTypeController } from './team-type.controller';
 import { TeamController } from './team.controller';
 import { PlayerTypeController } from './player-type.controller';
 import { AdvancementController } from './advancement.controller';
+import { PlayerTypeHasAdvancementController } from './player-type-has-advancement.controller';
 
 @Module({
   imports: [
     PersistenceModule,
     ImportModule,
   ],
-  controllers: [CoachController, TeamTypeController, TeamController, PlayerTypeController, AdvancementController]
+  controllers: [CoachController, TeamTypeController, TeamController, PlayerTypeController, AdvancementController, PlayerTypeHasAdvancementController]
 })
 export class RestModule {}
