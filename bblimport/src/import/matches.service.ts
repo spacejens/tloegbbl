@@ -337,9 +337,8 @@ export class MatchesService {
     );
     console.log(JSON.stringify(result.data));
     for (const team of match.teams) {
-      const teamResult = await this.api.mutation(
-        'importTeamInMatch',
-        'teamInMatch',
+      const teamResult = await this.api.post(
+        'team-in-match',
         {
           team: {
             externalIds: [this.api.externalId(team.id)],
@@ -348,25 +347,6 @@ export class MatchesService {
             externalIds: [this.api.externalId(match.id)],
           },
         },
-        [
-          'id',
-          {
-            team: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-          {
-            match: [
-              'id',
-              {
-                externalIds: ['id', 'externalId', 'externalSystem'],
-              },
-            ],
-          },
-        ],
       );
       console.log(JSON.stringify(teamResult.data));
     }
