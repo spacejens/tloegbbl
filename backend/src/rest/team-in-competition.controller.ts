@@ -11,12 +11,12 @@ export class TeamInCompetitionController {
   ) {}
 
   @Post()
-  async importCompetition(@Body() teamInCompetition: TeamInCompetition): Promise<TeamInCompetition> {
+  async importTeamInCompetition(@Body() teamInCompetition: TeamInCompetition): Promise<TeamInCompetition> {
     return this.teamInCompetitionImportService.import(teamInCompetition);
   }
 
   @Get(':id')
-  async getCompetition(@Param('id') id: string): Promise<TeamInCompetition> {
+  async getTeamInCompetition(@Param('id') id: string): Promise<TeamInCompetition> {
     return this.teamInCompetitionService.findById(+id);
   }
 }
