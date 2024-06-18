@@ -354,7 +354,6 @@ export class MatchesService {
       const eventResult = await this.api.post(
         'match-event',
         {
-          // TODO Send action/consequence type to backend
           externalIds: [this.api.externalId(matchEvent.id)],
           match: {
             externalIds: [this.api.externalId(match.id)],
@@ -369,6 +368,7 @@ export class MatchesService {
                 externalIds: [this.api.externalId(matchEvent.actingPlayer.id)],
               }
             : undefined,
+          actionType: matchEvent.actionType,
           consequenceTeam: matchEvent.consequenceTeam
             ? {
                 externalIds: [
@@ -383,6 +383,7 @@ export class MatchesService {
                 ],
               }
             : undefined,
+          consequenceType: matchEvent.consequenceType,
         },
       );
       console.log(JSON.stringify(eventResult.data));
