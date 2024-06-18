@@ -170,6 +170,34 @@ describe('CombineDataService', () => {
         expect(result).toEqual({ alpha: 'Found' });
       });
 
+      it('should overwrite found undefined', () => {
+        const requested: TestData = { alpha: 'Requested' };
+        const found: TestData = { alpha: undefined };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ alpha: 'Requested' });
+      });
+
+      it('should overwrite found null', () => {
+        const requested: TestData = { alpha: 'Requested' };
+        const found: TestData = { alpha: null };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ alpha: 'Requested' });
+      });
+
+      it('should not overwrite with requested undefined', () => {
+        const requested: TestData = { alpha: undefined };
+        const found: TestData = { alpha: 'Found' };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ alpha: 'Found' });
+      });
+
+      it('should not overwrite with requested null', () => {
+        const requested: TestData = { alpha: null };
+        const found: TestData = { alpha: 'Found' };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ alpha: 'Found' });
+      });
+
       it('should merge different data', () => {
         const requested: TestData = { alpha: 'Requested' };
         const found: TestData = { beta: 'Found' };

@@ -1,18 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalId, ExternallyIdentifiable } from '../dtos';
 
+type Validate<T> = Pick<T, {
+  [Prop in keyof T]: T[Prop] extends null | undefined ? never : Prop
+}[keyof T]>
+
 @Injectable()
 export class CombineDataService {
   preferFound<T extends ExternallyIdentifiable>(requested: T, found: T): T {
     return {
       ...requested,
-      ...found,
+      ...this.keepOnlyPropsWithValues(found),
       id: found.id,
       externalIds: this.combineExternalIds(
         requested.externalIds,
         found.externalIds,
       ),
     };
+  }
+
+  private keepOnlyPropsWithValues<T extends ExternallyIdentifiable>(obj: T): Validate<T> {
+    return Object.fromEntries(
+      Object.entries(obj)
+        .filter(([_, v]) => v != null)
+        .map(([k, v]) => [k, v === Object(v) ? this.keepOnlyPropsWithValues(v) : v])
+    ) as Validate<T>
   }
 
   private combineExternalIds(
