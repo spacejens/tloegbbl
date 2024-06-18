@@ -3,6 +3,7 @@ import { MatchesService } from './matches.service';
 import { ApiClientService } from '../api-client/api-client.service';
 import { mock } from 'jest-mock-extended';
 import { FileReaderService } from './filereader.service';
+import { MatchEventConsolidatorService } from './match-event-consolidator.service';
 
 describe('MatchesService', () => {
   let service: MatchesService;
@@ -13,6 +14,7 @@ describe('MatchesService', () => {
         MatchesService,
         { provide: FileReaderService, useValue: mock<FileReaderService>() },
         { provide: ApiClientService, useValue: mock<ApiClientService>() },
+        { provide: MatchEventConsolidatorService, useValue: mock<MatchEventConsolidatorService>() },
       ],
     }).compile();
 

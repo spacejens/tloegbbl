@@ -10,6 +10,7 @@ import { MatchesService } from './matches.service';
 import { PlayersService } from './players.service';
 import { PlayerTypesService } from './player-types.service';
 import { AdvancementsService } from './advancements.service';
+import { MatchEventConsolidatorService } from './match-event-consolidator.service';
 
 @Module({
   imports: [ApiClientModule],
@@ -24,6 +25,7 @@ import { AdvancementsService } from './advancements.service';
     PlayersService,
     PlayerTypesService,
     AdvancementsService,
+    MatchEventConsolidatorService,
   ],
   exports: [ImportService],
 })
