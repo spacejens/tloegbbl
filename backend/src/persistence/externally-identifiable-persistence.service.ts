@@ -29,9 +29,9 @@ export abstract class ExternallyIdentifiablePersistenceService<
     // TODO When finding by multiple references, check if references are contradictory (i.e. refer to different records) or dead (i.e. missing record)
     if (reference.id) {
       return this.findById(reference.id);
-    } else {
+    } else if (reference.externalIds) {
       for (const extId of reference.externalIds) {
-        const found = await this.findByExternalId(extId);
+        const found = extId && await this.findByExternalId(extId);
         if (found) {
           return found;
         }
