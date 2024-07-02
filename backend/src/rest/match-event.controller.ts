@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
 import { MatchEventService } from '../persistence/match-event.service';
 import { MatchEventImportService } from '../import/match-event-import.service';
 import { MatchEvent } from '../dtos';
+import { MatchEventPipe } from './match-event.pipe';
 
 @Controller('match-event')
 export class MatchEventController {
@@ -11,6 +12,7 @@ export class MatchEventController {
   ) {}
 
   @Post()
+  @UsePipes(MatchEventPipe)
   async importMatchEvent(@Body() matchEvent: MatchEvent): Promise<MatchEvent> {
     return this.matchEventImportService.import(matchEvent);
   }

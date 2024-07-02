@@ -1,8 +1,3 @@
-import {
-  MatchEventActionType,
-  MatchEventConsequenceType,
-} from '@prisma/client';
-
 export class Identifiable {
   id?: number;
 }
@@ -116,6 +111,31 @@ export class TeamInMatchReference extends Identifiable {
 }
 
 export class TeamInMatch extends TeamInMatchReference {}
+
+export enum MatchEventActionType {
+  CASUALTY = 'CASUALTY',
+  COMPLETION = 'COMPLETION',
+  TTM_COMPLETION = 'TTM_COMPLETION',
+  DEFLECTION = 'DEFLECTION',
+  INTERCEPTION = 'INTERCEPTION',
+  TOUCHDOWN = 'TOUCHDOWN',
+  MVP = 'MVP',
+  FOUL = 'FOUL',
+  SENT_OFF = 'SENT_OFF',
+}
+
+export enum MatchEventConsequenceType {
+  SERIOUS_INJURY = 'SERIOUS_INJURY',
+  MISS_NEXT_GAME = 'MISS_NEXT_GAME',
+  NIGGLING_INJURY = 'NIGGLING_INJURY',
+  MOVEMENT_REDUCTION = 'MOVEMENT_REDUCTION',
+  STRENGTH_REDUCTION = 'STRENGTH_REDUCTION',
+  AGILITY_REDUCTION = 'AGILITY_REDUCTION',
+  PASSING_REDUCTION = 'PASSING_REDUCTION',
+  ARMOUR_REDUCTION = 'ARMOUR_REDUCTION',
+  BADLY_HURT = 'BADLY_HURT',
+  DEATH = 'DEATH',
+}
 
 export class MatchEventReference extends ExternallyIdentifiable {}
 
