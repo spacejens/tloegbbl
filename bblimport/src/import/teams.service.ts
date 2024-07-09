@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 import { CoachesService } from './coaches.service';
-import { BblTeamType, TeamTypesService } from './team-types.service';
+import { TeamTypesService } from './team-types.service';
 import { ApiClientService } from '../api-client/api-client.service';
-import { Coach, CoachReference } from '../dtos';
+import { Coach, CoachReference, TeamType, TeamTypeReference } from '../dtos';
 
 export type BblTeamReference = {
   id: string;
@@ -15,7 +15,7 @@ export type BblTeam = BblTeamReference & {
   extraId?: string;
   headCoach: CoachReference;
   coCoach?: CoachReference;
-  teamType: BblTeamType;
+  teamType: TeamTypeReference;
 };
 
 // TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
@@ -23,7 +23,7 @@ export type TeamImportData = {
   team: BblTeam,
   headCoach: Coach,
   coCoach?: Coach,
-  teamType: BblTeamType,
+  teamType: TeamType,
 };
 
 @Injectable()
@@ -61,10 +61,10 @@ export class TeamsService {
           'Did not expect to find more than one team type for ' + teamId,
         );
       }
-      const teamType: BblTeamType = {
-        id: this.fileReaderService.findAnchorInHref(
+      const teamType: TeamType = {
+        externalIds: [this.api.externalId(this.fileReaderService.findAnchorInHref(
           teamTypeElements[0].getAttribute('href'),
-        ),
+        ))],
         name: teamTypeElements[0].innerText,
       };
       // Find extra team ID (if different in links due to character encoding issues)
@@ -160,9 +160,7 @@ export class TeamsService {
         ],
         headCoach: data.team.headCoach,
         coCoach: data.team.coCoach,
-        teamType: {
-          externalIds: [this.api.externalId(data.team.teamType.id)],
-        },
+        teamType: data.team.teamType,
       },
     );
     console.log(JSON.stringify(result.data));
