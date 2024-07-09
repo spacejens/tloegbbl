@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
-import { BblTeamReference } from './teams.service';
 import { HTMLElement } from 'node-html-parser';
 import { BblPlayerTypeReference } from './player-types.service';
 import { AdvancementsService, BblAdvancement } from './advancements.service';
+import { TeamReference } from '../dtos';
 
 export type BblPlayerReference = {
   id: string;
@@ -13,7 +13,7 @@ export type BblPlayerReference = {
 export type BblPlayer = BblPlayerReference & {
   name: string;
   playerType: BblPlayerTypeReference;
-  team: BblTeamReference;
+  team: TeamReference;
   advancements: BblAdvancement[];
 };
 
@@ -67,11 +67,11 @@ export class PlayersService {
         ),
       };
       // Find team
-      const team = {
-        id: this.fileReaderService.findQueryParamInHref(
+      const team: TeamReference = {
+        externalIds: [this.api.externalId(this.fileReaderService.findQueryParamInHref(
           't',
           playerLinkElements[1].getAttribute('href'),
-        ),
+        ))],
       };
       // Find advancements
       const advancements = Array<BblAdvancement>();
@@ -119,9 +119,7 @@ export class PlayersService {
         playerType: {
           externalIds: [this.api.externalId(player.playerType.id)],
         },
-        team: {
-          externalIds: [this.api.externalId(player.team.id)],
-        },
+        team: player.team,
       },
     );
     console.log(JSON.stringify(result.data));

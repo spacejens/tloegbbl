@@ -3,24 +3,11 @@ import { FileReaderService } from './filereader.service';
 import { CoachesService } from './coaches.service';
 import { TeamTypesService } from './team-types.service';
 import { ApiClientService } from '../api-client/api-client.service';
-import { Coach, CoachReference, TeamType, TeamTypeReference } from '../dtos';
-
-export type BblTeamReference = {
-  id: string;
-};
-
-// TODO Add more data points about each team
-export type BblTeam = BblTeamReference & {
-  name: string;
-  extraId?: string;
-  headCoach: CoachReference;
-  coCoach?: CoachReference;
-  teamType: TeamTypeReference;
-};
+import { Coach, ExternalId, Team, TeamType } from '../dtos';
 
 // TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
 export type TeamImportData = {
-  team: BblTeam,
+  team: Team,
   headCoach: Coach,
   coCoach?: Coach,
   teamType: TeamType,
@@ -82,13 +69,16 @@ export class TeamsService {
       if (teamId === extraId) {
         extraId = undefined;
       }
+      const externalIds: ExternalId[] = [this.api.externalId(teamId)];
+      if (extraId) {
+        externalIds.push(this.api.externalId(extraId));
+      }
       // Find head coach and co-coaches (if present)
       const coachElements = teamViewFile.querySelectorAll('td b span');
       if (coachElements.length === 1) {
         teams.push({
           team: {
-            id: teamId,
-            extraId: extraId,
+            externalIds: externalIds,
             name: teamName,
             headCoach: {
               externalIds: [this.api.externalId(coachElements[0].innerText)],
@@ -105,8 +95,7 @@ export class TeamsService {
         // TODO Merge one/many coaches cases into a single case to avoid code duplication
         teams.push({
           team: {
-            id: teamId,
-            extraId: extraId,
+            externalIds: externalIds,
             name: teamName,
             headCoach: {
               externalIds: [this.api.externalId(coachElements[0].innerText)],
@@ -150,18 +139,7 @@ export class TeamsService {
     // Upload the team data
     const result = await this.api.post(
       'team',
-      {
-        name: data.team.name,
-        externalIds: data.team.extraId ? [
-          this.api.externalId(data.team.id),
-          this.api.externalId(data.team.extraId),
-        ] : [
-          this.api.externalId(data.team.id),
-        ],
-        headCoach: data.team.headCoach,
-        coCoach: data.team.coCoach,
-        teamType: data.team.teamType,
-      },
+      data.team,
     );
     console.log(JSON.stringify(result.data));
   }

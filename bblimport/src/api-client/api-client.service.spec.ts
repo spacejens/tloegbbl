@@ -43,5 +43,7 @@ describe('ApiClientService', () => {
     });
   });
 
+  // TODO Add unit tests for getExternalId
+
   // TODO Add unit tests for HTTP POST
 });

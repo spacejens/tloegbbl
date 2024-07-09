@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { BblCompetitionReference } from './competitions.service';
-import { BblTeamReference } from './teams.service';
 import { BblPlayerReference } from './players.service';
 import { HTMLElement } from 'node-html-parser';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
+import { TeamReference } from '../dtos';
 
 export enum ActionType {
   // Actions that give star player points
@@ -41,10 +41,10 @@ export type BblMatchEventReference = {
 };
 
 export type BblMatchEvent = BblMatchEventReference & {
-  actingTeam?: BblTeamReference;
+  actingTeam?: TeamReference;
   actingPlayer?: BblPlayerReference;
   actionType?: ActionType;
-  consequenceTeam?: BblTeamReference;
+  consequenceTeam?: TeamReference;
   consequencePlayer?: BblPlayerReference;
   consequenceType?: ConsequenceType;
 };
@@ -56,7 +56,7 @@ export type BblMatchReference = {
 export type BblMatch = BblMatchReference & {
   name: string;
   competition: BblCompetitionReference;
-  teams: BblTeamReference[];
+  teams: TeamReference[];
   matchEvents: BblMatchEvent[];
 };
 
@@ -105,13 +105,13 @@ export class MatchesService {
           `Did not expect to find ${teamLogoElements.length} teams for ${matchId}`,
         );
       }
-      const teams = Array<BblTeamReference>();
+      const teams = Array<TeamReference>();
       for (const teamLogoElement of teamLogoElements) {
         teams.push({
-          id: this.fileReaderService.findQueryParamInHref(
+          externalIds: [this.api.externalId(this.fileReaderService.findQueryParamInHref(
             't',
             teamLogoElement.parentNode.getAttribute('href'),
-          ),
+          ))],
         });
       }
       // Find match events
@@ -165,7 +165,7 @@ export class MatchesService {
   // TODO Event type should be enum in function argument
   private extractMatchEvents(
     columnElements: HTMLElement,
-    team: BblTeamReference,
+    team: TeamReference,
     rowTypeText: string,
     matchId: string,
   ): BblMatchEvent[] {
@@ -182,7 +182,7 @@ export class MatchesService {
           return;
         }
         // Parse the event
-        const eventId = `M${matchId}-${team.id}-${rowTypeText}-#${index}`;
+        const eventId = `M${matchId}-${this.api.getExternalId(team)}-${rowTypeText}-#${index}`;
         // Parse event type
         let actionType: ActionType;
         let consequenceType: ConsequenceType;
@@ -331,9 +331,7 @@ export class MatchesService {
       const teamResult = await this.api.post(
         'team-in-match',
         {
-          team: {
-            externalIds: [this.api.externalId(team.id)],
-          },
+          team: team,
           match: {
             externalIds: [this.api.externalId(match.id)],
           },
@@ -349,24 +347,14 @@ export class MatchesService {
           match: {
             externalIds: [this.api.externalId(match.id)],
           },
-          actingTeam: matchEvent.actingTeam
-            ? {
-                externalIds: [this.api.externalId(matchEvent.actingTeam.id)],
-              }
-            : undefined,
+          actingTeam: matchEvent.actingTeam,
           actingPlayer: matchEvent.actingPlayer
             ? {
                 externalIds: [this.api.externalId(matchEvent.actingPlayer.id)],
               }
             : undefined,
           actionType: matchEvent.actionType,
-          consequenceTeam: matchEvent.consequenceTeam
-            ? {
-                externalIds: [
-                  this.api.externalId(matchEvent.consequenceTeam.id),
-                ],
-              }
-            : undefined,
+          consequenceTeam: matchEvent.consequenceTeam,
           consequencePlayer: matchEvent.consequencePlayer
             ? {
                 externalIds: [

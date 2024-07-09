@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
-import { BblTeamReference } from './teams.service';
+import { TeamReference } from '../dtos';
 
 export type BblCompetitionReference = {
   id: string;
@@ -9,7 +9,7 @@ export type BblCompetitionReference = {
 
 export type BblCompetition = BblCompetitionReference & {
   name: string;
-  participants: BblTeamReference[];
+  participants: TeamReference[];
 };
 
 @Injectable()
@@ -43,15 +43,15 @@ export class CompetitionsService {
         'Score for '.length,
       );
       // Find participants
-      const participants = Array<BblTeamReference>();
+      const participants = Array<TeamReference>();
       const participantElements = competitionFile.querySelectorAll(
         'table tr.trlist td.td9',
       );
       for (const participantElement of participantElements) {
         participants.push({
-          id: this.fileReaderService.findTeamIdInGoToTeam(
+          externalIds: [this.api.externalId(this.fileReaderService.findTeamIdInGoToTeam(
             participantElement.getAttribute('onclick'),
-          ),
+          ))],
         });
       }
       // Assemble result
@@ -84,9 +84,7 @@ export class CompetitionsService {
       const participantResult = await this.api.post(
         'team-in-competition',
         {
-          team: {
-            externalIds: [this.api.externalId(participant.id)],
-          },
+          team: participant,
           competition: {
             externalIds: [this.api.externalId(competition.id)],
           },
