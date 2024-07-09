@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
-import { BblCoachReference, CoachesService } from './coaches.service';
+import { CoachesService } from './coaches.service';
 import { BblTeamType, TeamTypesService } from './team-types.service';
 import { ApiClientService } from '../api-client/api-client.service';
+import { Coach, CoachReference } from '../dtos';
 
 export type BblTeamReference = {
   id: string;
@@ -12,9 +13,17 @@ export type BblTeamReference = {
 export type BblTeam = BblTeamReference & {
   name: string;
   extraId?: string;
-  headCoach: BblCoachReference;
-  coCoach?: BblCoachReference;
+  headCoach: CoachReference;
+  coCoach?: CoachReference;
   teamType: BblTeamType;
+};
+
+// TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
+export type TeamImportData = {
+  team: BblTeam,
+  headCoach: Coach,
+  coCoach?: Coach,
+  teamType: BblTeamType,
 };
 
 @Injectable()
@@ -26,9 +35,9 @@ export class TeamsService {
     private readonly api: ApiClientService,
   ) {}
 
-  getTeams(): BblTeam[] {
+  getTeams(): TeamImportData[] {
     // Loop over all team files in the directory
-    const teams = Array<BblTeam>();
+    const teams = Array<TeamImportData>();
     const teamViewFilenames = this.fileReaderService.listFiles(
       'default.asp?p=tm&t=',
     );
@@ -77,10 +86,17 @@ export class TeamsService {
       const coachElements = teamViewFile.querySelectorAll('td b span');
       if (coachElements.length === 1) {
         teams.push({
-          id: teamId,
-          extraId: extraId,
-          name: teamName,
+          team: {
+            id: teamId,
+            extraId: extraId,
+            name: teamName,
+            headCoach: {
+              externalIds: [this.api.externalId(coachElements[0].innerText)],
+            },
+            teamType: teamType,
+          },
           headCoach: {
+            externalIds: [this.api.externalId(coachElements[0].innerText)],
             name: coachElements[0].innerText,
           },
           teamType: teamType,
@@ -88,13 +104,24 @@ export class TeamsService {
       } else if (coachElements.length === 2) {
         // TODO Merge one/many coaches cases into a single case to avoid code duplication
         teams.push({
-          id: teamId,
-          extraId: extraId,
-          name: teamName,
+          team: {
+            id: teamId,
+            extraId: extraId,
+            name: teamName,
+            headCoach: {
+              externalIds: [this.api.externalId(coachElements[0].innerText)],
+            },
+            coCoach: {
+              externalIds: [this.api.externalId(coachElements[1].innerText)],
+            },
+            teamType: teamType,
+          },
           headCoach: {
+            externalIds: [this.api.externalId(coachElements[0].innerText)],
             name: coachElements[0].innerText,
           },
           coCoach: {
+            externalIds: [this.api.externalId(coachElements[1].innerText)],
             name: coachElements[1].innerText,
           },
           teamType: teamType,
@@ -108,39 +135,33 @@ export class TeamsService {
     return teams;
   }
 
-  async uploadTeams(teams: BblTeam[]): Promise<void> {
+  async uploadTeams(teams: TeamImportData[]): Promise<void> {
     for (const team of teams) {
       await this.uploadTeam(team);
     }
   }
 
-  async uploadTeam(team: BblTeam): Promise<void> {
-    await this.coachesService.uploadCoach(team.headCoach);
-    if (team.coCoach) {
-      await this.coachesService.uploadCoach(team.coCoach);
+  async uploadTeam(data: TeamImportData): Promise<void> {
+    await this.coachesService.uploadCoach(data.headCoach);
+    if (data.coCoach) {
+      await this.coachesService.uploadCoach(data.coCoach);
     }
-    await this.teamTypesService.uploadTeamType(team.teamType);
+    await this.teamTypesService.uploadTeamType(data.teamType);
     // Upload the team data
     const result = await this.api.post(
       'team',
       {
-        name: team.name,
-        externalIds: team.extraId ? [
-          this.api.externalId(team.id),
-          this.api.externalId(team.extraId),
+        name: data.team.name,
+        externalIds: data.team.extraId ? [
+          this.api.externalId(data.team.id),
+          this.api.externalId(data.team.extraId),
         ] : [
-          this.api.externalId(team.id),
+          this.api.externalId(data.team.id),
         ],
-        headCoach: {
-          externalIds: [this.api.externalId(team.headCoach.name)],
-        },
-        coCoach: team.coCoach
-          ? {
-              externalIds: [this.api.externalId(team.coCoach.name)],
-            }
-          : undefined,
+        headCoach: data.team.headCoach,
+        coCoach: data.team.coCoach,
         teamType: {
-          externalIds: [this.api.externalId(team.teamType.id)],
+          externalIds: [this.api.externalId(data.team.teamType.id)],
         },
       },
     );

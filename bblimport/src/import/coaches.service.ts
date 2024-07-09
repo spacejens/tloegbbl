@@ -1,13 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 import { ApiClientService } from '../api-client/api-client.service';
-
-export type BblCoachReference = {
-  name: string;
-};
-
-// BBL has no more data points for coaches
-export type BblCoach = BblCoachReference;
+import { Coach } from '../dtos';
 
 @Injectable()
 export class CoachesService {
@@ -16,7 +10,7 @@ export class CoachesService {
     private readonly api: ApiClientService,
   ) {}
 
-  getCoaches(): BblCoach[] {
+  getCoaches(): Coach[] {
     const coaches = new Set<string>();
     const teamListFile = this.fileReaderService.readFile('default.asp?p=te');
     teamListFile.querySelectorAll('.tblist').forEach((teamList) => {
@@ -32,14 +26,14 @@ export class CoachesService {
     }));
   }
 
-  async uploadCoaches(coaches: BblCoach[]): Promise<void> {
+  async uploadCoaches(coaches: Coach[]): Promise<void> {
     for (const coach of coaches) {
       await this.uploadCoach(coach);
     }
   }
 
   private uploadedCoaches = Array<string>();
-  async uploadCoach(coach: BblCoach): Promise<void> {
+  async uploadCoach(coach: Coach): Promise<void> {
     // Ensure no duplicate uploads
     if (this.uploadedCoaches.indexOf(coach.name) != -1) {
       return;
