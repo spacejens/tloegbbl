@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
-import { ActionType } from './matches.service';
-import { PlayerReference, TeamReference } from '../dtos';
+import { MatchEventActionType, MatchReference, PlayerReference, TeamReference } from '../dtos';
 
 describe('MatchEventConsolidatorService', () => {
   let service: MatchEventConsolidatorService;
@@ -19,6 +18,10 @@ describe('MatchEventConsolidatorService', () => {
   });
 
   describe('consolidateMatchEvents', () => {
+    const match: MatchReference = { externalIds: [{
+      externalId: 'match',
+      externalSystem: 'test',
+    }]};
     const teamA: TeamReference = { externalIds: [{
       externalId: 'teamA',
       externalSystem: 'test',
@@ -43,16 +46,24 @@ describe('MatchEventConsolidatorService', () => {
 
     it('does nothing to single event', () => {
       const result = service.consolidateMatchEvents([{
-        id: '1',
+        externalIds: [{
+          externalId: '1',
+          externalSystem: 'test',
+        }],
+        match: match,
         actingTeam: teamA,
         actingPlayer: playerA1,
-        actionType: ActionType.MVP,
+        actionType: MatchEventActionType.MVP,
       }]);
       expect(result).toStrictEqual([{
-        id: '1',
+        externalIds: [{
+          externalId: '1',
+          externalSystem: 'test',
+        }],
+        match: match,
         actingTeam: teamA,
         actingPlayer: playerA1,
-        actionType: ActionType.MVP,
+        actionType: MatchEventActionType.MVP,
       }]);
     });
   });

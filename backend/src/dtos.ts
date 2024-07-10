@@ -113,18 +113,21 @@ export class TeamInMatchReference extends Identifiable {
 export class TeamInMatch extends TeamInMatchReference {}
 
 export enum MatchEventActionType {
+  // Actions that give star player points
   CASUALTY = 'CASUALTY',
-  COMPLETION = 'COMPLETION',
+  COMPLETION = 'COMPLETION', // TODO Need separate (more specific) enum for ball completion? And the ability to have an unknown completion, for TourPlay?
   TTM_COMPLETION = 'TTM_COMPLETION',
   DEFLECTION = 'DEFLECTION',
   INTERCEPTION = 'INTERCEPTION',
   TOUCHDOWN = 'TOUCHDOWN',
   MVP = 'MVP',
+  // Other actions
   FOUL = 'FOUL',
   SENT_OFF = 'SENT_OFF',
 }
 
 export enum MatchEventConsequenceType {
+  // Serious injury can be either unspecified or specified
   SERIOUS_INJURY = 'SERIOUS_INJURY',
   MISS_NEXT_GAME = 'MISS_NEXT_GAME',
   NIGGLING_INJURY = 'NIGGLING_INJURY',
@@ -133,6 +136,7 @@ export enum MatchEventConsequenceType {
   AGILITY_REDUCTION = 'AGILITY_REDUCTION',
   PASSING_REDUCTION = 'PASSING_REDUCTION',
   ARMOUR_REDUCTION = 'ARMOUR_REDUCTION',
+  // For other types of casualties, the consequences are known
   BADLY_HURT = 'BADLY_HURT',
   DEATH = 'DEATH',
 }

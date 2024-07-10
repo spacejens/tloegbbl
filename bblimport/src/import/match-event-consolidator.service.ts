@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { BblMatchEvent } from './matches.service';
+import { MatchEvent } from '../dtos';
 
 @Injectable()
 export class MatchEventConsolidatorService {
 
   consolidateMatchEvents(
-    matchEvents: BblMatchEvent[],
-  ): BblMatchEvent[] {
-    const output = Array<BblMatchEvent>();
+    matchEvents: MatchEvent[],
+  ): MatchEvent[] {
+    const output = Array<MatchEvent>();
     for (const matchEvent of matchEvents) {
       // TODO Consolidate into a smaller set, joining events that belong together
       // TODO In case of serious injuries, the acting row's exact consequence will be unknown, but consolidate anyway (when possible)

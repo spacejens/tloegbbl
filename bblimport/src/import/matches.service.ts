@@ -3,49 +3,7 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { HTMLElement } from 'node-html-parser';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
-import { CompetitionReference, PlayerReference, TeamReference } from '../dtos';
-
-export enum ActionType {
-  // Actions that give star player points
-  CASUALTY = 'CASUALTY',
-  COMPLETION = 'COMPLETION', // TODO Need separate (more specific) enum for ball completion? And the ability to have an unknown completion, for TourPlay?
-  TTM_COMPLETION = 'TTM_COMPLETION',
-  DEFLECTION = 'DEFLECTION',
-  INTERCEPTION = 'INTERCEPTION',
-  TOUCHDOWN = 'TOUCHDOWN',
-  MVP = 'MVP',
-  // Other actions
-  FOUL = 'FOUL',
-  SENT_OFF = 'SENT_OFF',
-}
-
-export enum ConsequenceType {
-  // Serious injury can be either unspecified or specified
-  SERIOUS_INJURY = 'SERIOUS_INJURY',
-  MISS_NEXT_GAME = 'MISS_NEXT_GAME',
-  NIGGLING_INJURY = 'NIGGLING_INJURY',
-  MOVEMENT_REDUCTION = 'MOVEMENT_REDUCTION',
-  STRENGTH_REDUCTION = 'STRENGTH_REDUCTION',
-  AGILITY_REDUCTION = 'AGILITY_REDUCTION',
-  PASSING_REDUCTION = 'PASSING_REDUCTION',
-  ARMOUR_REDUCTION = 'ARMOUR_REDUCTION',
-  // For other types of casualties, the consequences are known
-  BADLY_HURT = 'BADLY_HURT',
-  DEATH = 'DEATH',
-}
-
-export type BblMatchEventReference = {
-  id: string;
-};
-
-export type BblMatchEvent = BblMatchEventReference & {
-  actingTeam?: TeamReference;
-  actingPlayer?: PlayerReference;
-  actionType?: ActionType;
-  consequenceTeam?: TeamReference;
-  consequencePlayer?: PlayerReference;
-  consequenceType?: ConsequenceType;
-};
+import { CompetitionReference, MatchEvent, MatchEventActionType, MatchEventConsequenceType, MatchEventReference, TeamReference } from '../dtos';
 
 export type BblMatchReference = {
   id: string;
@@ -55,7 +13,12 @@ export type BblMatch = BblMatchReference & {
   name: string;
   competition: CompetitionReference;
   teams: TeamReference[];
-  matchEvents: BblMatchEvent[];
+  matchEvents: MatchEventReference[];
+};
+
+export type MatchImportData = {
+  match: BblMatch,
+  matchEvents: MatchEvent[],
 };
 
 @Injectable()
@@ -66,9 +29,9 @@ export class MatchesService {
     private readonly consolidator: MatchEventConsolidatorService,
   ) {}
 
-  getMatches(): BblMatch[] {
+  getMatches(): MatchImportData[] {
     // Loop over all the match files in the directory
-    const matches = Array<BblMatch>();
+    const matches = Array<MatchImportData>();
     const matchFilenames =
       this.fileReaderService.listFiles('default.asp?p=m&m=');
     for (const matchFilename of matchFilenames) {
@@ -113,7 +76,7 @@ export class MatchesService {
         });
       }
       // Find match events
-      const matchEvents = Array<BblMatchEvent>();
+      const matchEvents = Array<MatchEvent>();
       const matchReportRowElements = matchFile.querySelectorAll(
         'table.tblist tr.trborder',
       );
@@ -146,13 +109,17 @@ export class MatchesService {
           ),
         );
       }
+      const consolidatedMatchEvents = this.consolidator.consolidateMatchEvents(matchEvents);
       // Assemble the result
       matches.push({
-        id: matchId,
-        name: matchName,
-        competition: competition,
-        teams: teams,
-        matchEvents: this.consolidator.consolidateMatchEvents(matchEvents),
+        match: {
+          id: matchId,
+          name: matchName,
+          competition: competition,
+          teams: teams,
+          matchEvents: consolidatedMatchEvents,
+        },
+        matchEvents: consolidatedMatchEvents,
       });
     }
     return matches;
@@ -164,8 +131,8 @@ export class MatchesService {
     team: TeamReference,
     rowTypeText: string,
     matchId: string,
-  ): BblMatchEvent[] {
-    const matchEvents = Array<BblMatchEvent>();
+  ): MatchEvent[] {
+    const matchEvents = Array<MatchEvent>();
     this.fileReaderService
       .split(columnElements.childNodes)
       .forEach((eventElements, index) => {
@@ -180,76 +147,76 @@ export class MatchesService {
         // Parse the event
         const eventId = `M${matchId}-${this.api.getExternalId(team)}-${rowTypeText}-#${index}`;
         // Parse event type
-        let actionType: ActionType;
-        let consequenceType: ConsequenceType;
+        let actionType: MatchEventActionType;
+        let consequenceType: MatchEventConsequenceType;
         let isConsequenceRow: boolean = false;
         switch (rowTypeText) {
           case 'TD Scorers':
-            actionType = ActionType.TOUCHDOWN;
+            actionType = MatchEventActionType.TOUCHDOWN;
             break;
           case 'Completions by':
-            actionType = ActionType.COMPLETION;
+            actionType = MatchEventActionType.COMPLETION;
             break;
           case 'TTM Completions by':
-            actionType = ActionType.TTM_COMPLETION;
+            actionType = MatchEventActionType.TTM_COMPLETION;
             break;
           case 'Interceptions by':
-            actionType = ActionType.INTERCEPTION;
+            actionType = MatchEventActionType.INTERCEPTION;
             break;
           case 'Deflections by':
-            actionType = ActionType.DEFLECTION;
+            actionType = MatchEventActionType.DEFLECTION;
             break;
           case 'Foulers (no cas)':
-            actionType = ActionType.FOUL;
+            actionType = MatchEventActionType.FOUL;
             break;
           case 'Sent off':
-            actionType = ActionType.SENT_OFF;
+            actionType = MatchEventActionType.SENT_OFF;
             break;
           case "Badly Hurt'ers":
-            actionType = ActionType.CASUALTY;
-            consequenceType = ConsequenceType.BADLY_HURT;
+            actionType = MatchEventActionType.CASUALTY;
+            consequenceType = MatchEventConsequenceType.BADLY_HURT;
             break;
           case 'Serious/LastingHurters/Injurers':
-            actionType = ActionType.CASUALTY;
-            consequenceType = ConsequenceType.SERIOUS_INJURY; // Exact injury unknown
+            actionType = MatchEventActionType.CASUALTY;
+            consequenceType = MatchEventConsequenceType.SERIOUS_INJURY; // Exact injury unknown
             break;
           case 'Killers':
-            actionType = ActionType.CASUALTY;
-            consequenceType = ConsequenceType.DEATH;
+            actionType = MatchEventActionType.CASUALTY;
+            consequenceType = MatchEventConsequenceType.DEATH;
             break;
           case 'MVP awards to':
-            actionType = ActionType.MVP;
+            actionType = MatchEventActionType.MVP;
             break;
           case 'Miss Next Game':
-            consequenceType = ConsequenceType.MISS_NEXT_GAME;
+            consequenceType = MatchEventConsequenceType.MISS_NEXT_GAME;
             isConsequenceRow = true;
             break;
           case 'Niggling Injury':
-            consequenceType = ConsequenceType.NIGGLING_INJURY;
+            consequenceType = MatchEventConsequenceType.NIGGLING_INJURY;
             isConsequenceRow = true;
             break;
           case '-1 MA':
-            consequenceType = ConsequenceType.MOVEMENT_REDUCTION;
+            consequenceType = MatchEventConsequenceType.MOVEMENT_REDUCTION;
             isConsequenceRow = true;
             break;
           case '-1 ST':
-            consequenceType = ConsequenceType.STRENGTH_REDUCTION;
+            consequenceType = MatchEventConsequenceType.STRENGTH_REDUCTION;
             isConsequenceRow = true;
             break;
           case '-1 AG':
-            consequenceType = ConsequenceType.AGILITY_REDUCTION;
+            consequenceType = MatchEventConsequenceType.AGILITY_REDUCTION;
             isConsequenceRow = true;
             break;
           case '-1 PA':
-            consequenceType = ConsequenceType.PASSING_REDUCTION;
+            consequenceType = MatchEventConsequenceType.PASSING_REDUCTION;
             isConsequenceRow = true;
             break;
           case '-1 AV':
-            consequenceType = ConsequenceType.ARMOUR_REDUCTION;
+            consequenceType = MatchEventConsequenceType.ARMOUR_REDUCTION;
             isConsequenceRow = true;
             break;
           case 'Death':
-            consequenceType = ConsequenceType.DEATH;
+            consequenceType = MatchEventConsequenceType.DEATH;
             isConsequenceRow = true;
             break;
           default:
@@ -281,7 +248,10 @@ export class MatchesService {
         }
         if (isConsequenceRow) {
           matchEvents.push({
-            id: eventId,
+            externalIds: [this.api.externalId(eventId)],
+            match: {
+              externalIds: [this.api.externalId(matchId)],
+            },
             actionType: actionType,
             consequenceTeam: team,
             consequencePlayer: {
@@ -291,7 +261,10 @@ export class MatchesService {
           });
         } else {
           matchEvents.push({
-            id: eventId,
+            externalIds: [this.api.externalId(eventId)],
+            match: {
+              externalIds: [this.api.externalId(matchId)],
+            },
             actingTeam: team,
             actingPlayer: {
               externalIds: [this.api.externalId(playerId)],
@@ -304,50 +277,39 @@ export class MatchesService {
     return matchEvents;
   }
 
-  async uploadMatches(matches: BblMatch[]): Promise<void> {
+  async uploadMatches(matches: MatchImportData[]): Promise<void> {
     for (const match of matches) {
       await this.uploadMatch(match);
     }
   }
 
-  async uploadMatch(match: BblMatch): Promise<void> {
+  async uploadMatch(data: MatchImportData): Promise<void> {
     // Upload the match data
     const result = await this.api.post(
       'match',
       {
-        name: match.name,
-        externalIds: [this.api.externalId(match.id)],
-        competition: match.competition,
+        name: data.match.name,
+        externalIds: [this.api.externalId(data.match.id)],
+        competition: data.match.competition,
       },
     );
     console.log(JSON.stringify(result.data));
-    for (const team of match.teams) {
+    for (const team of data.match.teams) {
       const teamResult = await this.api.post(
         'team-in-match',
         {
           team: team,
           match: {
-            externalIds: [this.api.externalId(match.id)],
+            externalIds: [this.api.externalId(data.match.id)],
           },
         },
       );
       console.log(JSON.stringify(teamResult.data));
     }
-    for (const matchEvent of match.matchEvents) {
+    for (const matchEvent of data.matchEvents) {
       const eventResult = await this.api.post(
         'match-event',
-        {
-          externalIds: [this.api.externalId(matchEvent.id)],
-          match: {
-            externalIds: [this.api.externalId(match.id)],
-          },
-          actingTeam: matchEvent.actingTeam,
-          actingPlayer: matchEvent.actingPlayer,
-          actionType: matchEvent.actionType,
-          consequenceTeam: matchEvent.consequenceTeam,
-          consequencePlayer: matchEvent.consequencePlayer,
-          consequenceType: matchEvent.consequenceType,
-        },
+        matchEvent,
       );
       console.log(JSON.stringify(eventResult.data));
     }
