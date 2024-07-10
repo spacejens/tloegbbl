@@ -3,21 +3,11 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { HTMLElement } from 'node-html-parser';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
-import { CompetitionReference, MatchEvent, MatchEventActionType, MatchEventConsequenceType, MatchEventReference, TeamReference } from '../dtos';
-
-export type BblMatchReference = {
-  id: string;
-};
-
-export type BblMatch = BblMatchReference & {
-  name: string;
-  competition: CompetitionReference;
-  teams: TeamReference[];
-  matchEvents: MatchEventReference[];
-};
+import { CompetitionReference, Match, MatchEvent, MatchEventActionType, MatchEventConsequenceType, TeamReference } from '../dtos';
 
 export type MatchImportData = {
-  match: BblMatch,
+  match: Match,
+  teams: TeamReference[],
   matchEvents: MatchEvent[],
 };
 
@@ -109,17 +99,15 @@ export class MatchesService {
           ),
         );
       }
-      const consolidatedMatchEvents = this.consolidator.consolidateMatchEvents(matchEvents);
       // Assemble the result
       matches.push({
         match: {
-          id: matchId,
+          externalIds: [this.api.externalId(matchId)],
           name: matchName,
           competition: competition,
-          teams: teams,
-          matchEvents: consolidatedMatchEvents,
         },
-        matchEvents: consolidatedMatchEvents,
+        teams: teams,
+        matchEvents: this.consolidator.consolidateMatchEvents(matchEvents),
       });
     }
     return matches;
@@ -287,21 +275,15 @@ export class MatchesService {
     // Upload the match data
     const result = await this.api.post(
       'match',
-      {
-        name: data.match.name,
-        externalIds: [this.api.externalId(data.match.id)],
-        competition: data.match.competition,
-      },
+      data.match,
     );
     console.log(JSON.stringify(result.data));
-    for (const team of data.match.teams) {
+    for (const team of data.teams) {
       const teamResult = await this.api.post(
         'team-in-match',
         {
           team: team,
-          match: {
-            externalIds: [this.api.externalId(data.match.id)],
-          },
+          match: data.match,
         },
       );
       console.log(JSON.stringify(teamResult.data));
