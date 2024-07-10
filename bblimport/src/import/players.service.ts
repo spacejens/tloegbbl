@@ -75,6 +75,7 @@ export class PlayersService {
         if (advancementElement.innerText) {
           const trimmedText = advancementElement.innerText.trim();
           if (trimmedText != '?') {
+            // TODO Handle if a player has the same advancement twice? (i.e. double stat increases)
             advancements.push({
               externalIds: [this.api.externalId(trimmedText)],
               name: trimmedText,
