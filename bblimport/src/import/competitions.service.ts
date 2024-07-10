@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
-import { TeamReference } from '../dtos';
+import { Competition, TeamReference } from '../dtos';
 
-export type BblCompetitionReference = {
-  id: string;
-};
-
-export type BblCompetition = BblCompetitionReference & {
-  name: string;
-  participants: TeamReference[];
+export type CompetitionImportData = {
+  competition: Competition,
+  participants: TeamReference[],
 };
 
 @Injectable()
@@ -19,9 +15,9 @@ export class CompetitionsService {
     private readonly api: ApiClientService,
   ) {}
 
-  getCompetitions(): BblCompetition[] {
+  getCompetitions(): CompetitionImportData[] {
     // Loop over all the competition files in the directory
-    const competitions = Array<BblCompetition>();
+    const competitions = Array<CompetitionImportData>();
     const competitionFilenames = this.fileReaderService.listFiles(
       'default.asp?p=se&s=',
     );
@@ -56,38 +52,35 @@ export class CompetitionsService {
       }
       // Assemble result
       competitions.push({
-        id: competitionId,
-        name: competitionName,
+        competition: {
+          externalIds: [this.api.externalId(competitionId)],
+          name: competitionName,
+        },
         participants: participants,
       });
     }
     return competitions;
   }
 
-  async uploadCompetitions(competitions: BblCompetition[]): Promise<void> {
+  async uploadCompetitions(competitions: CompetitionImportData[]): Promise<void> {
     for (const competition of competitions) {
       await this.uploadCompetition(competition);
     }
   }
 
-  async uploadCompetition(competition: BblCompetition): Promise<void> {
+  async uploadCompetition(data: CompetitionImportData): Promise<void> {
     // Upload the competition data
     const result = await this.api.post(
       'competition',
-      {
-        name: competition.name,
-        externalIds: [this.api.externalId(competition.id)],
-      },
+      data.competition,
     );
     console.log(JSON.stringify(result.data));
-    for (const participant of competition.participants) {
+    for (const participant of data.participants) {
       const participantResult = await this.api.post(
         'team-in-competition',
         {
           team: participant,
-          competition: {
-            externalIds: [this.api.externalId(competition.id)],
-          },
+          competition: data.competition,
         },
       );
       console.log(JSON.stringify(participantResult.data));

@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
-import { BblCompetitionReference } from './competitions.service';
 import { HTMLElement } from 'node-html-parser';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
-import { PlayerReference, TeamReference } from '../dtos';
+import { CompetitionReference, PlayerReference, TeamReference } from '../dtos';
 
 export enum ActionType {
   // Actions that give star player points
@@ -54,7 +53,7 @@ export type BblMatchReference = {
 
 export type BblMatch = BblMatchReference & {
   name: string;
-  competition: BblCompetitionReference;
+  competition: CompetitionReference;
   teams: TeamReference[];
   matchEvents: BblMatchEvent[];
 };
@@ -82,11 +81,11 @@ export class MatchesService {
           `Did not expect to find ${competitionElements.length} competition elements for ${matchId}`,
         );
       }
-      const competition = {
-        id: this.fileReaderService.findQueryParamInHref(
+      const competition: CompetitionReference = {
+        externalIds: [this.api.externalId(this.fileReaderService.findQueryParamInHref(
           's',
           competitionElements[0].getAttribute('href'),
-        ),
+        ))],
       };
       // Find match name
       const competitionAndMatchName =
@@ -151,9 +150,7 @@ export class MatchesService {
       matches.push({
         id: matchId,
         name: matchName,
-        competition: {
-          id: competition.id,
-        },
+        competition: competition,
         teams: teams,
         matchEvents: this.consolidator.consolidateMatchEvents(matchEvents),
       });
@@ -320,9 +317,7 @@ export class MatchesService {
       {
         name: match.name,
         externalIds: [this.api.externalId(match.id)],
-        competition: {
-          externalIds: [this.api.externalId(match.competition.id)],
-        },
+        competition: match.competition,
       },
     );
     console.log(JSON.stringify(result.data));
