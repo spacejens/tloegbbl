@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { HTMLElement } from 'node-html-parser';
-import { BblPlayerTypeReference } from './player-types.service';
 import { AdvancementsService } from './advancements.service';
-import { Advancement, AdvancementReference, TeamReference } from '../dtos';
+import { Advancement, AdvancementReference, PlayerTypeReference, TeamReference } from '../dtos';
 
 export type BblPlayerReference = {
   id: string;
@@ -12,7 +11,7 @@ export type BblPlayerReference = {
 
 export type BblPlayer = BblPlayerReference & {
   name: string;
-  playerType: BblPlayerTypeReference;
+  playerType: PlayerTypeReference;
   team: TeamReference;
   advancements: AdvancementReference[];
 };
@@ -65,11 +64,11 @@ export class PlayersService {
           `Did not expect to find ${playerLinkElements.length} type/team elements for player ${playerId}`,
         );
       }
-      const playerType = {
-        id: this.fileReaderService.findQueryParamInHref(
+      const playerType: PlayerTypeReference = {
+        externalIds: [this.api.externalId(this.fileReaderService.findQueryParamInHref(
           'typID',
           playerLinkElements[0].getAttribute('href'),
-        ),
+        ))],
       };
       // Find team
       const team: TeamReference = {
@@ -125,9 +124,7 @@ export class PlayersService {
       {
         name: data.player.name,
         externalIds: [this.api.externalId(data.player.id)],
-        playerType: {
-          externalIds: [this.api.externalId(data.player.playerType.id)],
-        },
+        playerType: data.player.playerType,
         team: data.player.team,
       },
     );

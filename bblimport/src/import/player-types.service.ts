@@ -3,21 +3,11 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { AdvancementsService } from './advancements.service';
 import { TeamTypesService } from './team-types.service';
-import { Advancement, AdvancementReference, TeamType, TeamTypeReference } from '../dtos';
-
-export type BblPlayerTypeReference = {
-  id: string;
-};
-
-export type BblPlayerType = BblPlayerTypeReference & {
-  name: string;
-  teamTypes: TeamTypeReference[];
-  advancements: AdvancementReference[];
-};
+import { Advancement, PlayerType, TeamType } from '../dtos';
 
 // TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
 export type PlayerTypeImportData = {
-  playerType: BblPlayerType,
+  playerType: PlayerType,
   teamTypes: TeamType[],
   advancements: Advancement[],
 };
@@ -98,10 +88,8 @@ export class PlayerTypesService {
       // Assemble the result
       playerTypes.push({
         playerType: {
-          id: playerTypeId,
+          externalIds: [this.api.externalId(playerTypeId)],
           name: playerTypeName,
-          teamTypes: teamTypes,
-          advancements: advancements,
         },
         teamTypes: teamTypes,
         advancements: advancements,
@@ -119,30 +107,25 @@ export class PlayerTypesService {
   private uploadedPlayerTypes = Array<string>();
   async uploadPlayerType(data: PlayerTypeImportData): Promise<void> {
     // Ensure no duplicate uploads
-    if (this.uploadedPlayerTypes.indexOf(data.playerType.id) != -1) {
+    if (this.uploadedPlayerTypes.indexOf(this.api.getExternalId(data.playerType)) != -1) {
       return;
     }
-    this.uploadedPlayerTypes.push(data.playerType.id);
+    this.uploadedPlayerTypes.push(this.api.getExternalId(data.playerType));
     // TODO Can the duplicate upload detection be more clean? Would be nice with an object equality check of the whole player type
     // Upload the player type data
     const result = await this.api.post(
       'player-type',
-      {
-        name: data.playerType.name,
-        externalIds: [this.api.externalId(data.playerType.id)],
-      },
+      data.playerType,
     );
     console.log(JSON.stringify(result.data));
     for (const advancement of data.advancements) {
       await this.advancementService.uploadAdvancement(advancement);
     }
-    for (const advancement of data.playerType.advancements) {
+    for (const advancement of data.advancements) {
       const advancementResult = await this.api.post(
         'player-type-has-advancement',
         {
-          playerType: {
-            externalIds: [this.api.externalId(data.playerType.id)],
-          },
+          playerType: data.playerType,
           advancement: advancement,
         },
       );
@@ -153,9 +136,7 @@ export class PlayerTypesService {
       const teamTypeResult = await this.api.post(
         'player-type-in-team-type',
         {
-          playerType: {
-            externalIds: [this.api.externalId(data.playerType.id)],
-          },
+          playerType: data.playerType,
           teamType: teamType,
         },
       );
