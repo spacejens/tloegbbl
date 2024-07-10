@@ -3,8 +3,8 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { HTMLElement } from 'node-html-parser';
 import { BblPlayerTypeReference } from './player-types.service';
-import { AdvancementsService, BblAdvancement } from './advancements.service';
-import { TeamReference } from '../dtos';
+import { AdvancementsService } from './advancements.service';
+import { Advancement, AdvancementReference, TeamReference } from '../dtos';
 
 export type BblPlayerReference = {
   id: string;
@@ -14,7 +14,12 @@ export type BblPlayer = BblPlayerReference & {
   name: string;
   playerType: BblPlayerTypeReference;
   team: TeamReference;
-  advancements: BblAdvancement[];
+  advancements: AdvancementReference[];
+};
+
+export type PlayerImportData = {
+  player: BblPlayer,
+  advancements: Advancement[],
 };
 
 @Injectable()
@@ -25,9 +30,9 @@ export class PlayersService {
     private readonly api: ApiClientService,
   ) {}
 
-  getPlayers(): BblPlayer[] {
+  getPlayers(): PlayerImportData[] {
     // Loop over all the match files in the directory
-    const players = Array<BblPlayer>();
+    const players = Array<PlayerImportData>();
     const playerFilenames = this.fileReaderService.listFiles(
       'default.asp?p=pl&pid=',
     );
@@ -74,7 +79,7 @@ export class PlayersService {
         ))],
       };
       // Find advancements
-      const advancements = Array<BblAdvancement>();
+      const advancements = Array<Advancement>();
       const advancementElements = playerFile.querySelectorAll(
         'table.tblist td.rtd9 span',
       );
@@ -83,6 +88,7 @@ export class PlayersService {
           const trimmedText = advancementElement.innerText.trim();
           if (trimmedText != '?') {
             advancements.push({
+              externalIds: [this.api.externalId(trimmedText)],
               name: trimmedText,
             });
           }
@@ -92,48 +98,49 @@ export class PlayersService {
       // TODO Find sustained injuries by listing elements "table.tblist td.red3" and taking their innerText (ensure niggling injuries registered correctly, e.g. player 330)
       // Assemble the result
       players.push({
-        id: playerId,
-        name: playerName,
-        playerType: playerType,
-        team: team,
+        player: {
+          id: playerId,
+          name: playerName,
+          playerType: playerType,
+          team: team,
+          advancements: advancements,
+        },
         advancements: advancements,
       });
     }
     return players;
   }
 
-  async uploadPlayers(players: BblPlayer[]): Promise<void> {
+  async uploadPlayers(players: PlayerImportData[]): Promise<void> {
     for (const player of players) {
       await this.uploadPlayer(player);
     }
   }
 
-  async uploadPlayer(player: BblPlayer): Promise<void> {
+  async uploadPlayer(data: PlayerImportData): Promise<void> {
     // TODO Ensure any sustained injuries have been uploaded before connecting players to them
     // Upload the player data
     const result = await this.api.post(
       'player',
       {
-        name: player.name,
-        externalIds: [this.api.externalId(player.id)],
+        name: data.player.name,
+        externalIds: [this.api.externalId(data.player.id)],
         playerType: {
-          externalIds: [this.api.externalId(player.playerType.id)],
+          externalIds: [this.api.externalId(data.player.playerType.id)],
         },
-        team: player.team,
+        team: data.player.team,
       },
     );
     console.log(JSON.stringify(result.data));
-    for (const advancement of player.advancements) {
+    for (const advancement of data.advancements) {
       await this.advancementService.uploadAdvancement(advancement);
       const advancementResult = await this.api.post(
         'player-has-advancement',
         {
           player: {
-            externalIds: [this.api.externalId(player.id)],
+            externalIds: [this.api.externalId(data.player.id)],
           },
-          advancement: {
-            externalIds: [this.api.externalId(advancement.name)],
-          },
+          advancement: advancement,
         },
       );
       console.log(JSON.stringify(advancementResult.data));

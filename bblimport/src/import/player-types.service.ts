@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
-import { AdvancementsService, BblAdvancement } from './advancements.service';
+import { AdvancementsService } from './advancements.service';
 import { TeamTypesService } from './team-types.service';
-import { TeamType, TeamTypeReference } from '../dtos';
+import { Advancement, AdvancementReference, TeamType, TeamTypeReference } from '../dtos';
 
 export type BblPlayerTypeReference = {
   id: string;
@@ -12,13 +12,14 @@ export type BblPlayerTypeReference = {
 export type BblPlayerType = BblPlayerTypeReference & {
   name: string;
   teamTypes: TeamTypeReference[];
-  advancements: BblAdvancement[];
+  advancements: AdvancementReference[];
 };
 
 // TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
 export type PlayerTypeImportData = {
   playerType: BblPlayerType,
   teamTypes: TeamType[],
+  advancements: Advancement[],
 };
 
 @Injectable()
@@ -60,7 +61,7 @@ export class PlayerTypesService {
       }
       const playerTypeName = playerTypeNameElements[0].innerText;
       // Find advancements
-      const advancements = Array<BblAdvancement>();
+      const advancements = Array<Advancement>();
       const advancementElements = playerTypeFile.querySelectorAll(
         'table.tblist td.rtd9',
       );
@@ -74,6 +75,7 @@ export class PlayerTypesService {
               .trim();
             if (trimmedAdvancementText) {
               advancements.push({
+                externalIds: [this.api.externalId(trimmedAdvancementText)],
                 name: trimmedAdvancementText,
               });
             }
@@ -102,6 +104,7 @@ export class PlayerTypesService {
           advancements: advancements,
         },
         teamTypes: teamTypes,
+        advancements: advancements,
       });
     }
     return playerTypes;
@@ -130,17 +133,17 @@ export class PlayerTypesService {
       },
     );
     console.log(JSON.stringify(result.data));
-    for (const advancement of data.playerType.advancements) {
+    for (const advancement of data.advancements) {
       await this.advancementService.uploadAdvancement(advancement);
+    }
+    for (const advancement of data.playerType.advancements) {
       const advancementResult = await this.api.post(
         'player-type-has-advancement',
         {
           playerType: {
             externalIds: [this.api.externalId(data.playerType.id)],
           },
-          advancement: {
-            externalIds: [this.api.externalId(advancement.name)],
-          },
+          advancement: advancement,
         },
       );
       console.log(JSON.stringify(advancementResult.data));
