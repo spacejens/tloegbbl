@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { BblCompetitionReference } from './competitions.service';
-import { BblPlayerReference } from './players.service';
 import { HTMLElement } from 'node-html-parser';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
-import { TeamReference } from '../dtos';
+import { PlayerReference, TeamReference } from '../dtos';
 
 export enum ActionType {
   // Actions that give star player points
@@ -42,10 +41,10 @@ export type BblMatchEventReference = {
 
 export type BblMatchEvent = BblMatchEventReference & {
   actingTeam?: TeamReference;
-  actingPlayer?: BblPlayerReference;
+  actingPlayer?: PlayerReference;
   actionType?: ActionType;
   consequenceTeam?: TeamReference;
-  consequencePlayer?: BblPlayerReference;
+  consequencePlayer?: PlayerReference;
   consequenceType?: ConsequenceType;
 };
 
@@ -289,7 +288,7 @@ export class MatchesService {
             actionType: actionType,
             consequenceTeam: team,
             consequencePlayer: {
-              id: playerId,
+              externalIds: [this.api.externalId(playerId)],
             },
             consequenceType: consequenceType,
           });
@@ -298,7 +297,7 @@ export class MatchesService {
             id: eventId,
             actingTeam: team,
             actingPlayer: {
-              id: playerId,
+              externalIds: [this.api.externalId(playerId)],
             },
             actionType: actionType,
             consequenceType: consequenceType,
@@ -348,20 +347,10 @@ export class MatchesService {
             externalIds: [this.api.externalId(match.id)],
           },
           actingTeam: matchEvent.actingTeam,
-          actingPlayer: matchEvent.actingPlayer
-            ? {
-                externalIds: [this.api.externalId(matchEvent.actingPlayer.id)],
-              }
-            : undefined,
+          actingPlayer: matchEvent.actingPlayer,
           actionType: matchEvent.actionType,
           consequenceTeam: matchEvent.consequenceTeam,
-          consequencePlayer: matchEvent.consequencePlayer
-            ? {
-                externalIds: [
-                  this.api.externalId(matchEvent.consequencePlayer.id),
-                ],
-              }
-            : undefined,
+          consequencePlayer: matchEvent.consequencePlayer,
           consequenceType: matchEvent.consequenceType,
         },
       );

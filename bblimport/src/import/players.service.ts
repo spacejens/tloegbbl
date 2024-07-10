@@ -3,21 +3,10 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { HTMLElement } from 'node-html-parser';
 import { AdvancementsService } from './advancements.service';
-import { Advancement, AdvancementReference, PlayerTypeReference, TeamReference } from '../dtos';
-
-export type BblPlayerReference = {
-  id: string;
-};
-
-export type BblPlayer = BblPlayerReference & {
-  name: string;
-  playerType: PlayerTypeReference;
-  team: TeamReference;
-  advancements: AdvancementReference[];
-};
+import { Advancement, Player, PlayerTypeReference, TeamReference } from '../dtos';
 
 export type PlayerImportData = {
-  player: BblPlayer,
+  player: Player,
   advancements: Advancement[],
 };
 
@@ -98,11 +87,10 @@ export class PlayersService {
       // Assemble the result
       players.push({
         player: {
-          id: playerId,
+          externalIds: [this.api.externalId(playerId)],
           name: playerName,
           playerType: playerType,
           team: team,
-          advancements: advancements,
         },
         advancements: advancements,
       });
@@ -121,12 +109,7 @@ export class PlayersService {
     // Upload the player data
     const result = await this.api.post(
       'player',
-      {
-        name: data.player.name,
-        externalIds: [this.api.externalId(data.player.id)],
-        playerType: data.player.playerType,
-        team: data.player.team,
-      },
+      data.player,
     );
     console.log(JSON.stringify(result.data));
     for (const advancement of data.advancements) {
@@ -134,9 +117,7 @@ export class PlayersService {
       const advancementResult = await this.api.post(
         'player-has-advancement',
         {
-          player: {
-            externalIds: [this.api.externalId(data.player.id)],
-          },
+          player: data.player,
           advancement: advancement,
         },
       );

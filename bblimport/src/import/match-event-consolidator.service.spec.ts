@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
-import { BblPlayerReference } from './players.service';
 import { ActionType } from './matches.service';
-import { TeamReference } from '../dtos';
+import { PlayerReference, TeamReference } from '../dtos';
 
 describe('MatchEventConsolidatorService', () => {
   let service: MatchEventConsolidatorService;
@@ -24,12 +23,18 @@ describe('MatchEventConsolidatorService', () => {
       externalId: 'teamA',
       externalSystem: 'test',
     }]};
-    const playerA1: BblPlayerReference = { id: 'playerA1' };
+    const playerA1: PlayerReference = { externalIds: [{
+      externalId: 'playerA1',
+      externalSystem: 'test',
+    }] };
     const teamB: TeamReference = { externalIds: [{
       externalId: 'teamB',
       externalSystem: 'test',
     }]};
-    const playerB1: BblPlayerReference = { id: 'playerB1' };
+    const playerB1: PlayerReference = { externalIds: [{
+      externalId: 'playerB1',
+      externalSystem: 'test',
+    }]};
 
     it('does nothing to empty set', () => {
       const result = service.consolidateMatchEvents([]);
