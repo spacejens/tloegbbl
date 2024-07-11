@@ -11,7 +11,9 @@ export class AdvancementController {
   ) {}
 
   @Post()
-  async importAdvancement(@Body() advancement: Advancement): Promise<Advancement> {
+  async importAdvancement(
+    @Body() advancement: Advancement,
+  ): Promise<Advancement> {
     return this.advancementImportService.import(advancement);
   }
 

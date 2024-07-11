@@ -14,7 +14,10 @@ describe('MatchesService', () => {
         MatchesService,
         { provide: FileReaderService, useValue: mock<FileReaderService>() },
         { provide: ApiClientService, useValue: mock<ApiClientService>() },
-        { provide: MatchEventConsolidatorService, useValue: mock<MatchEventConsolidatorService>() },
+        {
+          provide: MatchEventConsolidatorService,
+          useValue: mock<MatchEventConsolidatorService>(),
+        },
       ],
     }).compile();
 

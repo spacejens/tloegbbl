@@ -3,10 +3,7 @@ import { MatchEvent } from '../dtos';
 
 @Injectable()
 export class MatchEventConsolidatorService {
-
-  consolidateMatchEvents(
-    matchEvents: MatchEvent[],
-  ): MatchEvent[] {
+  consolidateMatchEvents(matchEvents: MatchEvent[]): MatchEvent[] {
     const output = Array<MatchEvent>();
     for (const matchEvent of matchEvents) {
       // TODO Consolidate into a smaller set, joining events that belong together
@@ -15,7 +12,7 @@ export class MatchEventConsolidatorService {
       // TODO If all serious injuries have the same consequence type (e.g. niggling), that information can be used to detail the acting players' actions
       // TODO Avoid consolidation for matches that are linked to other matches (multiplayer games)
       output.push(matchEvent);
-    };
+    }
     return matchEvents;
   }
 }

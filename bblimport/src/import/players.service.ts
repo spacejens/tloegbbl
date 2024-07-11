@@ -3,11 +3,16 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { HTMLElement } from 'node-html-parser';
 import { AdvancementsService } from './advancements.service';
-import { Advancement, Player, PlayerTypeReference, TeamReference } from '../dtos';
+import {
+  Advancement,
+  Player,
+  PlayerTypeReference,
+  TeamReference,
+} from '../dtos';
 
 export type PlayerImportData = {
-  player: Player,
-  advancements: Advancement[],
+  player: Player;
+  advancements: Advancement[];
 };
 
 @Injectable()
@@ -54,17 +59,25 @@ export class PlayersService {
         );
       }
       const playerType: PlayerTypeReference = {
-        externalIds: [this.api.externalId(this.fileReaderService.findQueryParamInHref(
-          'typID',
-          playerLinkElements[0].getAttribute('href'),
-        ))],
+        externalIds: [
+          this.api.externalId(
+            this.fileReaderService.findQueryParamInHref(
+              'typID',
+              playerLinkElements[0].getAttribute('href'),
+            ),
+          ),
+        ],
       };
       // Find team
       const team: TeamReference = {
-        externalIds: [this.api.externalId(this.fileReaderService.findQueryParamInHref(
-          't',
-          playerLinkElements[1].getAttribute('href'),
-        ))],
+        externalIds: [
+          this.api.externalId(
+            this.fileReaderService.findQueryParamInHref(
+              't',
+              playerLinkElements[1].getAttribute('href'),
+            ),
+          ),
+        ],
       };
       // Find advancements
       const advancements = Array<Advancement>();
@@ -108,20 +121,14 @@ export class PlayersService {
   async uploadPlayer(data: PlayerImportData): Promise<void> {
     // TODO Ensure any sustained injuries have been uploaded before connecting players to them
     // Upload the player data
-    const result = await this.api.post(
-      'player',
-      data.player,
-    );
+    const result = await this.api.post('player', data.player);
     console.log(JSON.stringify(result.data));
     for (const advancement of data.advancements) {
       await this.advancementService.uploadAdvancement(advancement);
-      const advancementResult = await this.api.post(
-        'player-has-advancement',
-        {
-          player: data.player,
-          advancement: advancement,
-        },
-      );
+      const advancementResult = await this.api.post('player-has-advancement', {
+        player: data.player,
+        advancement: advancement,
+      });
       console.log(JSON.stringify(advancementResult.data));
     }
   }

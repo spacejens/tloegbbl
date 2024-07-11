@@ -12,7 +12,10 @@ describe('AdvancementController', () => {
       controllers: [AdvancementController],
       providers: [
         { provide: AdvancementService, useValue: mock<AdvancementService>() },
-        { provide: AdvancementImportService, useValue: mock<AdvancementImportService>() },
+        {
+          provide: AdvancementImportService,
+          useValue: mock<AdvancementImportService>(),
+        },
       ],
     }).compile();
 

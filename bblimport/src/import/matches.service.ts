@@ -3,12 +3,19 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { HTMLElement } from 'node-html-parser';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
-import { CompetitionReference, Match, MatchEvent, MatchEventActionType, MatchEventConsequenceType, TeamReference } from '../dtos';
+import {
+  CompetitionReference,
+  Match,
+  MatchEvent,
+  MatchEventActionType,
+  MatchEventConsequenceType,
+  TeamReference,
+} from '../dtos';
 
 export type MatchImportData = {
-  match: Match,
-  teams: TeamReference[],
-  matchEvents: MatchEvent[],
+  match: Match;
+  teams: TeamReference[];
+  matchEvents: MatchEvent[];
 };
 
 @Injectable()
@@ -35,10 +42,14 @@ export class MatchesService {
         );
       }
       const competition: CompetitionReference = {
-        externalIds: [this.api.externalId(this.fileReaderService.findQueryParamInHref(
-          's',
-          competitionElements[0].getAttribute('href'),
-        ))],
+        externalIds: [
+          this.api.externalId(
+            this.fileReaderService.findQueryParamInHref(
+              's',
+              competitionElements[0].getAttribute('href'),
+            ),
+          ),
+        ],
       };
       // Find match name
       const competitionAndMatchName =
@@ -59,10 +70,14 @@ export class MatchesService {
       const teams = Array<TeamReference>();
       for (const teamLogoElement of teamLogoElements) {
         teams.push({
-          externalIds: [this.api.externalId(this.fileReaderService.findQueryParamInHref(
-            't',
-            teamLogoElement.parentNode.getAttribute('href'),
-          ))],
+          externalIds: [
+            this.api.externalId(
+              this.fileReaderService.findQueryParamInHref(
+                't',
+                teamLogoElement.parentNode.getAttribute('href'),
+              ),
+            ),
+          ],
         });
       }
       // Find match events
@@ -273,26 +288,17 @@ export class MatchesService {
 
   async uploadMatch(data: MatchImportData): Promise<void> {
     // Upload the match data
-    const result = await this.api.post(
-      'match',
-      data.match,
-    );
+    const result = await this.api.post('match', data.match);
     console.log(JSON.stringify(result.data));
     for (const team of data.teams) {
-      const teamResult = await this.api.post(
-        'team-in-match',
-        {
-          team: team,
-          match: data.match,
-        },
-      );
+      const teamResult = await this.api.post('team-in-match', {
+        team: team,
+        match: data.match,
+      });
       console.log(JSON.stringify(teamResult.data));
     }
     for (const matchEvent of data.matchEvents) {
-      const eventResult = await this.api.post(
-        'match-event',
-        matchEvent,
-      );
+      const eventResult = await this.api.post('match-event', matchEvent);
       console.log(JSON.stringify(eventResult.data));
     }
   }

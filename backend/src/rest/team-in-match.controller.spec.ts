@@ -12,7 +12,10 @@ describe('TeamInMatchController', () => {
       controllers: [TeamInMatchController],
       providers: [
         { provide: TeamInMatchService, useValue: mock<TeamInMatchService>() },
-        { provide: TeamInMatchImportService, useValue: mock<TeamInMatchImportService>() },
+        {
+          provide: TeamInMatchImportService,
+          useValue: mock<TeamInMatchImportService>(),
+        },
       ],
     }).compile();
 

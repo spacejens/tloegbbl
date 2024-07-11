@@ -7,10 +7,10 @@ import { Coach, ExternalId, Team, TeamType } from '../dtos';
 
 // TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
 export type TeamImportData = {
-  team: Team,
-  headCoach: Coach,
-  coCoach?: Coach,
-  teamType: TeamType,
+  team: Team;
+  headCoach: Coach;
+  coCoach?: Coach;
+  teamType: TeamType;
 };
 
 @Injectable()
@@ -49,9 +49,13 @@ export class TeamsService {
         );
       }
       const teamType: TeamType = {
-        externalIds: [this.api.externalId(this.fileReaderService.findAnchorInHref(
-          teamTypeElements[0].getAttribute('href'),
-        ))],
+        externalIds: [
+          this.api.externalId(
+            this.fileReaderService.findAnchorInHref(
+              teamTypeElements[0].getAttribute('href'),
+            ),
+          ),
+        ],
         name: teamTypeElements[0].innerText,
       };
       // Find extra team ID (if different in links due to character encoding issues)
@@ -137,10 +141,7 @@ export class TeamsService {
     }
     await this.teamTypesService.uploadTeamType(data.teamType);
     // Upload the team data
-    const result = await this.api.post(
-      'team',
-      data.team,
-    );
+    const result = await this.api.post('team', data.team);
     console.log(JSON.stringify(result.data));
   }
 }

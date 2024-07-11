@@ -1,5 +1,9 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
-import { MatchEvent, MatchEventActionType, MatchEventConsequenceType } from '../dtos';
+import {
+  MatchEvent,
+  MatchEventActionType,
+  MatchEventConsequenceType,
+} from '../dtos';
 
 @Injectable()
 export class MatchEventPipe implements PipeTransform {

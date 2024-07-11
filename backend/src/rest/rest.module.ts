@@ -17,10 +17,22 @@ import { TeamInMatchController } from './team-in-match.controller';
 import { MatchEventController } from './match-event.controller';
 
 @Module({
-  imports: [
-    PersistenceModule,
-    ImportModule,
+  imports: [PersistenceModule, ImportModule],
+  controllers: [
+    CoachController,
+    TeamTypeController,
+    TeamController,
+    PlayerTypeController,
+    AdvancementController,
+    PlayerTypeHasAdvancementController,
+    PlayerTypeInTeamTypeController,
+    PlayerController,
+    PlayerHasAdvancementController,
+    CompetitionController,
+    TeamInCompetitionController,
+    MatchController,
+    TeamInMatchController,
+    MatchEventController,
   ],
-  controllers: [CoachController, TeamTypeController, TeamController, PlayerTypeController, AdvancementController, PlayerTypeHasAdvancementController, PlayerTypeInTeamTypeController, PlayerController, PlayerHasAdvancementController, CompetitionController, TeamInCompetitionController, MatchController, TeamInMatchController, MatchEventController]
 })
 export class RestModule {}

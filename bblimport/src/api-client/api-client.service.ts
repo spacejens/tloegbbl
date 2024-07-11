@@ -25,17 +25,15 @@ export class ApiClientService {
   // TODO What if there are multiple external IDs for the same data? Need to return array instead...
   getExternalId(data: ExternallyIdentifiable): string {
     for (const externalId of data.externalIds) {
-      if (externalId.externalSystem == 'tloeg.bbleague.se') { // TODO Get externalSystem from configuration
+      if (externalId.externalSystem == 'tloeg.bbleague.se') {
+        // TODO Get externalSystem from configuration
         return externalId.externalId;
       }
     }
     return undefined;
   }
 
-  async post(
-    path: string,
-    argument: any,
-  ): Promise<AxiosResponse<any,any>> {
+  async post(path: string, argument: any): Promise<AxiosResponse<any, any>> {
     const result = await this.httpService.post(
       // TODO Get API URL from configuration
       'http://localhost:3000/' + path,
@@ -45,7 +43,7 @@ export class ApiClientService {
           'Content-Type': 'application/json',
         },
       },
-    )
+    );
     if (result.status != 201 || result.data.errors) {
       throw new Error(
         `Unexpected result from REST POST: ${result.status} ${

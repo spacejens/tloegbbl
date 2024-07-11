@@ -7,9 +7,9 @@ import { Advancement, PlayerType, TeamType } from '../dtos';
 
 // TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
 export type PlayerTypeImportData = {
-  playerType: PlayerType,
-  teamTypes: TeamType[],
-  advancements: Advancement[],
+  playerType: PlayerType;
+  teamTypes: TeamType[];
+  advancements: Advancement[];
 };
 
 @Injectable()
@@ -79,9 +79,13 @@ export class PlayerTypesService {
       );
       for (const teamTypeElement of teamTypeElements) {
         teamTypes.push({
-          externalIds: [this.api.externalId(this.fileReaderService.findAnchorInHref(
-            teamTypeElement.getAttribute('href'),
-          ))],
+          externalIds: [
+            this.api.externalId(
+              this.fileReaderService.findAnchorInHref(
+                teamTypeElement.getAttribute('href'),
+              ),
+            ),
+          ],
           name: teamTypeElement.innerText,
         });
       }
@@ -107,16 +111,17 @@ export class PlayerTypesService {
   private uploadedPlayerTypes = Array<string>();
   async uploadPlayerType(data: PlayerTypeImportData): Promise<void> {
     // Ensure no duplicate uploads
-    if (this.uploadedPlayerTypes.indexOf(this.api.getExternalId(data.playerType)) != -1) {
+    if (
+      this.uploadedPlayerTypes.indexOf(
+        this.api.getExternalId(data.playerType),
+      ) != -1
+    ) {
       return;
     }
     this.uploadedPlayerTypes.push(this.api.getExternalId(data.playerType));
     // TODO Can the duplicate upload detection be more clean? Would be nice with an object equality check of the whole player type
     // Upload the player type data
-    const result = await this.api.post(
-      'player-type',
-      data.playerType,
-    );
+    const result = await this.api.post('player-type', data.playerType);
     console.log(JSON.stringify(result.data));
     for (const advancement of data.advancements) {
       await this.advancementService.uploadAdvancement(advancement);
@@ -133,13 +138,10 @@ export class PlayerTypesService {
     }
     for (const teamType of data.teamTypes) {
       await this.teamTypesService.uploadTeamType(teamType);
-      const teamTypeResult = await this.api.post(
-        'player-type-in-team-type',
-        {
-          playerType: data.playerType,
-          teamType: teamType,
-        },
-      );
+      const teamTypeResult = await this.api.post('player-type-in-team-type', {
+        playerType: data.playerType,
+        teamType: teamType,
+      });
       console.log(JSON.stringify(teamTypeResult.data));
     }
   }

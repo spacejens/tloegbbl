@@ -11,12 +11,20 @@ describe('PlayerHasAdvancementController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PlayerHasAdvancementController],
       providers: [
-        { provide: PlayerHasAdvancementService, useValue: mock<PlayerHasAdvancementService>() },
-        { provide: PlayerHasAdvancementImportService, useValue: mock<PlayerHasAdvancementImportService>() },
+        {
+          provide: PlayerHasAdvancementService,
+          useValue: mock<PlayerHasAdvancementService>(),
+        },
+        {
+          provide: PlayerHasAdvancementImportService,
+          useValue: mock<PlayerHasAdvancementImportService>(),
+        },
       ],
     }).compile();
 
-    controller = module.get<PlayerHasAdvancementController>(PlayerHasAdvancementController);
+    controller = module.get<PlayerHasAdvancementController>(
+      PlayerHasAdvancementController,
+    );
   });
 
   it('should be defined', () => {

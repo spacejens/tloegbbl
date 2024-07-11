@@ -11,7 +11,9 @@ export class TeamInMatchController {
   ) {}
 
   @Post()
-  async importTeamInMatch(@Body() teamInMatch: TeamInMatch): Promise<TeamInMatch> {
+  async importTeamInMatch(
+    @Body() teamInMatch: TeamInMatch,
+  ): Promise<TeamInMatch> {
     return this.teamInMatchImportService.import(teamInMatch);
   }
 

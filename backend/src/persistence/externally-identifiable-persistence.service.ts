@@ -31,7 +31,7 @@ export abstract class ExternallyIdentifiablePersistenceService<
       return this.findById(reference.id);
     } else if (reference.externalIds) {
       for (const extId of reference.externalIds) {
-        const found = extId && await this.findByExternalId(extId);
+        const found = extId && (await this.findByExternalId(extId));
         if (found) {
           return found;
         }

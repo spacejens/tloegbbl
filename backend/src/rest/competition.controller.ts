@@ -11,7 +11,9 @@ export class CompetitionController {
   ) {}
 
   @Post()
-  async importCompetition(@Body() competition: Competition): Promise<Competition> {
+  async importCompetition(
+    @Body() competition: Competition,
+  ): Promise<Competition> {
     return this.competitionImportService.import(competition);
   }
 

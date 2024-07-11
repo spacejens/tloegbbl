@@ -12,7 +12,10 @@ describe('CompetitionController', () => {
       controllers: [CompetitionController],
       providers: [
         { provide: CompetitionService, useValue: mock<CompetitionService>() },
-        { provide: CompetitionImportService, useValue: mock<CompetitionImportService>() },
+        {
+          provide: CompetitionImportService,
+          useValue: mock<CompetitionImportService>(),
+        },
       ],
     }).compile();
 

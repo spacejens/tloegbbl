@@ -11,12 +11,20 @@ describe('PlayerTypeInTeamTypeController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PlayerTypeInTeamTypeController],
       providers: [
-        { provide: PlayerTypeInTeamTypeService, useValue: mock<PlayerTypeInTeamTypeService>() },
-        { provide: PlayerTypeInTeamTypeImportService, useValue: mock<PlayerTypeInTeamTypeImportService>() },
+        {
+          provide: PlayerTypeInTeamTypeService,
+          useValue: mock<PlayerTypeInTeamTypeService>(),
+        },
+        {
+          provide: PlayerTypeInTeamTypeImportService,
+          useValue: mock<PlayerTypeInTeamTypeImportService>(),
+        },
       ],
     }).compile();
 
-    controller = module.get<PlayerTypeInTeamTypeController>(PlayerTypeInTeamTypeController);
+    controller = module.get<PlayerTypeInTeamTypeController>(
+      PlayerTypeInTeamTypeController,
+    );
   });
 
   it('should be defined', () => {

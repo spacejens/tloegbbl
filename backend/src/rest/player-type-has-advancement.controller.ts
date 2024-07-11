@@ -11,12 +11,18 @@ export class PlayerTypeHasAdvancementController {
   ) {}
 
   @Post()
-  async importPlayerTypeHasAdvancement(@Body() playerTypeHasAdvancement: PlayerTypeHasAdvancement): Promise<PlayerTypeHasAdvancement> {
-    return this.playerTypeHasAdvancementImportService.import(playerTypeHasAdvancement);
+  async importPlayerTypeHasAdvancement(
+    @Body() playerTypeHasAdvancement: PlayerTypeHasAdvancement,
+  ): Promise<PlayerTypeHasAdvancement> {
+    return this.playerTypeHasAdvancementImportService.import(
+      playerTypeHasAdvancement,
+    );
   }
 
   @Get(':id')
-  async getPlayerTypeHasAdvancement(@Param('id') id: string): Promise<PlayerTypeHasAdvancement> {
+  async getPlayerTypeHasAdvancement(
+    @Param('id') id: string,
+  ): Promise<PlayerTypeHasAdvancement> {
     return this.playerTypeHasAdvancementService.findById(+id);
   }
 }

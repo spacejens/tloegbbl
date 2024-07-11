@@ -11,12 +11,20 @@ describe('TeamInCompetitionController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TeamInCompetitionController],
       providers: [
-        { provide: TeamInCompetitionService, useValue: mock<TeamInCompetitionService>() },
-        { provide: TeamInCompetitionImportService, useValue: mock<TeamInCompetitionImportService>() },
+        {
+          provide: TeamInCompetitionService,
+          useValue: mock<TeamInCompetitionService>(),
+        },
+        {
+          provide: TeamInCompetitionImportService,
+          useValue: mock<TeamInCompetitionImportService>(),
+        },
       ],
     }).compile();
 
-    controller = module.get<TeamInCompetitionController>(TeamInCompetitionController);
+    controller = module.get<TeamInCompetitionController>(
+      TeamInCompetitionController,
+    );
   });
 
   it('should be defined', () => {

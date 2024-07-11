@@ -12,7 +12,10 @@ describe('PlayerTypeController', () => {
       controllers: [PlayerTypeController],
       providers: [
         { provide: PlayerTypeService, useValue: mock<PlayerTypeService>() },
-        { provide: PlayerTypeImportService, useValue: mock<PlayerTypeImportService>() },
+        {
+          provide: PlayerTypeImportService,
+          useValue: mock<PlayerTypeImportService>(),
+        },
       ],
     }).compile();
 

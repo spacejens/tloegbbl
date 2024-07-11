@@ -4,8 +4,8 @@ import { FileReaderService } from './filereader.service';
 import { Competition, TeamReference } from '../dtos';
 
 export type CompetitionImportData = {
-  competition: Competition,
-  participants: TeamReference[],
+  competition: Competition;
+  participants: TeamReference[];
 };
 
 @Injectable()
@@ -45,9 +45,13 @@ export class CompetitionsService {
       );
       for (const participantElement of participantElements) {
         participants.push({
-          externalIds: [this.api.externalId(this.fileReaderService.findTeamIdInGoToTeam(
-            participantElement.getAttribute('onclick'),
-          ))],
+          externalIds: [
+            this.api.externalId(
+              this.fileReaderService.findTeamIdInGoToTeam(
+                participantElement.getAttribute('onclick'),
+              ),
+            ),
+          ],
         });
       }
       // Assemble result
@@ -62,7 +66,9 @@ export class CompetitionsService {
     return competitions;
   }
 
-  async uploadCompetitions(competitions: CompetitionImportData[]): Promise<void> {
+  async uploadCompetitions(
+    competitions: CompetitionImportData[],
+  ): Promise<void> {
     for (const competition of competitions) {
       await this.uploadCompetition(competition);
     }
@@ -70,19 +76,13 @@ export class CompetitionsService {
 
   async uploadCompetition(data: CompetitionImportData): Promise<void> {
     // Upload the competition data
-    const result = await this.api.post(
-      'competition',
-      data.competition,
-    );
+    const result = await this.api.post('competition', data.competition);
     console.log(JSON.stringify(result.data));
     for (const participant of data.participants) {
-      const participantResult = await this.api.post(
-        'team-in-competition',
-        {
-          team: participant,
-          competition: data.competition,
-        },
-      );
+      const participantResult = await this.api.post('team-in-competition', {
+        team: participant,
+        competition: data.competition,
+      });
       console.log(JSON.stringify(participantResult.data));
     }
   }

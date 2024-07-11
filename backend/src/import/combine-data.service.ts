@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalId, ExternallyIdentifiable } from '../dtos';
 
-type Validate<T> = Pick<T, {
-  [Prop in keyof T]: T[Prop] extends null | undefined ? never : Prop
-}[keyof T]>
+type Validate<T> = Pick<
+  T,
+  {
+    [Prop in keyof T]: T[Prop] extends null | undefined ? never : Prop;
+  }[keyof T]
+>;
 
 @Injectable()
 export class CombineDataService {
@@ -19,12 +22,17 @@ export class CombineDataService {
     };
   }
 
-  private keepOnlyPropsWithValues<T extends ExternallyIdentifiable>(obj: T): Validate<T> {
+  private keepOnlyPropsWithValues<T extends ExternallyIdentifiable>(
+    obj: T,
+  ): Validate<T> {
     return Object.fromEntries(
       Object.entries(obj)
         .filter(([_, v]) => v != null)
-        .map(([k, v]) => [k, v === Object(v) ? this.keepOnlyPropsWithValues(v) : v])
-    ) as Validate<T>
+        .map(([k, v]) => [
+          k,
+          v === Object(v) ? this.keepOnlyPropsWithValues(v) : v,
+        ]),
+    ) as Validate<T>;
   }
 
   private combineExternalIds(

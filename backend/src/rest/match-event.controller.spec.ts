@@ -12,7 +12,10 @@ describe('MatchEventController', () => {
       controllers: [MatchEventController],
       providers: [
         { provide: MatchEventService, useValue: mock<MatchEventService>() },
-        { provide: MatchEventImportService, useValue: mock<MatchEventImportService>() },
+        {
+          provide: MatchEventImportService,
+          useValue: mock<MatchEventImportService>(),
+        },
       ],
     }).compile();
 

@@ -11,12 +11,16 @@ export class PlayerTypeInTeamTypeController {
   ) {}
 
   @Post()
-  async importPlayerTypeInTeamType(@Body() playerTypeInTeamType: PlayerTypeInTeamType): Promise<PlayerTypeInTeamType> {
+  async importPlayerTypeInTeamType(
+    @Body() playerTypeInTeamType: PlayerTypeInTeamType,
+  ): Promise<PlayerTypeInTeamType> {
     return this.playerTypeInTeamTypeImportService.import(playerTypeInTeamType);
   }
 
   @Get(':id')
-  async getPlayerTypeInTeamType(@Param('id') id: string): Promise<PlayerTypeInTeamType> {
+  async getPlayerTypeInTeamType(
+    @Param('id') id: string,
+  ): Promise<PlayerTypeInTeamType> {
     return this.playerTypeInTeamTypeService.findById(+id);
   }
 }
