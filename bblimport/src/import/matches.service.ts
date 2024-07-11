@@ -179,6 +179,7 @@ export class MatchesService {
             actionType = MatchEventActionType.CASUALTY;
             consequenceType = MatchEventConsequenceType.BADLY_HURT;
             break;
+          case 'Serious/Lasting\nHurters/Injurers':
           case 'Serious/LastingHurters/Injurers':
             actionType = MatchEventActionType.CASUALTY;
             consequenceType = MatchEventConsequenceType.SERIOUS_INJURY; // Exact injury unknown
