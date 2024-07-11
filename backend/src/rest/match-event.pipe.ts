@@ -7,7 +7,7 @@ import {
 
 @Injectable()
 export class MatchEventPipe implements PipeTransform {
-  transform(value: any, metadata: ArgumentMetadata): MatchEvent {
+  transform(value: any, _: ArgumentMetadata): MatchEvent {
     return {
       ...value,
       actionType: MatchEventActionType[value.actionType],
