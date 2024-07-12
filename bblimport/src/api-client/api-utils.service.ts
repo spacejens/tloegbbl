@@ -23,4 +23,11 @@ export class ApiUtilsService {
     }
     return undefined;
   }
+
+  // TODO What if there are multiple external IDs for the same data? Need to check for array overlap instead...
+  sameExternalId(dataA: ExternallyIdentifiable, dataB: ExternallyIdentifiable): boolean {
+    const idA = this.getExternalId(dataA);
+    const idB = this.getExternalId(dataB);
+    return idA && idA === idB;
+  }
 }

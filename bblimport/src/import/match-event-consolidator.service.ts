@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ExternalId, ExternallyIdentifiable, MatchEvent, MatchEventActionType, MatchEventConsequenceType } from '../dtos';
+import { ExternalId, MatchEvent, MatchEventActionType, MatchEventConsequenceType } from '../dtos';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 @Injectable()
@@ -80,12 +80,5 @@ export class MatchEventConsolidatorService {
       consequencePlayer: consequencePlayer,
       consequenceType: consequenceType,
     };
-  }
-
-  // TODO What if there are multiple external IDs for the same data? Need to check for array overlap instead...
-  sameExternalId(dataA: ExternallyIdentifiable, dataB: ExternallyIdentifiable): boolean {
-    const idA = this.apiUtils.getExternalId(dataA);
-    const idB = this.apiUtils.getExternalId(dataB);
-    return idA && idA === idB;
   }
 }

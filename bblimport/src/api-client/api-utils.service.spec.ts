@@ -30,4 +30,6 @@ describe('ApiUtilsService', () => {
   });
 
   // TODO Add unit tests for getExternalId
+
+  // TODO Add unit tests for sameExternalId
 });
