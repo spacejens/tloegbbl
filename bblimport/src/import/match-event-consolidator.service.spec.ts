@@ -35,7 +35,7 @@ describe('MatchEventConsolidatorService', () => {
       externalIds: [
         {
           externalId: 'match',
-          externalSystem: 'test',
+          externalSystem: 'tloeg.bbleague.se',
         },
       ],
     };
@@ -43,7 +43,7 @@ describe('MatchEventConsolidatorService', () => {
       externalIds: [
         {
           externalId: 'teamA',
-          externalSystem: 'test',
+          externalSystem: 'tloeg.bbleague.se',
         },
       ],
     };
@@ -51,7 +51,7 @@ describe('MatchEventConsolidatorService', () => {
       externalIds: [
         {
           externalId: 'playerA1',
-          externalSystem: 'test',
+          externalSystem: 'tloeg.bbleague.se',
         },
       ],
     };
@@ -59,7 +59,7 @@ describe('MatchEventConsolidatorService', () => {
       externalIds: [
         {
           externalId: 'teamB',
-          externalSystem: 'test',
+          externalSystem: 'tloeg.bbleague.se',
         },
       ],
     };
@@ -67,7 +67,7 @@ describe('MatchEventConsolidatorService', () => {
       externalIds: [
         {
           externalId: 'playerB1',
-          externalSystem: 'test',
+          externalSystem: 'tloeg.bbleague.se',
         },
       ],
     };
@@ -83,7 +83,7 @@ describe('MatchEventConsolidatorService', () => {
           externalIds: [
             {
               externalId: '1',
-              externalSystem: 'test',
+              externalSystem: 'tloeg.bbleague.se',
             },
           ],
           match: match,
@@ -97,7 +97,7 @@ describe('MatchEventConsolidatorService', () => {
           externalIds: [
             {
               externalId: '1',
-              externalSystem: 'test',
+              externalSystem: 'tloeg.bbleague.se',
             },
           ],
           match: match,
@@ -114,7 +114,7 @@ describe('MatchEventConsolidatorService', () => {
           externalIds: [
             {
               externalId: '1',
-              externalSystem: 'test',
+              externalSystem: 'tloeg.bbleague.se',
             },
           ],
           match: match,
@@ -127,7 +127,7 @@ describe('MatchEventConsolidatorService', () => {
           externalIds: [
             {
               externalId: '2',
-              externalSystem: 'test',
+              externalSystem: 'tloeg.bbleague.se',
             },
           ],
           match: match,
@@ -141,11 +141,11 @@ describe('MatchEventConsolidatorService', () => {
           externalIds: [
             {
               externalId: '1',
-              externalSystem: 'test',
+              externalSystem: 'tloeg.bbleague.se',
             },
             {
               externalId: '2',
-              externalSystem: 'test',
+              externalSystem: 'tloeg.bbleague.se',
             },
           ],
           match: match,

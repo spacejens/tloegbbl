@@ -23,11 +23,18 @@ export class ApiUtilsService {
     }
     return undefined;
   }
+  getExternalIds(data: ExternallyIdentifiable): string[] {
+    return data.externalIds
+      .filter((value) => value.externalSystem == 'tloeg.bbleague.se') // TODO Get externalSystem from configuration
+      .map((value) => value.externalId)
+      .sort();
+  }
 
-  // TODO What if there are multiple external IDs for the same data? Need to check for array overlap instead...
   sameExternalId(dataA: ExternallyIdentifiable, dataB: ExternallyIdentifiable): boolean {
-    const idA = this.getExternalId(dataA);
-    const idB = this.getExternalId(dataB);
-    return idA && idA === idB;
+    const idsA = this.getExternalIds(dataA);
+    const idsB = this.getExternalIds(dataB);
+    return idsA
+      .filter((value) => idsB.indexOf(value) > -1)
+      .length > 0;
   }
 }
