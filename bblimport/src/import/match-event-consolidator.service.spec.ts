@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
 import {
   MatchEventActionType,
+  MatchEventConsequenceType,
   MatchReference,
   PlayerReference,
   TeamReference,
@@ -101,5 +102,58 @@ describe('MatchEventConsolidatorService', () => {
         },
       ]);
     });
+
+    it('merges killer and death', () => {
+      const result = service.consolidateMatchEvents([
+        {
+          externalIds: [
+            {
+              externalId: '1',
+              externalSystem: 'test',
+            },
+          ],
+          match: match,
+          actingTeam: teamA,
+          actingPlayer: playerA1,
+          actionType: MatchEventActionType.CASUALTY,
+          consequenceType: MatchEventConsequenceType.DEATH,
+        },
+        {
+          externalIds: [
+            {
+              externalId: '2',
+              externalSystem: 'test',
+            },
+          ],
+          match: match,
+          consequenceTeam: teamB,
+          consequencePlayer: playerB1,
+          consequenceType: MatchEventConsequenceType.DEATH,
+        },
+      ]);
+      expect(result).toStrictEqual([
+        {
+          externalIds: [
+            {
+              externalId: '1',
+              externalSystem: 'test',
+            },
+            {
+              externalId: '2',
+              externalSystem: 'test',
+            },
+          ],
+          match: match,
+          actingTeam: teamA,
+          actingPlayer: playerA1,
+          actionType: MatchEventActionType.CASUALTY,
+          consequenceTeam: teamB,
+          consequencePlayer: playerB1,
+          consequenceType: MatchEventConsequenceType.DEATH,
+        },
+      ]);
+    });
   });
+
+  // TODO Extract helper function to create external IDs
 });

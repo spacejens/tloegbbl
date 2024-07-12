@@ -123,7 +123,7 @@ export enum MatchEventActionType {
   MVP = 'MVP',
   // Other actions
   FOUL = 'FOUL',
-  SENT_OFF = 'SENT_OFF',
+  SENT_OFF = 'SENT_OFF', // TODO Should sent off be a consequence instead? Keep in mind that fouls could be joined with an injury consequence
 }
 
 export enum MatchEventConsequenceType {
