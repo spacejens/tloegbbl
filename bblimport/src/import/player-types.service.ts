@@ -4,6 +4,7 @@ import { FileReaderService } from './filereader.service';
 import { AdvancementsService } from './advancements.service';
 import { TeamTypesService } from './team-types.service';
 import { Advancement, PlayerType, TeamType } from '../dtos';
+import { ApiUtilsService } from '../api-client/api-utils.service';
 
 // TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
 export type PlayerTypeImportData = {
@@ -17,6 +18,7 @@ export class PlayerTypesService {
   constructor(
     private readonly fileReaderService: FileReaderService,
     private readonly api: ApiClientService,
+    private readonly apiUtils: ApiUtilsService,
     private readonly advancementService: AdvancementsService,
     private readonly teamTypesService: TeamTypesService,
   ) {}
@@ -65,7 +67,7 @@ export class PlayerTypesService {
               .trim();
             if (trimmedAdvancementText) {
               advancements.push({
-                externalIds: [this.api.externalId(trimmedAdvancementText)],
+                externalIds: [this.apiUtils.externalId(trimmedAdvancementText)],
                 name: trimmedAdvancementText,
               });
             }
@@ -80,7 +82,7 @@ export class PlayerTypesService {
       for (const teamTypeElement of teamTypeElements) {
         teamTypes.push({
           externalIds: [
-            this.api.externalId(
+            this.apiUtils.externalId(
               this.fileReaderService.findAnchorInHref(
                 teamTypeElement.getAttribute('href'),
               ),
@@ -92,7 +94,7 @@ export class PlayerTypesService {
       // Assemble the result
       playerTypes.push({
         playerType: {
-          externalIds: [this.api.externalId(playerTypeId)],
+          externalIds: [this.apiUtils.externalId(playerTypeId)],
           name: playerTypeName,
         },
         teamTypes: teamTypes,
@@ -113,12 +115,12 @@ export class PlayerTypesService {
     // Ensure no duplicate uploads
     if (
       this.uploadedPlayerTypes.indexOf(
-        this.api.getExternalId(data.playerType),
+        this.apiUtils.getExternalId(data.playerType),
       ) != -1
     ) {
       return;
     }
-    this.uploadedPlayerTypes.push(this.api.getExternalId(data.playerType));
+    this.uploadedPlayerTypes.push(this.apiUtils.getExternalId(data.playerType));
     // TODO Can the duplicate upload detection be more clean? Would be nice with an object equality check of the whole player type
     // Upload the player type data
     const result = await this.api.post('player-type', data.playerType);

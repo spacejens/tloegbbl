@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 import { ApiClientService } from '../api-client/api-client.service';
 import { Coach } from '../dtos';
+import { ApiUtilsService } from '../api-client/api-utils.service';
 
 @Injectable()
 export class CoachesService {
   constructor(
     private readonly fileReaderService: FileReaderService,
     private readonly api: ApiClientService,
+    private readonly apiUtils: ApiUtilsService,
   ) {}
 
   getCoaches(): Coach[] {
@@ -43,7 +45,7 @@ export class CoachesService {
     // Upload the coach data
     const result = await this.api.post('coach', {
       name: coach.name,
-      externalIds: [this.api.externalId(coach.name)],
+      externalIds: [this.apiUtils.externalId(coach.name)],
     });
     console.log(JSON.stringify(result.data));
   }

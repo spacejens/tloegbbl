@@ -11,6 +11,7 @@ import {
   MatchEventConsequenceType,
   TeamReference,
 } from '../dtos';
+import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type MatchImportData = {
   match: Match;
@@ -23,6 +24,7 @@ export class MatchesService {
   constructor(
     private readonly fileReaderService: FileReaderService,
     private readonly api: ApiClientService,
+    private readonly apiUtils: ApiUtilsService,
     private readonly consolidator: MatchEventConsolidatorService,
   ) {}
 
@@ -43,7 +45,7 @@ export class MatchesService {
       }
       const competition: CompetitionReference = {
         externalIds: [
-          this.api.externalId(
+          this.apiUtils.externalId(
             this.fileReaderService.findQueryParamInHref(
               's',
               competitionElements[0].getAttribute('href'),
@@ -71,7 +73,7 @@ export class MatchesService {
       for (const teamLogoElement of teamLogoElements) {
         teams.push({
           externalIds: [
-            this.api.externalId(
+            this.apiUtils.externalId(
               this.fileReaderService.findQueryParamInHref(
                 't',
                 teamLogoElement.parentNode.getAttribute('href'),
@@ -117,7 +119,7 @@ export class MatchesService {
       // Assemble the result
       matches.push({
         match: {
-          externalIds: [this.api.externalId(matchId)],
+          externalIds: [this.apiUtils.externalId(matchId)],
           name: matchName,
           competition: competition,
         },
@@ -148,7 +150,7 @@ export class MatchesService {
           return;
         }
         // Parse the event
-        const eventId = `M${matchId}-${this.api.getExternalId(team)}-${rowTypeText}-#${index}`;
+        const eventId = `M${matchId}-${this.apiUtils.getExternalId(team)}-${rowTypeText}-#${index}`;
         // Parse event type
         let actionType: MatchEventActionType;
         let consequenceType: MatchEventConsequenceType;
@@ -252,26 +254,26 @@ export class MatchesService {
         }
         if (isConsequenceRow) {
           matchEvents.push({
-            externalIds: [this.api.externalId(eventId)],
+            externalIds: [this.apiUtils.externalId(eventId)],
             match: {
-              externalIds: [this.api.externalId(matchId)],
+              externalIds: [this.apiUtils.externalId(matchId)],
             },
             actionType: actionType,
             consequenceTeam: team,
             consequencePlayer: {
-              externalIds: [this.api.externalId(playerId)],
+              externalIds: [this.apiUtils.externalId(playerId)],
             },
             consequenceType: consequenceType,
           });
         } else {
           matchEvents.push({
-            externalIds: [this.api.externalId(eventId)],
+            externalIds: [this.apiUtils.externalId(eventId)],
             match: {
-              externalIds: [this.api.externalId(matchId)],
+              externalIds: [this.apiUtils.externalId(matchId)],
             },
             actingTeam: team,
             actingPlayer: {
-              externalIds: [this.api.externalId(playerId)],
+              externalIds: [this.apiUtils.externalId(playerId)],
             },
             actionType: actionType,
             consequenceType: consequenceType,

@@ -7,13 +7,18 @@ import {
   PlayerReference,
   TeamReference,
 } from '../dtos';
+import { mock } from 'jest-mock-extended';
+import { ApiUtilsService } from '../api-client/api-utils.service';
 
 describe('MatchEventConsolidatorService', () => {
   let service: MatchEventConsolidatorService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MatchEventConsolidatorService],
+      providers: [
+        MatchEventConsolidatorService,
+        { provide: ApiUtilsService, useValue: mock<ApiUtilsService>() },
+      ],
     }).compile();
 
     service = module.get<MatchEventConsolidatorService>(

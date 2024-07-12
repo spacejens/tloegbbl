@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { Competition, TeamReference } from '../dtos';
+import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type CompetitionImportData = {
   competition: Competition;
@@ -13,6 +14,7 @@ export class CompetitionsService {
   constructor(
     private readonly fileReaderService: FileReaderService,
     private readonly api: ApiClientService,
+    private readonly apiUtils: ApiUtilsService,
   ) {}
 
   getCompetitions(): CompetitionImportData[] {
@@ -46,7 +48,7 @@ export class CompetitionsService {
       for (const participantElement of participantElements) {
         participants.push({
           externalIds: [
-            this.api.externalId(
+            this.apiUtils.externalId(
               this.fileReaderService.findTeamIdInGoToTeam(
                 participantElement.getAttribute('onclick'),
               ),
@@ -57,7 +59,7 @@ export class CompetitionsService {
       // Assemble result
       competitions.push({
         competition: {
-          externalIds: [this.api.externalId(competitionId)],
+          externalIds: [this.apiUtils.externalId(competitionId)],
           name: competitionName,
         },
         participants: participants,

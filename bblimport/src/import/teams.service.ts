@@ -4,6 +4,7 @@ import { CoachesService } from './coaches.service';
 import { TeamTypesService } from './team-types.service';
 import { ApiClientService } from '../api-client/api-client.service';
 import { Coach, ExternalId, Team, TeamType } from '../dtos';
+import { ApiUtilsService } from '../api-client/api-utils.service';
 
 // TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
 export type TeamImportData = {
@@ -20,6 +21,7 @@ export class TeamsService {
     private readonly coachesService: CoachesService,
     private readonly teamTypesService: TeamTypesService,
     private readonly api: ApiClientService,
+    private readonly apiUtils: ApiUtilsService,
   ) {}
 
   getTeams(): TeamImportData[] {
@@ -50,7 +52,7 @@ export class TeamsService {
       }
       const teamType: TeamType = {
         externalIds: [
-          this.api.externalId(
+          this.apiUtils.externalId(
             this.fileReaderService.findAnchorInHref(
               teamTypeElements[0].getAttribute('href'),
             ),
@@ -73,9 +75,9 @@ export class TeamsService {
       if (teamId === extraId) {
         extraId = undefined;
       }
-      const externalIds: ExternalId[] = [this.api.externalId(teamId)];
+      const externalIds: ExternalId[] = [this.apiUtils.externalId(teamId)];
       if (extraId) {
-        externalIds.push(this.api.externalId(extraId));
+        externalIds.push(this.apiUtils.externalId(extraId));
       }
       // Find head coach and co-coaches (if present)
       const coachElements = teamViewFile.querySelectorAll('td b span');
@@ -85,12 +87,12 @@ export class TeamsService {
             externalIds: externalIds,
             name: teamName,
             headCoach: {
-              externalIds: [this.api.externalId(coachElements[0].innerText)],
+              externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
             },
             teamType: teamType,
           },
           headCoach: {
-            externalIds: [this.api.externalId(coachElements[0].innerText)],
+            externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
             name: coachElements[0].innerText,
           },
           teamType: teamType,
@@ -102,19 +104,19 @@ export class TeamsService {
             externalIds: externalIds,
             name: teamName,
             headCoach: {
-              externalIds: [this.api.externalId(coachElements[0].innerText)],
+              externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
             },
             coCoach: {
-              externalIds: [this.api.externalId(coachElements[1].innerText)],
+              externalIds: [this.apiUtils.externalId(coachElements[1].innerText)],
             },
             teamType: teamType,
           },
           headCoach: {
-            externalIds: [this.api.externalId(coachElements[0].innerText)],
+            externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
             name: coachElements[0].innerText,
           },
           coCoach: {
-            externalIds: [this.api.externalId(coachElements[1].innerText)],
+            externalIds: [this.apiUtils.externalId(coachElements[1].innerText)],
             name: coachElements[1].innerText,
           },
           teamType: teamType,

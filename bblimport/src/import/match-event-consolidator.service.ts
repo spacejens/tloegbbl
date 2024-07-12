@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalId, ExternallyIdentifiable, MatchEvent, MatchEventActionType, MatchEventConsequenceType } from '../dtos';
-import { ApiClientService } from '../api-client/api-client.service';
+import { ApiUtilsService } from '../api-client/api-utils.service';
 
 @Injectable()
 export class MatchEventConsolidatorService {
-  constructor(private readonly api: ApiClientService) {}
+  constructor(
+    private readonly apiUtils: ApiUtilsService,
+  ) {}
 
   consolidateMatchEvents(matchEvents: MatchEvent[]): MatchEvent[] {
     const output = Array<MatchEvent>();
@@ -80,12 +82,10 @@ export class MatchEventConsolidatorService {
     };
   }
 
-  // TODO Move external ID util methods to separate class (together with methods from API client). Perhaps just move to the DTO classes?
-
   // TODO What if there are multiple external IDs for the same data? Need to check for array overlap instead...
   sameExternalId(dataA: ExternallyIdentifiable, dataB: ExternallyIdentifiable): boolean {
-    const idA = this.api.getExternalId(dataA);
-    const idB = this.api.getExternalId(dataB);
+    const idA = this.apiUtils.getExternalId(dataA);
+    const idB = this.apiUtils.getExternalId(dataB);
     return idA && idA === idB;
   }
 }

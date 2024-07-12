@@ -30,20 +30,5 @@ describe('ApiClientService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('externalId', () => {
-    it('should wrap in object with external system', () => {
-      expect(service.externalId('MyId')).toEqual({
-        externalId: 'MyId',
-        externalSystem: 'tloeg.bbleague.se',
-      });
-    });
-
-    it('should ignore undefined values', () => {
-      expect(service.externalId(undefined)).toBe(undefined);
-    });
-  });
-
-  // TODO Add unit tests for getExternalId
-
   // TODO Add unit tests for HTTP POST
 });

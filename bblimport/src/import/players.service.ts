@@ -9,6 +9,7 @@ import {
   PlayerTypeReference,
   TeamReference,
 } from '../dtos';
+import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type PlayerImportData = {
   player: Player;
@@ -21,6 +22,7 @@ export class PlayersService {
     private readonly fileReaderService: FileReaderService,
     private readonly advancementService: AdvancementsService,
     private readonly api: ApiClientService,
+    private readonly apiUtils: ApiUtilsService,
   ) {}
 
   getPlayers(): PlayerImportData[] {
@@ -60,7 +62,7 @@ export class PlayersService {
       }
       const playerType: PlayerTypeReference = {
         externalIds: [
-          this.api.externalId(
+          this.apiUtils.externalId(
             this.fileReaderService.findQueryParamInHref(
               'typID',
               playerLinkElements[0].getAttribute('href'),
@@ -71,7 +73,7 @@ export class PlayersService {
       // Find team
       const team: TeamReference = {
         externalIds: [
-          this.api.externalId(
+          this.apiUtils.externalId(
             this.fileReaderService.findQueryParamInHref(
               't',
               playerLinkElements[1].getAttribute('href'),
@@ -90,7 +92,7 @@ export class PlayersService {
           if (trimmedText != '?') {
             // TODO Handle if a player has the same advancement twice? (i.e. double stat increases)
             advancements.push({
-              externalIds: [this.api.externalId(trimmedText)],
+              externalIds: [this.apiUtils.externalId(trimmedText)],
               name: trimmedText,
             });
           }
@@ -101,7 +103,7 @@ export class PlayersService {
       // Assemble the result
       players.push({
         player: {
-          externalIds: [this.api.externalId(playerId)],
+          externalIds: [this.apiUtils.externalId(playerId)],
           name: playerName,
           playerType: playerType,
           team: team,

@@ -3,6 +3,7 @@ import { CompetitionsService } from './competitions.service';
 import { ApiClientService } from '../api-client/api-client.service';
 import { mock } from 'jest-mock-extended';
 import { FileReaderService } from './filereader.service';
+import { ApiUtilsService } from '../api-client/api-utils.service';
 
 describe('CompetitionsService', () => {
   let service: CompetitionsService;
@@ -13,6 +14,7 @@ describe('CompetitionsService', () => {
         CompetitionsService,
         { provide: FileReaderService, useValue: mock<FileReaderService>() },
         { provide: ApiClientService, useValue: mock<ApiClientService>() },
+        { provide: ApiUtilsService, useValue: mock<ApiUtilsService>() },
       ],
     }).compile();
 
