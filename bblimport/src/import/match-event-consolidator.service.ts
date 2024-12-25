@@ -27,6 +27,10 @@ export class MatchEventConsolidatorService {
   }
 
   mergeActionsWithConsequences(actions: MatchEvent[], consequences: MatchEvent[]): MatchEvent[] {
+    // TODO Remove trivial (length 1) check when merging match events
+    if (actions.length === 1 && consequences.length === 1) {
+      return [this.mergeEvents(actions[0], consequences[0])];
+    }
     return actions.concat(...consequences); // TODO Remove temporary return
     // TODO All actions by one team should merge with all consequences of other team(s)
     // TODO In case of serious injuries, the acting row's exact consequence will be unknown, but consolidate anyway (when possible)
