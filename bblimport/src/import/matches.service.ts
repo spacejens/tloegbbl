@@ -130,7 +130,6 @@ export class MatchesService {
     return matches;
   }
 
-  // TODO Event type should be enum in function argument
   private extractMatchEvents(
     columnElements: HTMLElement,
     team: TeamReference,
