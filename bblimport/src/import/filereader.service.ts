@@ -53,6 +53,14 @@ export class FileReaderService {
     return href.substring(href.lastIndexOf('#') + 1);
   }
 
+  /**
+   * Split an array of nodes into an array of arrays, split by nodes matching the splitting node.
+   * Analogouos to `String.split()` and its `separator` argument.
+   *
+   * @param nodes The original array to split.
+   * @param splitBy An expression determining if a node is a splitting node.
+   * @returns An array of arrays, being the groups of nodes between the splitting nodes.
+   */
   split(
     nodes: Node[],
     splitBy: (node: Node) => boolean = this.hasTagName('BR'),
