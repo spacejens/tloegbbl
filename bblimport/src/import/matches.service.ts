@@ -229,7 +229,7 @@ export class MatchesService {
               `Match ${matchId} has unknown match event row type text: ${rowTypeText}`,
             );
         }
-        // TODO Event type sometimes changed by non-player text elements (e.g. for fouls, random events)
+        // TODO Event type sometimes changed by additional text elements (e.g. for fouls?)
         // Find player ID, if any
         const playerIds = eventElements
           .filter((element) => element instanceof HTMLElement)
@@ -249,6 +249,36 @@ export class MatchesService {
         } else if (playerIds.length === 1) {
           playerId = playerIds[0];
         } else {
+          // No player IDs found, extract other non-player information
+          const nonPlayerText = eventElements
+            .map((element) => element.rawText)
+            .join();
+          // TODO Remember and store the specifics of the non-player text somehow?
+          switch(nonPlayerText) {
+            case 'victim regenerated':
+            case 'victim healed by apoth':
+            case 'mercenary':
+            case 'mercenary / star':
+            case 'journeyman':
+              // Cannot identify the specific player
+              break;
+            case 'mercenary / fans / random event':
+            case 'fans / random event':
+              // There may or may not have been a specific player (secret weapons, fans, and so on)
+              break;
+            case 'Extra shoot-out TD after tied overtime':
+              // There was no specific player
+              break;
+            case 'foul':
+              if (actionType === MatchEventActionType.CASUALTY) {
+                actionType = MatchEventActionType.FOUL;
+              }
+              break;
+            default:
+              throw new Error(
+                `Match ${matchId} has unknown match event non player text: ${nonPlayerText}`,
+              );
+          }
           playerId = undefined;
         }
         if (isConsequenceRow) {

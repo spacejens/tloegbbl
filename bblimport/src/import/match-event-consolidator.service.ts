@@ -16,6 +16,7 @@ export class MatchEventConsolidatorService {
       // TODO Consolidate into a smaller set, joining events that belong together
       if (matchEvent.actionType === MatchEventActionType.CASUALTY && matchEvent.consequenceType === MatchEventConsequenceType.DEATH) {
         killers.push(matchEvent);
+        // TODO Death fouls also need to be consolidated as killers
       } else if (! matchEvent.actionType && matchEvent.consequenceType === MatchEventConsequenceType.DEATH) {
         deaths.push(matchEvent);
       } else {
