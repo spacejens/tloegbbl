@@ -41,7 +41,179 @@ describe('ApiUtilsService', () => {
     });
   });
 
-  // TODO Add unit tests for getExternalId
+  describe('getExternalId', () => {
+    it('returns first found external ID for correct system', () => {
+      const result = service.getExternalId({
+        externalIds: [
+          {
+            externalId: 'id0',
+            externalSystem: 'wrongSystem',
+          },
+          {
+            externalId: 'id1',
+            externalSystem: 'tloeg.bbleague.se',
+          },
+          {
+            externalId: 'id2',
+            externalSystem: 'tloeg.bbleague.se',
+          },
+        ],
+      });
+      expect(result).toStrictEqual('id1');
+    });
 
-  // TODO Add unit tests for sameExternalId
+    it('returns undefined if no external IDs are found', () => {
+      const result = service.getExternalId({});
+      expect(result).toBeUndefined();
+    });
+
+    it('returns undefined if external IDs array is empty', () => {
+      const result = service.getExternalId({
+        externalIds: [],
+      });
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getExternalIds', () => {
+    it('returns all external IDs for correct system', () => {
+      const result = service.getExternalIds({
+        externalIds: [
+          {
+            externalId: 'id0',
+            externalSystem: 'wrongSystem',
+          },
+          {
+            externalId: 'id1',
+            externalSystem: 'tloeg.bbleague.se',
+          },
+          {
+            externalId: 'id2',
+            externalSystem: 'tloeg.bbleague.se',
+          },
+        ],
+      });
+      expect(result).toStrictEqual(['id1','id2']);
+    });
+
+    it('sorts returned IDs', () => {
+      const result = service.getExternalIds({
+        externalIds: [
+          {
+            externalId: 'id2',
+            externalSystem: 'tloeg.bbleague.se',
+          },
+          {
+            externalId: 'id1',
+            externalSystem: 'tloeg.bbleague.se',
+          },
+        ],
+      });
+      expect(result).toStrictEqual(['id1','id2']);
+    });
+
+    it('returns empty array if no external IDs are found', () => {
+      const result = service.getExternalIds({});
+      expect(result).toStrictEqual([]);
+    });
+
+    it('returns empty array if external IDs array is empty', () => {
+      const result = service.getExternalIds({
+        externalIds: [],
+      });
+      expect(result).toStrictEqual([]);
+    });
+  });
+
+  describe('sameExternalId', () => {
+    it('detects that two objects share one ID for correct system', () => {
+      const result = service.sameExternalId(
+        {
+          externalIds: [
+            {
+              externalId: 'id1',
+              externalSystem: 'tloeg.bbleague.se',
+            },
+            {
+              externalId: 'id2',
+              externalSystem: 'tloeg.bbleague.se',
+            },
+          ],
+        },
+        {
+          externalIds: [
+            {
+              externalId: 'id2',
+              externalSystem: 'tloeg.bbleague.se',
+            },
+            {
+              externalId: 'id3',
+              externalSystem: 'tloeg.bbleague.se',
+            },
+          ],
+        },
+      );
+      expect(result).toBe(true);
+    });
+
+    it('ignores incorrect system', () => {
+      const result = service.sameExternalId(
+        {
+          externalIds: [
+            {
+              externalId: 'id1',
+              externalSystem: 'tloeg.bbleague.se',
+            },
+            {
+              externalId: 'id2',
+              externalSystem: 'tloeg.bbleague.se',
+            },
+          ],
+        },
+        {
+          externalIds: [
+            {
+              externalId: 'id2',
+              externalSystem: 'wrongSystem',
+            },
+            {
+              externalId: 'id3',
+              externalSystem: 'tloeg.bbleague.se',
+            },
+          ],
+        },
+      );
+      expect(result).toBe(false);
+    });
+
+    it('handles first object having no external IDs', () => {
+      const result = service.sameExternalId(
+        {},
+        {
+          externalIds: [
+            {
+              externalId: 'id1',
+              externalSystem: 'tloeg.bbleague.se',
+            },
+          ],
+        },
+      );
+      expect(result).toBe(false);
+    });
+
+    it('handles second object having no external IDs', () => {
+      const result = service.sameExternalId(
+        {
+          externalIds: [
+            {
+              externalId: 'id1',
+              externalSystem: 'tloeg.bbleague.se',
+            },
+          ],
+        },
+        {},
+      );
+      expect(result).toBe(false);
+    });
+  });
 });
