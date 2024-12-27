@@ -66,7 +66,7 @@ export class MatchesService {
       if (matchDates.length != 1) {
         throw new Error(`Did not expect to find ${matchDates.length} match dates for ${matchId}`);
       }
-      // TODO Parse and upload date of match
+      const matchDate = this.fileReaderService.parseDateFromMonthDayYear(matchDates[0]);
       // Find teams
       const teamLogoElements = matchFile.querySelectorAll(
         'tr.trborder td a img',
@@ -125,6 +125,7 @@ export class MatchesService {
         );
       }
       // Assemble the result
+      // TODO Include matchDate in the pushed match data
       matches.push({
         match: {
           externalIds: [this.apiUtils.externalId(matchId)],

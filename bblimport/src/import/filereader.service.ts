@@ -91,4 +91,57 @@ export class FileReaderService {
     return (node: Node) =>
       node instanceof HTMLElement && node.tagName === tagName;
   }
+
+  /**
+   * Parse a date from plain text representation.
+   *
+   * @param source A date, e.g. 'September 24th, 2022'
+   */
+  parseDateFromMonthDayYear(source: string): Date {
+    const parts = source.split(' ');
+    if (parts.length != 3) {
+      throw new Error(`Unexpected number of spaces in month-day-year date ${source}`);
+    }
+    const month: number = this.monthNameToNumber(parts[0]);
+    const day: number = parseInt(parts[1]);
+    const year: number = parseInt(parts[2]);
+    return new Date(year,month,day);
+  }
+
+  /**
+   * Get month number from its name.
+   *
+   * @param name Capitalized name of month, e.g. 'September'
+   * @returns Month number, 0-11 (as expected by `date` constructor)
+   */
+  private monthNameToNumber(name: string): number {
+    switch(name) {
+      case 'January':
+        return 0;
+      case 'February':
+        return 1;
+      case 'March':
+        return 2;
+      case 'April':
+        return 3;
+      case 'May':
+        return 4;
+      case 'June':
+        return 5;
+      case 'July':
+        return 6;
+      case 'August':
+        return 7;
+      case 'September':
+        return 8;
+      case 'October':
+        return 9;
+      case 'November':
+        return 10;
+      case 'December':
+        return 11;
+      default:
+        throw new Error(`Unexpected month name ${name}`);
+    }
+  }
 }
