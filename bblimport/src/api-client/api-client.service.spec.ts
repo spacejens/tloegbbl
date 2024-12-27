@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ApiClientService } from './api-client.service';
 import { HttpWrapperService } from './http-wrapper.service';
 import { mock } from 'jest-mock-extended';
+import { ConfigService } from '@nestjs/config';
 
 describe('ApiClientService', () => {
   let service: ApiClientService;
@@ -11,6 +12,7 @@ describe('ApiClientService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApiClientService,
+        { provide: ConfigService, useValue: mock<ConfigService>() },
         { provide: HttpWrapperService, useValue: mock<HttpWrapperService>() },
       ],
     }).compile();

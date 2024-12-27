@@ -6,6 +6,11 @@ Since this was a one-time operation and this module operates by parsing download
 
 The module is designed to be used locally, but still has boilerplate source code to be able to deploy (although not in a useful way).
 
+## Configuration
+```bash
+cp .env.example .env
+```
+
 ## Installation
 
 ```bash

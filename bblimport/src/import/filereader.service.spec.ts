@@ -177,7 +177,7 @@ describe('FileReaderService', () => {
     it('parses a human readable date', () => {
       expect(
         fileReaderService.parseDateFromMonthDayYear('September 24th, 2022')
-      ).toStrictEqual(new Date(2022,8,24));
+      ).toStrictEqual(new Date(2022,8,24,12));
     });
 
     // TODO More test cases for date parsing

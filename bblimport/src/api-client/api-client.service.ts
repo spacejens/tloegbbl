@@ -1,7 +1,7 @@
 import { HttpWrapperService } from './http-wrapper.service';
 import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
-import { ExternallyIdentifiable } from '../dtos';
+import { ConfigService } from '@nestjs/config';
 
 export type ReturnedFields = ReturnedField[];
 
@@ -11,12 +11,14 @@ export type ReturnedSubfield = { [fieldName: string]: ReturnedFields };
 
 @Injectable()
 export class ApiClientService {
-  constructor(private readonly httpService: HttpWrapperService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly httpService: HttpWrapperService,
+  ) {}
 
   async post(path: string, argument: any): Promise<AxiosResponse<any, any>> {
     const result = await this.httpService.post(
-      // TODO Get API URL from configuration
-      'http://localhost:3000/' + path,
+      this.configService.get('BACKEND_API_URL') + path,
       argument,
       {
         headers: {

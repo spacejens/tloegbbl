@@ -1,6 +1,9 @@
 # Types from backend
 src/dtos.ts
 
+# Credentials
+.env
+
 # compiled output
 /dist
 /node_modules

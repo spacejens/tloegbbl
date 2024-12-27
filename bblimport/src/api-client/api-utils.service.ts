@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ExternallyIdentifiable } from '../dtos';
 
 @Injectable()
 export class ApiUtilsService {
+  constructor(
+    private readonly configService: ConfigService,
+  ) {}
 
   externalId(id: string) {
     return (
       id && {
         externalId: id,
-        externalSystem: 'tloeg.bbleague.se', // TODO Get externalSystem from configuration
+        externalSystem: this.configService.get('EXTERNAL_SYSTEM'),
       }
     );
   }
@@ -16,8 +20,7 @@ export class ApiUtilsService {
   // TODO What if there are multiple external IDs for the same data? Need to return array instead...
   getExternalId(data: ExternallyIdentifiable): string {
     for (const externalId of data.externalIds) {
-      if (externalId.externalSystem == 'tloeg.bbleague.se') {
-        // TODO Get externalSystem from configuration
+      if (externalId.externalSystem == this.configService.get('EXTERNAL_SYSTEM')) {
         return externalId.externalId;
       }
     }
@@ -25,7 +28,7 @@ export class ApiUtilsService {
   }
   getExternalIds(data: ExternallyIdentifiable): string[] {
     return data.externalIds
-      .filter((value) => value.externalSystem == 'tloeg.bbleague.se') // TODO Get externalSystem from configuration
+      .filter((value) => value.externalSystem == this.configService.get('EXTERNAL_SYSTEM'))
       .map((value) => value.externalId)
       .sort();
   }
