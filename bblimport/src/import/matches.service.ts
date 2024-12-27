@@ -60,7 +60,13 @@ export class MatchesService {
         competitionAndMatchName.indexOf(', ') + 2,
       );
       // Find date of match
-      // TODO Find and parse date of match, an element with "Result added ...."
+      const matchDates = matchFile.querySelectorAll('div')
+        .filter((element) => element.innerText.startsWith('Result added '))
+        .map((element) => element.innerText.substring('Result added '.length).trim());
+      if (matchDates.length != 1) {
+        throw new Error(`Did not expect to find ${matchDates.length} match dates for ${matchId}`);
+      }
+      // TODO Parse and upload date of match
       // Find teams
       const teamLogoElements = matchFile.querySelectorAll(
         'tr.trborder td a img',
