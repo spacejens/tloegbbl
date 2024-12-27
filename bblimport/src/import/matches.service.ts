@@ -59,6 +59,8 @@ export class MatchesService {
       const matchName = competitionAndMatchName.slice(
         competitionAndMatchName.indexOf(', ') + 2,
       );
+      // Find date of match
+      // TODO Find and parse date of match, an element with "Result added ...."
       // Find teams
       const teamLogoElements = matchFile.querySelectorAll(
         'tr.trborder td a img',
