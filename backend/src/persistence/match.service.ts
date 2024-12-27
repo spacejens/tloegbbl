@@ -69,6 +69,7 @@ export class MatchService extends ExternallyIdentifiablePersistenceService<
             id: competition.id,
           },
         },
+        playedAt: input.playedAt,
       },
       include: this.fieldsNeededForTheDto(),
     });
@@ -90,6 +91,7 @@ export class MatchService extends ExternallyIdentifiablePersistenceService<
       data: {
         externalIds: this.createAnonymousOf(input.externalIds),
         name: input.name,
+        playedAt: input.playedAt,
       },
       include: this.fieldsNeededForTheDto(),
     });

@@ -102,6 +102,7 @@ export class MatchReference extends ExternallyIdentifiable {}
 export class Match extends MatchReference {
   name: string;
   competition: CompetitionReference;
+  playedAt: Date;
   // TODO Include array of TeamInMatchReference records? Or should API instead query using a partial TeamInMatchReference?
 }
 

@@ -125,12 +125,12 @@ export class MatchesService {
         );
       }
       // Assemble the result
-      // TODO Include matchDate in the pushed match data
       matches.push({
         match: {
           externalIds: [this.apiUtils.externalId(matchId)],
           name: matchName,
           competition: competition,
+          playedAt: matchDate,
         },
         teams: teams,
         matchEvents: this.consolidator.consolidateMatchEvents(matchEvents),
