@@ -1,17 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FileReaderService } from './filereader.service';
 import { HTMLElement, TextNode } from 'node-html-parser';
+import { mock } from 'jest-mock-extended';
+import { ConfigService } from '@nestjs/config';
 
 describe('FileReaderService', () => {
   let fileReaderService: FileReaderService;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      providers: [FileReaderService],
+      providers: [
+        FileReaderService,
+        { provide: ConfigService, useValue: mock<ConfigService>() },
+      ],
     }).compile();
 
     fileReaderService = app.get<FileReaderService>(FileReaderService);
   });
+
+  // TODO Test cases for listFiles
 
   // TODO Test cases for readFile
 

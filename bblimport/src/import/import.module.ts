@@ -11,9 +11,10 @@ import { PlayersService } from './players.service';
 import { PlayerTypesService } from './player-types.service';
 import { AdvancementsService } from './advancements.service';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ApiClientModule],
+  imports: [ApiClientModule, ConfigModule],
   providers: [
     ImportService,
     FileReaderService,
