@@ -41,9 +41,9 @@ describe('ApiUtilsService', () => {
     });
   });
 
-  describe('getExternalId', () => {
+  describe('getFirstExternalId', () => {
     it('returns first (alphabetically) external ID for correct system', () => {
-      const result = service.getExternalId({
+      const result = service.getFirstExternalId({
         externalIds: [
           {
             externalId: 'id0',
@@ -67,12 +67,12 @@ describe('ApiUtilsService', () => {
     });
 
     it('returns undefined if no external IDs are found', () => {
-      const result = service.getExternalId({});
+      const result = service.getFirstExternalId({});
       expect(result).toBeUndefined();
     });
 
     it('returns undefined if external IDs array is empty', () => {
-      const result = service.getExternalId({
+      const result = service.getFirstExternalId({
         externalIds: [],
       });
       expect(result).toBeUndefined();

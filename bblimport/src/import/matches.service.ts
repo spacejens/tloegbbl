@@ -158,7 +158,7 @@ export class MatchesService {
           return;
         }
         // Parse the event
-        const eventId = `M${matchId}-${this.apiUtils.getExternalId(team)}-${rowTypeText}-#${index}`;
+        const eventId = `M${matchId}-${this.apiUtils.getFirstExternalId(team)}-${rowTypeText}-#${index}`;
         // Parse event type
         let actionType: MatchEventActionType;
         let consequenceType: MatchEventConsequenceType;

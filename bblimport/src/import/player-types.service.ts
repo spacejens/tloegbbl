@@ -114,12 +114,12 @@ export class PlayerTypesService {
     // Ensure no duplicate uploads
     if (
       this.uploadedPlayerTypes.indexOf(
-        this.apiUtils.getExternalId(data.playerType),
+        this.apiUtils.getFirstExternalId(data.playerType),
       ) != -1
     ) {
       return;
     }
-    this.uploadedPlayerTypes.push(this.apiUtils.getExternalId(data.playerType));
+    this.uploadedPlayerTypes.push(this.apiUtils.getFirstExternalId(data.playerType));
     // Upload the player type data
     const result = await this.api.post('player-type', data.playerType);
     console.log(JSON.stringify(result.data));
