@@ -19,12 +19,12 @@ export class ApiUtilsService {
 
   // TODO What if there are multiple external IDs for the same data? Need to return array instead...
   getExternalId(data: ExternallyIdentifiable): string {
-    for (const externalId of data.externalIds ?? []) {
-      if (externalId.externalSystem == this.configService.get('EXTERNAL_SYSTEM')) {
-        return externalId.externalId;
-      }
+    const ids = this.getExternalIds(data);
+    if (ids.length > 0) {
+      return ids[0];
+    } else {
+      return undefined;
     }
-    return undefined;
   }
   getExternalIds(data: ExternallyIdentifiable): string[] {
     return (data.externalIds ?? [])
