@@ -229,7 +229,13 @@ export class MatchesService {
               `Match ${matchId} has unknown match event row type text: ${rowTypeText}`,
             );
         }
-        // TODO Event type sometimes changed by additional text elements (e.g. for fouls?)
+        // The event type can be affected by specific text being present
+        if (
+          actionType === MatchEventActionType.CASUALTY &&
+          eventElements.filter((element) => element.rawText === 'foul by ').length > 0
+        ) {
+          actionType = MatchEventActionType.FOUL;
+        }
         // Find player ID, if any
         const playerIds = eventElements
           .filter((element) => element instanceof HTMLElement)
