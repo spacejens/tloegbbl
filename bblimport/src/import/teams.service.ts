@@ -6,7 +6,6 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { Coach, ExternalId, Team, TeamType } from '../dtos';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
-// TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
 export type TeamImportData = {
   team: Team;
   headCoach: Coach;

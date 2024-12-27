@@ -6,7 +6,6 @@ import { TeamTypesService } from './team-types.service';
 import { Advancement, PlayerType, TeamType } from '../dtos';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
-// TODO Perhaps avoid gathering all data at once and passing it around, to reduce memory cost?
 export type PlayerTypeImportData = {
   playerType: PlayerType;
   teamTypes: TeamType[];
