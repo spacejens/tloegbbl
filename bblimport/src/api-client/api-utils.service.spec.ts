@@ -42,7 +42,7 @@ describe('ApiUtilsService', () => {
   });
 
   describe('getExternalId', () => {
-    it('returns first found external ID for correct system', () => {
+    it('returns first (alphabetically) external ID for correct system', () => {
       const result = service.getExternalId({
         externalIds: [
           {
@@ -50,11 +50,15 @@ describe('ApiUtilsService', () => {
             externalSystem: 'wrongSystem',
           },
           {
+            externalId: 'id2',
+            externalSystem: 'tloeg.bbleague.se',
+          },
+          {
             externalId: 'id1',
             externalSystem: 'tloeg.bbleague.se',
           },
           {
-            externalId: 'id2',
+            externalId: 'id3',
             externalSystem: 'tloeg.bbleague.se',
           },
         ],
