@@ -5,6 +5,8 @@ import { ExternallyIdentifiable } from '../dtos';
 class TestData extends ExternallyIdentifiable {
   alpha?: string;
   beta?: string;
+  startAt?: Date;
+  endAt?: Date;
 }
 
 describe('CombineDataService', () => {
@@ -148,7 +150,7 @@ describe('CombineDataService', () => {
       });
     });
 
-    describe('data', () => {
+    describe('string data', () => {
       it('should add requested data', () => {
         const requested: TestData = { alpha: 'Requested' };
         const found: TestData = {};
@@ -203,6 +205,64 @@ describe('CombineDataService', () => {
         const found: TestData = { beta: 'Found' };
         const result: TestData = service.preferFound(requested, found);
         expect(result).toEqual({ alpha: 'Requested', beta: 'Found' });
+      });
+    });
+
+    describe('date data', () => {
+      it('should add requested data', () => {
+        const requested: TestData = { startAt: new Date(2024,0,1,12) };
+        const found: TestData = {};
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ startAt: new Date(2024,0,1,12) });
+      });
+
+      it('should keep found data', () => {
+        const requested: TestData = {};
+        const found: TestData = { startAt: new Date(2024,0,1,12) };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ startAt: new Date(2024,0,1,12) });
+      });
+
+      it('should not overwrite found data', () => {
+        const requested: TestData = { startAt: new Date(2024,11,31,12) };
+        const found: TestData = { startAt: new Date(2024,0,1,12) };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ startAt: new Date(2024,0,1,12) });
+      });
+
+      it('should overwrite found undefined', () => {
+        const requested: TestData = { startAt: new Date(2024,11,31,12) };
+        const found: TestData = { startAt: undefined };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ startAt: new Date(2024,11,31,12) });
+      });
+
+      it('should overwrite found null', () => {
+        const requested: TestData = { startAt: new Date(2024,11,31,12) };
+        const found: TestData = { startAt: null };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ startAt: new Date(2024,11,31,12) });
+      });
+
+      it('should not overwrite with requested undefined', () => {
+        const requested: TestData = { startAt: undefined };
+        const found: TestData = { startAt: new Date(2024,0,1,12) };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ startAt: new Date(2024,0,1,12) });
+      });
+
+      it('should not overwrite with requested null', () => {
+        const requested: TestData = { startAt: null };
+        const found: TestData = { startAt: new Date(2024,0,1,12) };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ startAt: new Date(2024,0,1,12) });
+      });
+
+      it('should merge different data', () => {
+        const requested: TestData = { startAt: new Date(2024,0,1,12) };
+        const found: TestData = { endAt: new Date(2024,11,31,12) };
+        const result: TestData = service.preferFound(requested, found);
+        expect(result).toEqual({ startAt: new Date(2024,0,1,12), endAt: new Date(2024,11,31,12) });
       });
     });
   });
