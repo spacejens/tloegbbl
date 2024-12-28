@@ -80,7 +80,7 @@ export class TeamsService {
       }
       // Find head coach and co-coaches (if present)
       const coachElements = teamViewFile.querySelectorAll('td b span');
-      if (coachElements.length === 1) {
+      if (coachElements.length === 1 || coachElements.length === 2) {
         teams.push({
           team: {
             externalIds: externalIds,
@@ -88,24 +88,7 @@ export class TeamsService {
             headCoach: {
               externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
             },
-            teamType: teamType,
-          },
-          headCoach: {
-            externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
-            name: coachElements[0].innerText,
-          },
-          teamType: teamType,
-        });
-      } else if (coachElements.length === 2) {
-        // TODO Merge one/many coaches cases into a single case to avoid code duplication
-        teams.push({
-          team: {
-            externalIds: externalIds,
-            name: teamName,
-            headCoach: {
-              externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
-            },
-            coCoach: {
+            coCoach: coachElements.length === 1 ? undefined : {
               externalIds: [this.apiUtils.externalId(coachElements[1].innerText)],
             },
             teamType: teamType,
@@ -114,7 +97,7 @@ export class TeamsService {
             externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
             name: coachElements[0].innerText,
           },
-          coCoach: {
+          coCoach: coachElements.length === 1 ? undefined : {
             externalIds: [this.apiUtils.externalId(coachElements[1].innerText)],
             name: coachElements[1].innerText,
           },
