@@ -107,8 +107,7 @@ export class FileReaderService {
     const month: number = this.monthNameToNumber(parts[0]);
     const day: number = parseInt(parts[1]);
     const year: number = parseInt(parts[2]);
-    // TODO Send UTC dates through REST, wouldn't need middle of day hack to avoid time zone issues
-    return new Date(year,month,day,12);
+    return new Date(Date.UTC(year,month,day));
   }
 
   /**
