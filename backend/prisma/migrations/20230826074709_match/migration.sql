@@ -3,7 +3,7 @@ CREATE TABLE "match" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "competition_id" INTEGER NOT NULL,
-    "played_at" TIMESTAMP(3) NOT NULL,
+    "played_at" TIMESTAMPTZ(3) NOT NULL,
 
     CONSTRAINT "match_pkey" PRIMARY KEY ("id")
 );

@@ -235,7 +235,7 @@ model Match {
   externalIds             ExternalMatchId[]
   competition             Competition               @relation(fields: [competitionId], references: [id])
   competitionId           Int                       @map("competition_id")
-  playedAt                DateTime                  @map("played_at")
+  playedAt                DateTime                  @map("played_at") @db.Timestamptz(3)
   teams                   TeamInMatch[]
   events                  MatchEvent[]
 
