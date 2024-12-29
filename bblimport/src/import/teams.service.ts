@@ -107,7 +107,7 @@ export class TeamsService {
         throw new Error('Failed to find coach for ' + teamId);
       }
       // TODO Extract team data from team list row (small logo filename)
-      // TODO Extract more team data from team page (large logo filename, team type, trophies)
+      // TODO Extract more team data from team page (large logo filename, team type)
     }
     return teams;
   }
