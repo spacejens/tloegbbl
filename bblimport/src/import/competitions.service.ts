@@ -56,6 +56,27 @@ export class CompetitionsService {
           ],
         });
       }
+      // Find competition results
+      const competitionResultsFile =
+        this.fileReaderService.readFile(`default.asp?p=sr&s=${competitionId}`);
+      for (const trophyTable of competitionResultsFile.querySelectorAll('table.tblist')) {
+        const trophyCategoryCells = trophyTable.querySelectorAll('tr.trlisthead th');
+        if (trophyCategoryCells.length > 0) {
+          const trophyCategory = trophyCategoryCells[0].rawText.replace(new RegExp('&nbsp;', 'g'),'').trim();
+          switch (trophyCategory) {
+            case 'Team trophy':
+              // TODO Find team trophies
+              break;
+            case 'Player prize':
+              // TODO Find player trophies
+              break;
+            default:
+              throw new Error(`Unexpected trophy category "${trophyCategory}" for competition ${competitionId}`);
+          }
+        } else {
+          // Not really a trophy category table, ignore
+        }
+      }
       // Assemble result
       competitions.push({
         competition: {
