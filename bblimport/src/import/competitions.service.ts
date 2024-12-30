@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
-import { Competition, TeamReference } from '../dtos';
+import { Competition, TeamReference, Trophy, TrophyCategory } from '../dtos';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type CompetitionImportData = {
   competition: Competition;
   participants: TeamReference[];
+  trophies: Trophy[];
 };
 
 @Injectable()
@@ -59,19 +60,44 @@ export class CompetitionsService {
       // Find competition results
       const competitionResultsFile =
         this.fileReaderService.readFile(`default.asp?p=sr&s=${competitionId}`);
+      const trophies: Trophy[] = [];
       for (const trophyTable of competitionResultsFile.querySelectorAll('table.tblist')) {
         const trophyCategoryCells = trophyTable.querySelectorAll('tr.trlisthead th');
         if (trophyCategoryCells.length > 0) {
-          const trophyCategory = trophyCategoryCells[0].rawText.replace(new RegExp('&nbsp;', 'g'),'').trim();
-          switch (trophyCategory) {
+          // The trophy category is the same for the entire table
+          const trophyCategoryText = trophyCategoryCells[0].rawText.replace(new RegExp('&nbsp;', 'g'),'').trim();
+          let trophyCategory: TrophyCategory;
+          switch (trophyCategoryText) {
             case 'Team trophy':
-              // TODO Find team trophies
+              trophyCategory = TrophyCategory.TEAM_TROPHY;
               break;
             case 'Player prize':
-              // TODO Find player trophies
+              trophyCategory = TrophyCategory.PLAYER_TROPHY;
               break;
             default:
-              throw new Error(`Unexpected trophy category "${trophyCategory}" for competition ${competitionId}`);
+              throw new Error(`Unexpected trophy category "${trophyCategoryText}" for competition ${competitionId}`);
+          }
+          // Each non-header row of the table is one awarded trophy
+          const trophyRows = trophyTable.querySelectorAll('tr.trlist');
+          if (trophyRows.length === 0) {
+            throw new Error(`No ${trophyCategoryText} rows for competition ${competitionId}`);
+          }
+          for (const trophyRow of trophyRows) {
+            const trophyRowCells = trophyRow.querySelectorAll('td');
+            if ((trophyCategory === TrophyCategory.TEAM_TROPHY && trophyRowCells.length != 5)
+              || (trophyCategory === TrophyCategory.PLAYER_TROPHY && trophyRowCells.length != 4)) {
+              throw new Error(`Unexpected number (${trophyRowCells.length}) of cells in ${trophyCategoryText} row for competition ${competitionId}`);
+            }
+            const trophyName = trophyRowCells[1].rawText.replace('&nbsp;', '').trim();
+            const trophyId = trophyName; // TODO Is trophy name a good external ID? Is there a numeric ID? Maybe use icon URL?
+            // TODO Find team of trophy (different for team and player trophies)
+            // TODO Find player of trophy (only for player trophies)
+            trophies.push({
+              externalIds: [this.apiUtils.externalId(trophyId)],
+              name: trophyName,
+              trophyCategory: trophyCategory,
+            });
+            // TODO Add all related awarded data (team, competition, player) to pushed trophy
           }
         } else {
           // Not really a trophy category table, ignore
@@ -84,6 +110,7 @@ export class CompetitionsService {
           name: competitionName,
         },
         participants: participants,
+        trophies: trophies,
       });
     }
     return competitions;
@@ -108,5 +135,10 @@ export class CompetitionsService {
       });
       console.log(JSON.stringify(participantResult.data));
     }
+    for (const trophy of data.trophies) {
+      const trophyResult = await this.api.post('trophy', trophy);
+      console.log(JSON.stringify(trophyResult.data));
+    }
+    // TODO Upload trophy awarded data
   }
 }

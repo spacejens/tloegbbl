@@ -97,6 +97,19 @@ export class TeamInCompetitionReference extends Identifiable {
 
 export class TeamInCompetition extends TeamInCompetitionReference {}
 
+export enum TrophyCategory {
+  TEAM_TROPHY = 'TEAM_TROPHY',
+  PLAYER_TROPHY = 'PLAYER_TROPHY',
+}
+
+export class TrophyReference extends ExternallyIdentifiable {}
+
+export class Trophy extends TrophyReference {
+  name: string;
+  trophyCategory: TrophyCategory;
+  // TODO Include array of ....?
+}
+
 export class MatchReference extends ExternallyIdentifiable {}
 
 export class Match extends MatchReference {

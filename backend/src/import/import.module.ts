@@ -15,6 +15,7 @@ import { PlayerHasAdvancementImportService } from './player-has-advancement-impo
 import { PlayerTypeHasAdvancementImportService } from './player-type-has-advancement-import.service';
 import { PlayerTypeInTeamTypeImportService } from './player-type-in-team-type-import.service';
 import { MatchEventImportService } from './match-event-import.service';
+import { TrophyImportService } from './trophy-import.service';
 
 @Module({
   imports: [PersistenceModule],
@@ -34,6 +35,7 @@ import { MatchEventImportService } from './match-event-import.service';
     PlayerTypeHasAdvancementImportService,
     PlayerTypeInTeamTypeImportService,
     MatchEventImportService,
+    TrophyImportService,
   ],
   exports: [
     CoachImportService,
@@ -50,6 +52,7 @@ import { MatchEventImportService } from './match-event-import.service';
     PlayerTypeHasAdvancementImportService,
     PlayerTypeInTeamTypeImportService,
     MatchEventImportService,
+    TrophyImportService,
   ],
 })
 export class ImportModule {}

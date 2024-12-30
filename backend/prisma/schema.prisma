@@ -229,6 +229,32 @@ model TeamInCompetition {
   @@map("team_in_competition")
 }
 
+enum TrophyCategory {
+  TEAM_TROPHY
+  PLAYER_TROPHY
+}
+
+model Trophy {
+  id                      Int                       @default(autoincrement()) @id
+  name                    String
+  externalIds             ExternalTrophyId[]
+  trophyCategory          TrophyCategory            @map("trophy_category")
+
+  @@map("trophy")
+}
+
+model ExternalTrophyId {
+  id                      Int                       @default(autoincrement()) @id
+  externalId              String                    @map("external_id")
+  externalSystem          String                    @map("external_system")
+  trophy                  Trophy                    @relation(fields: [trophyId], references: [id])
+  trophyId                Int                       @map("trophy_id")
+
+  @@unique([externalId, externalSystem])
+
+  @@map("external_trophy_id")
+}
+
 model Match {
   id                      Int                       @default(autoincrement()) @id
   name                    String
