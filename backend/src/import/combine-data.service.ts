@@ -30,7 +30,9 @@ export class CombineDataService {
         .filter(([_, v]) => v != null)
         .map(([k, v]) => [
           k,
-          v === Object(v) && Object.entries(v).length > 0 ? this.keepOnlyPropsWithValues(v) : v,
+          v === Object(v) && Object.entries(v).length > 0
+            ? this.keepOnlyPropsWithValues(v)
+            : v,
         ]),
     ) as Validate<T>;
   }

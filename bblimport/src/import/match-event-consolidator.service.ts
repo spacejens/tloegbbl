@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { ExternalId, MatchEvent, MatchEventActionType, MatchEventConsequenceType } from '../dtos';
+import {
+  ExternalId,
+  MatchEvent,
+  MatchEventActionType,
+  MatchEventConsequenceType,
+} from '../dtos';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 @Injectable()
 export class MatchEventConsolidatorService {
-  constructor(
-    private readonly apiUtils: ApiUtilsService,
-  ) {}
+  constructor(private readonly apiUtils: ApiUtilsService) {}
 
   consolidateMatchEvents(matchEvents: MatchEvent[]): MatchEvent[] {
     const output = Array<MatchEvent>();
@@ -14,10 +17,16 @@ export class MatchEventConsolidatorService {
     const deaths = Array<MatchEvent>();
     for (const matchEvent of matchEvents) {
       // TODO Consolidate into a smaller set, joining events that belong together
-      if (matchEvent.actionType === MatchEventActionType.CASUALTY && matchEvent.consequenceType === MatchEventConsequenceType.DEATH) {
+      if (
+        matchEvent.actionType === MatchEventActionType.CASUALTY &&
+        matchEvent.consequenceType === MatchEventConsequenceType.DEATH
+      ) {
         killers.push(matchEvent);
         // TODO Death fouls also need to be consolidated as killers
-      } else if (! matchEvent.actionType && matchEvent.consequenceType === MatchEventConsequenceType.DEATH) {
+      } else if (
+        !matchEvent.actionType &&
+        matchEvent.consequenceType === MatchEventConsequenceType.DEATH
+      ) {
         deaths.push(matchEvent);
       } else {
         output.push(matchEvent);
@@ -27,7 +36,10 @@ export class MatchEventConsolidatorService {
     return output;
   }
 
-  mergeActionsWithConsequences(actions: MatchEvent[], consequences: MatchEvent[]): MatchEvent[] {
+  mergeActionsWithConsequences(
+    actions: MatchEvent[],
+    consequences: MatchEvent[],
+  ): MatchEvent[] {
     // TODO Remove trivial (length 1) check when merging match events
     if (actions.length === 1 && consequences.length === 1) {
       return [this.mergeEvents(actions[0], consequences[0])];

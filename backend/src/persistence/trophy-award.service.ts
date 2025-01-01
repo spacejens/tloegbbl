@@ -56,9 +56,7 @@ export class TrophyAwardService extends IdentifiablePersistenceService<
     };
   }
 
-  async findByReference(
-    reference: TrophyAwardReference,
-  ): Promise<TrophyAward> {
+  async findByReference(reference: TrophyAwardReference): Promise<TrophyAward> {
     if (reference.id) {
       return this.findById(reference.id);
     } else {
@@ -67,7 +65,9 @@ export class TrophyAwardService extends IdentifiablePersistenceService<
         reference.competition,
       );
       const team = await this.teamService.findByReference(reference.team);
-      const player = reference.player ? await this.playerService.findByReference(reference.player) : undefined;
+      const player = reference.player
+        ? await this.playerService.findByReference(reference.player)
+        : undefined;
       if (trophy && competition && team) {
         const results = await this.prisma.trophyAward.findMany({
           where: {
@@ -80,11 +80,13 @@ export class TrophyAwardService extends IdentifiablePersistenceService<
             team: {
               id: team.id,
             },
-            player: player ? {
-              id: player.id,
-            } : {
-              is: null,
-            },
+            player: player
+              ? {
+                  id: player.id,
+                }
+              : {
+                  is: null,
+                },
           },
           include: this.fieldsNeededForTheDto(),
         });
@@ -123,7 +125,9 @@ export class TrophyAwardService extends IdentifiablePersistenceService<
     if (!team) {
       throw new Error(`Failed to find team: ${JSON.stringify(input.team)}`);
     }
-    const player = input.player ? await this.playerService.findByReference(input.player) : undefined;
+    const player = input.player
+      ? await this.playerService.findByReference(input.player)
+      : undefined;
     if (input.player && !player) {
       throw new Error(`Failed to find player: ${JSON.stringify(input.player)}`);
     }
@@ -144,11 +148,13 @@ export class TrophyAwardService extends IdentifiablePersistenceService<
             id: team.id,
           },
         },
-        player: player ? {
-          connect: {
-            id: player.id,
-          },
-        } : undefined,
+        player: player
+          ? {
+              connect: {
+                id: player.id,
+              },
+            }
+          : undefined,
       },
       include: this.fieldsNeededForTheDto(),
     });

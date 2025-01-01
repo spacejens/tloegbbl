@@ -4,9 +4,7 @@ import { ExternallyIdentifiable } from '../dtos';
 
 @Injectable()
 export class ApiUtilsService {
-  constructor(
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly configService: ConfigService) {}
 
   externalId(id: string) {
     return (
@@ -28,16 +26,20 @@ export class ApiUtilsService {
 
   getExternalIds(data: ExternallyIdentifiable): string[] {
     return (data.externalIds ?? [])
-      .filter((value) => value.externalSystem == this.configService.get('EXTERNAL_SYSTEM'))
+      .filter(
+        (value) =>
+          value.externalSystem == this.configService.get('EXTERNAL_SYSTEM'),
+      )
       .map((value) => value.externalId)
       .sort();
   }
 
-  sameExternalId(dataA: ExternallyIdentifiable, dataB: ExternallyIdentifiable): boolean {
+  sameExternalId(
+    dataA: ExternallyIdentifiable,
+    dataB: ExternallyIdentifiable,
+  ): boolean {
     const idsA = this.getExternalIds(dataA);
     const idsB = this.getExternalIds(dataB);
-    return idsA
-      .filter((value) => idsB.indexOf(value) > -1)
-      .length > 0;
+    return idsA.filter((value) => idsB.indexOf(value) > -1).length > 0;
   }
 }

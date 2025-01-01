@@ -18,9 +18,7 @@ export class TrophyAwardController {
   }
 
   @Get(':id')
-  async getTrophyAward(
-    @Param('id') id: string,
-  ): Promise<TrophyAward> {
+  async getTrophyAward(@Param('id') id: string): Promise<TrophyAward> {
     return this.trophyAwardService.findById(+id);
   }
 }

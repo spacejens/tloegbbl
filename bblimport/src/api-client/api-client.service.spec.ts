@@ -22,7 +22,7 @@ describe('ApiClientService', () => {
 
     configService = module.get<ConfigService>(ConfigService);
     configService.get = jest.fn().mockImplementation((propertyPath) => {
-      switch(propertyPath) {
+      switch (propertyPath) {
         case 'BACKEND_API_URL':
           return 'http://localhost:3000/';
         default:

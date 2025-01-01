@@ -19,7 +19,7 @@ describe('ApiUtilsService', () => {
     configService = module.get<ConfigService>(ConfigService);
 
     configService.get = jest.fn().mockImplementation((propertyPath) => {
-      switch(propertyPath) {
+      switch (propertyPath) {
         case 'EXTERNAL_SYSTEM':
           return 'tloeg.bbleague.se';
         default:
@@ -97,7 +97,7 @@ describe('ApiUtilsService', () => {
           },
         ],
       });
-      expect(result).toStrictEqual(['id1','id2']);
+      expect(result).toStrictEqual(['id1', 'id2']);
     });
 
     it('sorts returned IDs', () => {
@@ -113,7 +113,7 @@ describe('ApiUtilsService', () => {
           },
         ],
       });
-      expect(result).toStrictEqual(['id1','id2']);
+      expect(result).toStrictEqual(['id1', 'id2']);
     });
 
     it('returns empty array if no external IDs are found', () => {

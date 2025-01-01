@@ -86,21 +86,33 @@ export class TeamsService {
             externalIds: externalIds,
             name: teamName,
             headCoach: {
-              externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
+              externalIds: [
+                this.apiUtils.externalId(coachElements[0].innerText),
+              ],
             },
-            coCoach: coachElements.length === 1 ? undefined : {
-              externalIds: [this.apiUtils.externalId(coachElements[1].innerText)],
-            },
+            coCoach:
+              coachElements.length === 1
+                ? undefined
+                : {
+                    externalIds: [
+                      this.apiUtils.externalId(coachElements[1].innerText),
+                    ],
+                  },
             teamType: teamType,
           },
           headCoach: {
             externalIds: [this.apiUtils.externalId(coachElements[0].innerText)],
             name: coachElements[0].innerText,
           },
-          coCoach: coachElements.length === 1 ? undefined : {
-            externalIds: [this.apiUtils.externalId(coachElements[1].innerText)],
-            name: coachElements[1].innerText,
-          },
+          coCoach:
+            coachElements.length === 1
+              ? undefined
+              : {
+                  externalIds: [
+                    this.apiUtils.externalId(coachElements[1].innerText),
+                  ],
+                  name: coachElements[1].innerText,
+                },
           teamType: teamType,
         });
       } else {

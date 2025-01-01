@@ -119,7 +119,9 @@ export class PlayerTypesService {
     ) {
       return;
     }
-    this.uploadedPlayerTypes.push(this.apiUtils.getFirstExternalId(data.playerType));
+    this.uploadedPlayerTypes.push(
+      this.apiUtils.getFirstExternalId(data.playerType),
+    );
     // Upload the player type data
     const result = await this.api.post('player-type', data.playerType);
     console.log(JSON.stringify(result.data));

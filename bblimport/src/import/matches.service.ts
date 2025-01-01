@@ -60,13 +60,20 @@ export class MatchesService {
         competitionAndMatchName.indexOf(', ') + 2,
       );
       // Find date of match
-      const matchDates = matchFile.querySelectorAll('div')
+      const matchDates = matchFile
+        .querySelectorAll('div')
         .filter((element) => element.innerText.startsWith('Result added '))
-        .map((element) => element.innerText.substring('Result added '.length).trim());
+        .map((element) =>
+          element.innerText.substring('Result added '.length).trim(),
+        );
       if (matchDates.length != 1) {
-        throw new Error(`Did not expect to find ${matchDates.length} match dates for ${matchId}`);
+        throw new Error(
+          `Did not expect to find ${matchDates.length} match dates for ${matchId}`,
+        );
       }
-      const matchDate = this.fileReaderService.parseDateFromMonthDayYear(matchDates[0]);
+      const matchDate = this.fileReaderService.parseDateFromMonthDayYear(
+        matchDates[0],
+      );
       // Find teams
       const teamLogoElements = matchFile.querySelectorAll(
         'tr.trborder td a img',
@@ -241,7 +248,8 @@ export class MatchesService {
         // The event type can be affected by specific text being present
         if (
           actionType === MatchEventActionType.CASUALTY &&
-          eventElements.filter((element) => element.rawText === 'foul by ').length > 0
+          eventElements.filter((element) => element.rawText === 'foul by ')
+            .length > 0
         ) {
           actionType = MatchEventActionType.FOUL;
         }
@@ -269,7 +277,7 @@ export class MatchesService {
             .map((element) => element.rawText)
             .join();
           // TODO Remember and store the specifics of the non-player text somehow?
-          switch(nonPlayerText) {
+          switch (nonPlayerText) {
             case 'victim regenerated':
             case 'victim healed by apoth':
             case 'mercenary':

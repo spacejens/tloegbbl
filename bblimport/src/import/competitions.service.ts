@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
-import { Competition, TeamReference, Trophy, TrophyAward, TrophyCategory } from '../dtos';
+import {
+  Competition,
+  TeamReference,
+  Trophy,
+  TrophyAward,
+  TrophyCategory,
+} from '../dtos';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type CompetitionImportData = {
@@ -44,38 +50,48 @@ export class CompetitionsService {
       );
       // Find participants
       const participants = Array<TeamReference>();
-      const participantLookupByName: Map<string, string> = new Map<string, string>();
-      const participantRows = competitionFile.querySelectorAll('table tr.trlist');
+      const participantLookupByName: Map<string, string> = new Map<
+        string,
+        string
+      >();
+      const participantRows =
+        competitionFile.querySelectorAll('table tr.trlist');
       for (const participantRow of participantRows) {
         const participantElements = participantRow.querySelectorAll('td');
         if (participantElements.length < 2) {
-          throw new Error(`Unexpected number of participant elements in competition ${competitionId}`);
+          throw new Error(
+            `Unexpected number of participant elements in competition ${competitionId}`,
+          );
         }
         const participantElement = participantElements[1];
         const teamId = this.fileReaderService.findTeamIdInGoToTeam(
           participantElement.getAttribute('onclick'),
         );
         // TODO Use more modern replaceAll (requires tsconfig target update to newer es-version)
-        const teamName = participantElement.rawText.replace(new RegExp('&nbsp;', 'g'), ' ').trim();
+        const teamName = participantElement.rawText
+          .replace(new RegExp('&nbsp;', 'g'), ' ')
+          .trim();
         participants.push({
-          externalIds: [
-            this.apiUtils.externalId(
-              teamId,
-            ),
-          ],
+          externalIds: [this.apiUtils.externalId(teamId)],
         });
         participantLookupByName.set(teamName, teamId);
       }
       // Find competition results
-      const competitionResultsFile =
-        this.fileReaderService.readFile(`default.asp?p=sr&s=${competitionId}`);
+      const competitionResultsFile = this.fileReaderService.readFile(
+        `default.asp?p=sr&s=${competitionId}`,
+      );
       const trophies: Trophy[] = [];
       const trophyAwards: TrophyAward[] = [];
-      for (const trophyTable of competitionResultsFile.querySelectorAll('table.tblist')) {
-        const trophyCategoryCells = trophyTable.querySelectorAll('tr.trlisthead th');
+      for (const trophyTable of competitionResultsFile.querySelectorAll(
+        'table.tblist',
+      )) {
+        const trophyCategoryCells =
+          trophyTable.querySelectorAll('tr.trlisthead th');
         if (trophyCategoryCells.length > 0) {
           // The trophy category is the same for the entire table
-          const trophyCategoryText = trophyCategoryCells[0].rawText.replace(new RegExp('&nbsp;', 'g'),'').trim();
+          const trophyCategoryText = trophyCategoryCells[0].rawText
+            .replace(new RegExp('&nbsp;', 'g'), '')
+            .trim();
           let trophyCategory: TrophyCategory;
           switch (trophyCategoryText) {
             case 'Team trophy':
@@ -85,38 +101,63 @@ export class CompetitionsService {
               trophyCategory = TrophyCategory.PLAYER_TROPHY;
               break;
             default:
-              throw new Error(`Unexpected trophy category "${trophyCategoryText}" for competition ${competitionId}`);
+              throw new Error(
+                `Unexpected trophy category "${trophyCategoryText}" for competition ${competitionId}`,
+              );
           }
           // Each non-header row of the table is one awarded trophy
           const trophyRows = trophyTable.querySelectorAll('tr.trlist');
           if (trophyRows.length === 0) {
-            throw new Error(`No ${trophyCategoryText} rows for competition ${competitionId}`);
+            throw new Error(
+              `No ${trophyCategoryText} rows for competition ${competitionId}`,
+            );
           }
           for (const trophyRow of trophyRows) {
             const trophyRowCells = trophyRow.querySelectorAll('td');
-            if ((trophyCategory === TrophyCategory.TEAM_TROPHY && trophyRowCells.length != 5)
-              || (trophyCategory === TrophyCategory.PLAYER_TROPHY && trophyRowCells.length != 4)) {
-              throw new Error(`Unexpected number (${trophyRowCells.length}) of cells in ${trophyCategoryText} row for competition ${competitionId}`);
+            if (
+              (trophyCategory === TrophyCategory.TEAM_TROPHY &&
+                trophyRowCells.length != 5) ||
+              (trophyCategory === TrophyCategory.PLAYER_TROPHY &&
+                trophyRowCells.length != 4)
+            ) {
+              throw new Error(
+                `Unexpected number (${trophyRowCells.length}) of cells in ${trophyCategoryText} row for competition ${competitionId}`,
+              );
             }
-            const trophyName = trophyRowCells[1].rawText.replace('&nbsp;', '').trim();
+            const trophyName = trophyRowCells[1].rawText
+              .replace('&nbsp;', '')
+              .trim();
             const trophyId = trophyName; // TODO Is trophy name a good external ID? Is there a numeric ID? Maybe use icon URL?
             let teamId: string;
             let playerId: string;
             if (trophyCategory === TrophyCategory.TEAM_TROPHY) {
-              teamId = this.fileReaderService.findQueryParamInOnclick('t', trophyRow.getAttribute('onclick'));
+              teamId = this.fileReaderService.findQueryParamInOnclick(
+                't',
+                trophyRow.getAttribute('onclick'),
+              );
             } else if (trophyCategory === TrophyCategory.PLAYER_TROPHY) {
-              const trophyRowTeamNameElements = trophyRowCells[3].querySelectorAll('div');
+              const trophyRowTeamNameElements =
+                trophyRowCells[3].querySelectorAll('div');
               if (trophyRowTeamNameElements.length != 1) {
-                throw new Error(`Unexpected number (${trophyRowTeamNameElements}) of trophy row team name elements for competition ${competitionId}`);
+                throw new Error(
+                  `Unexpected number (${trophyRowTeamNameElements}) of trophy row team name elements for competition ${competitionId}`,
+                );
               }
               const trophyRowTeamName = trophyRowTeamNameElements[0].rawText;
               teamId = participantLookupByName.get(trophyRowTeamName);
               if (!teamId) {
-                throw new Error(`Failed to find team ID for team "${trophyRowTeamName}" in trophy row for competition ${competitionId}. Participant keys are ${Array.from(participantLookupByName.keys())}`);
+                throw new Error(
+                  `Failed to find team ID for team "${trophyRowTeamName}" in trophy row for competition ${competitionId}. Participant keys are ${Array.from(participantLookupByName.keys())}`,
+                );
               }
-              playerId = this.fileReaderService.findQueryParamInOnclick('pid', trophyRow.getAttribute('onclick'));
+              playerId = this.fileReaderService.findQueryParamInOnclick(
+                'pid',
+                trophyRow.getAttribute('onclick'),
+              );
             } else {
-              throw new Error(`Unexpected trophy category ${trophyCategory} for competition ${competitionId}`);
+              throw new Error(
+                `Unexpected trophy category ${trophyCategory} for competition ${competitionId}`,
+              );
             }
             trophies.push({
               externalIds: [this.apiUtils.externalId(trophyId)],
@@ -133,9 +174,11 @@ export class CompetitionsService {
               team: {
                 externalIds: [this.apiUtils.externalId(teamId)],
               },
-              player: playerId ? {
-                externalIds: [this.apiUtils.externalId(playerId)],
-              } : undefined,
+              player: playerId
+                ? {
+                    externalIds: [this.apiUtils.externalId(playerId)],
+                  }
+                : undefined,
             });
           }
         } else {
@@ -180,7 +223,10 @@ export class CompetitionsService {
       console.log(JSON.stringify(trophyResult.data));
     }
     for (const trophyAward of data.trophyAwards) {
-      const trophyAwardResult = await this.api.post('trophy-award', trophyAward);
+      const trophyAwardResult = await this.api.post(
+        'trophy-award',
+        trophyAward,
+      );
       console.log(JSON.stringify(trophyAwardResult.data));
     }
   }

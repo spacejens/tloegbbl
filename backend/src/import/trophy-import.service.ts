@@ -6,7 +6,7 @@ import { CombineDataService } from './combine-data.service';
 
 @Injectable()
 export class TrophyImportService extends ImportService<
-  TrophyReference, 
+  TrophyReference,
   Trophy
 > {
   constructor(

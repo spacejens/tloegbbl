@@ -6,9 +6,7 @@ import { join } from 'path';
 
 @Injectable()
 export class FileReaderService {
-  constructor(
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly configService: ConfigService) {}
 
   listFiles(
     filenameStartsWith: string,
@@ -18,7 +16,10 @@ export class FileReaderService {
     return files.filter((filename) => filename.startsWith(filenameStartsWith));
   }
 
-  readFile(filename: string, directory:string = this.configService.get('IMPORT_DEFAULT_DIRECTORY')): HTMLElement {
+  readFile(
+    filename: string,
+    directory: string = this.configService.get('IMPORT_DEFAULT_DIRECTORY'),
+  ): HTMLElement {
     const filepath = join(process.cwd(), directory, filename);
     return parse(readFileSync(filepath).toString());
   }
@@ -102,12 +103,14 @@ export class FileReaderService {
   parseDateFromMonthDayYear(source: string): Date {
     const parts = source.split(' ');
     if (parts.length != 3) {
-      throw new Error(`Unexpected number of spaces in month-day-year date ${source}`);
+      throw new Error(
+        `Unexpected number of spaces in month-day-year date ${source}`,
+      );
     }
     const month: number = this.monthNameToNumber(parts[0]);
     const day: number = parseInt(parts[1]);
     const year: number = parseInt(parts[2]);
-    return new Date(Date.UTC(year,month,day));
+    return new Date(Date.UTC(year, month, day));
   }
 
   /**
@@ -117,7 +120,7 @@ export class FileReaderService {
    * @returns Month number, 0-11 (as expected by `date` constructor)
    */
   private monthNameToNumber(name: string): number {
-    switch(name) {
+    switch (name) {
       case 'January':
         return 0;
       case 'February':
