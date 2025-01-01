@@ -67,9 +67,8 @@ export class CompetitionsService {
         const teamId = this.fileReaderService.findTeamIdInGoToTeam(
           participantElement.getAttribute('onclick'),
         );
-        // TODO Use more modern replaceAll (requires tsconfig target update to newer es-version)
         const teamName = participantElement.rawText
-          .replace(new RegExp('&nbsp;', 'g'), ' ')
+          .replaceAll('&nbsp;', ' ')
           .trim();
         participants.push({
           externalIds: [this.apiUtils.externalId(teamId)],
@@ -90,7 +89,7 @@ export class CompetitionsService {
         if (trophyCategoryCells.length > 0) {
           // The trophy category is the same for the entire table
           const trophyCategoryText = trophyCategoryCells[0].rawText
-            .replace(new RegExp('&nbsp;', 'g'), '')
+            .replaceAll('&nbsp;', '')
             .trim();
           let trophyCategory: TrophyCategory;
           switch (trophyCategoryText) {
