@@ -107,8 +107,17 @@ export class TrophyReference extends ExternallyIdentifiable {}
 export class Trophy extends TrophyReference {
   name: string;
   trophyCategory: TrophyCategory;
-  // TODO Include array of ....?
+  // TODO Include array of TrophyAwardReference records? Or should API instead query using a partial TrophyAwardReference?
 }
+
+export class TrophyAwardReference extends Identifiable {
+  trophy?: TrophyReference;
+  competition?: CompetitionReference;
+  team?: TeamReference;
+  player?: PlayerReference;
+}
+
+export class TrophyAward extends TrophyAwardReference {}
 
 export class MatchReference extends ExternallyIdentifiable {}
 

@@ -71,6 +71,7 @@ model Team {
   matches                 TeamInMatch[]
   actingMatchEvents       MatchEvent[]              @relation(name: "actingMatchEvents")
   consequenceMatchEvents  MatchEvent[]              @relation(name: "consequenceMatchEvents")
+  trophyAwards            TrophyAward[]
 
   @@map("team")
 }
@@ -167,6 +168,7 @@ model Player {
   advancements            PlayerHasAdvancement[]
   actingMatchEvents       MatchEvent[]              @relation(name: "actingMatchEvents")
   consequenceMatchEvents  MatchEvent[]              @relation(name: "consequenceMatchEvents")
+  trophyAwards            TrophyAward[]
 
   @@map("player")
 }
@@ -201,6 +203,7 @@ model Competition {
   externalIds             ExternalCompetitionId[]
   teams                   TeamInCompetition[]
   matches                 Match[]
+  trophyAwards            TrophyAward[]
 
   @@map("competition")
 }
@@ -239,8 +242,25 @@ model Trophy {
   name                    String
   externalIds             ExternalTrophyId[]
   trophyCategory          TrophyCategory            @map("trophy_category")
+  trophyAwards            TrophyAward[]
 
   @@map("trophy")
+}
+
+model TrophyAward {
+  id                      Int                       @default(autoincrement()) @id
+  trophy                  Trophy                    @relation(fields: [trophyId], references: [id])
+  trophyId                Int                       @map("trophy_id")
+  competition             Competition               @relation(fields: [competitionId], references: [id])
+  competitionId           Int                       @map("competition_id")
+  team                    Team                      @relation(fields: [teamId], references: [id])
+  teamId                  Int                       @map("team_id")
+  player                  Player?                   @relation(fields: [playerId], references: [id])
+  playerId                Int?                      @map("player_id")
+
+  @@unique([trophyId, competitionId, teamId, playerId])
+
+  @@map("trophy_award")
 }
 
 model ExternalTrophyId {

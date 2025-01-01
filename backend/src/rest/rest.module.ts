@@ -16,6 +16,7 @@ import { MatchController } from './match.controller';
 import { TeamInMatchController } from './team-in-match.controller';
 import { MatchEventController } from './match-event.controller';
 import { TrophyController } from './trophy.controller';
+import { TrophyAwardController } from './trophy-award.controller';
 
 @Module({
   imports: [PersistenceModule, ImportModule],
@@ -35,6 +36,7 @@ import { TrophyController } from './trophy.controller';
     TeamInMatchController,
     MatchEventController,
     TrophyController,
+    TrophyAwardController,
   ],
 })
 export class RestModule {}

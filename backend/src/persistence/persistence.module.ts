@@ -17,6 +17,7 @@ import { PlayerTypeHasAdvancementService } from './player-type-has-advancement.s
 import { PlayerTypeInTeamTypeService } from './player-type-in-team-type.service';
 import { MatchEventService } from './match-event.service';
 import { TrophyService } from './trophy.service';
+import { TrophyAwardService } from './trophy-award.service';
 
 @Module({
   providers: [
@@ -36,6 +37,7 @@ import { TrophyService } from './trophy.service';
     PlayerTypeInTeamTypeService,
     MatchEventService,
     TrophyService,
+    TrophyAwardService,
   ],
   controllers: [CountController, RawDataController],
   exports: [
@@ -54,6 +56,7 @@ import { TrophyService } from './trophy.service';
     PlayerTypeInTeamTypeService,
     MatchEventService,
     TrophyService,
+    TrophyAwardService,
   ],
 })
 export class PersistenceModule {}
