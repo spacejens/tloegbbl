@@ -2,3 +2,10 @@ packages:
   - api
   - backend
   - bblimport
+
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - prisma
+  - puppeteer
