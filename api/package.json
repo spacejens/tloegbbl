@@ -1,0 +1,16 @@
+{
+  "name": "@tloegbbl/api",
+  "version": "0.0.1",
+  "description": "TLOEGBBL API",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
