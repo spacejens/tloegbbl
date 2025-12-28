@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ExternalId, ExternallyIdentifiable } from '../dtos';
+import { ExternalId, ExternallyIdentifiable } from '@tloegbbl/api';
 import { IdentifiablePersistenceService } from './identifiable-persistence.service';
 
 @Injectable()

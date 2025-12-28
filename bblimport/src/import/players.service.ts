@@ -8,7 +8,7 @@ import {
   Player,
   PlayerTypeReference,
   TeamReference,
-} from '../dtos';
+} from '@tloegbbl/api';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type PlayerImportData = {

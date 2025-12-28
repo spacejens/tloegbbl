@@ -1,5 +1,5 @@
 import { IdentifiablePersistenceService } from './identifiable-persistence.service';
-import { Identifiable } from '../dtos';
+import { Identifiable } from '@tloegbbl/api';
 import { Injectable } from '@nestjs/common';
 
 class TestReference extends Identifiable {}

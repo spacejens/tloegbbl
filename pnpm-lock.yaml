@@ -31,6 +31,9 @@ importers:
       '@prisma/client':
         specifier: ^6.19.1
         version: 6.19.1(prisma@6.19.1(typescript@5.9.3))(typescript@5.9.3)
+      '@tloegbbl/api':
+        specifier: workspace:*
+        version: link:../api
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -128,6 +131,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^10.4.15
         version: 10.4.20(@nestjs/common@10.4.20(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@10.4.20)
+      '@tloegbbl/api':
+        specifier: workspace:*
+        version: link:../api
       axios:
         specifier: ^1.7.9
         version: 1.13.2

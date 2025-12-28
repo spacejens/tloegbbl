@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ExternallyIdentifiablePersistenceService } from './externally-identifiable-persistence.service';
-import { ExternalId, Trophy, TrophyCategory, TrophyReference } from '../dtos';
+import { ExternalId, Trophy, TrophyCategory, TrophyReference } from '@tloegbbl/api';
 import { PrismaService } from './prisma.service';
 import { Prisma, $Enums } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ImportService } from './import.service';
-import { Trophy, TrophyReference } from '../dtos';
+import { Trophy, TrophyReference } from '@tloegbbl/api';
 import { TrophyService } from '../persistence/trophy.service';
 import { CombineDataService } from './combine-data.service';
 

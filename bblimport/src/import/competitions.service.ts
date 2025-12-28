@@ -7,7 +7,7 @@ import {
   Trophy,
   TrophyAward,
   TrophyCategory,
-} from '../dtos';
+} from '@tloegbbl/api';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type CompetitionImportData = {

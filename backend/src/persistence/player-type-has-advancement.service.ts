@@ -3,7 +3,7 @@ import { IdentifiablePersistenceService } from './identifiable-persistence.servi
 import {
   PlayerTypeHasAdvancement,
   PlayerTypeHasAdvancementReference,
-} from '../dtos';
+} from '@tloegbbl/api';
 import { PrismaService } from './prisma.service';
 import { PlayerTypeService } from './player-type.service';
 import { AdvancementService } from './advancement.service';

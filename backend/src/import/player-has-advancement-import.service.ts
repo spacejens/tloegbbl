@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ImportService } from './import.service';
-import { PlayerHasAdvancement, PlayerHasAdvancementReference } from '../dtos';
+import { PlayerHasAdvancement, PlayerHasAdvancementReference } from '@tloegbbl/api';
 import { CombineDataService } from './combine-data.service';
 import { PlayerHasAdvancementService } from '../persistence/player-has-advancement.service';
 

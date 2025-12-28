@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ExternalId, ExternallyIdentifiable } from '../dtos';
+import { ExternalId, ExternallyIdentifiable } from '@tloegbbl/api';
 
 type Validate<T> = Pick<
   T,

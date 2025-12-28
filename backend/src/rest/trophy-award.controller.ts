@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { TrophyAwardService } from '../persistence/trophy-award.service';
 import { TrophyAwardImportService } from '../import/trophy-award-import.service';
-import { TrophyAward } from '../dtos';
+import { TrophyAward } from '@tloegbbl/api';
 
 @Controller('trophy-award')
 export class TrophyAwardController {

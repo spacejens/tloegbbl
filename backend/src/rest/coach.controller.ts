@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CoachService } from '../persistence/coach.service';
 import { CoachImportService } from '../import/coach-import.service';
-import { Coach } from '../dtos';
+import { Coach } from '@tloegbbl/api';
 
 @Controller('coach')
 export class CoachController {

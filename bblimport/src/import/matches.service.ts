@@ -10,7 +10,7 @@ import {
   MatchEventActionType,
   MatchEventConsequenceType,
   TeamReference,
-} from '../dtos';
+} from '@tloegbbl/api';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type MatchImportData = {

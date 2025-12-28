@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
 import { MatchEventService } from '../persistence/match-event.service';
 import { MatchEventImportService } from '../import/match-event-import.service';
-import { MatchEvent } from '../dtos';
+import { MatchEvent } from '@tloegbbl/api';
 import { MatchEventPipe } from './match-event.pipe';
 
 @Controller('match-event')

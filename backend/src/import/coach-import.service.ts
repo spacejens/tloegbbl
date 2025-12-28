@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Coach, CoachReference } from '../dtos';
+import { Coach, CoachReference } from '@tloegbbl/api';
 import { CoachService } from '../persistence/coach.service';
 import { CombineDataService } from './combine-data.service';
 import { ImportService } from './import.service';

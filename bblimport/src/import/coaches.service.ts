@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 import { ApiClientService } from '../api-client/api-client.service';
-import { Coach } from '../dtos';
+import { Coach } from '@tloegbbl/api';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { TeamInMatchService } from '../persistence/team-in-match.service';
 import { TeamInMatchImportService } from '../import/team-in-match-import.service';
-import { TeamInMatch } from '../dtos';
+import { TeamInMatch } from '@tloegbbl/api';
 
 @Controller('team-in-match')
 export class TeamInMatchController {

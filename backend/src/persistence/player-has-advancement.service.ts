@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IdentifiablePersistenceService } from './identifiable-persistence.service';
-import { PlayerHasAdvancement, PlayerHasAdvancementReference } from '../dtos';
+import { PlayerHasAdvancement, PlayerHasAdvancementReference } from '@tloegbbl/api';
 import { PrismaService } from './prisma.service';
 import { PlayerService } from './player.service';
 import { AdvancementService } from './advancement.service';

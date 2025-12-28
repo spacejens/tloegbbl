@@ -3,7 +3,7 @@ import { ImportService } from './import.service';
 import {
   PlayerTypeHasAdvancement,
   PlayerTypeHasAdvancementReference,
-} from '../dtos';
+} from '@tloegbbl/api';
 import { CombineDataService } from './combine-data.service';
 import { PlayerTypeHasAdvancementService } from '../persistence/player-type-has-advancement.service';
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Identifiable } from '../dtos';
+import { Identifiable } from '@tloegbbl/api';
 
 @Injectable()
 export abstract class IdentifiablePersistenceService<

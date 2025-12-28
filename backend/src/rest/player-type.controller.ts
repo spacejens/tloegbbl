@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PlayerTypeService } from '../persistence/player-type.service';
 import { PlayerTypeImportService } from '../import/player-type-import.service';
-import { PlayerType } from '../dtos';
+import { PlayerType } from '@tloegbbl/api';
 
 @Controller('player-type')
 export class PlayerTypeController {

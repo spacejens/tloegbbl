@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CombineDataService } from './combine-data.service';
-import { ExternallyIdentifiable } from '../dtos';
+import { ExternallyIdentifiable } from '@tloegbbl/api';
 
 class TestData extends ExternallyIdentifiable {
   alpha?: string;

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IdentifiablePersistenceService } from './identifiable-persistence.service';
-import { TrophyAward, TrophyAwardReference } from '../dtos';
+import { TrophyAward, TrophyAwardReference } from '@tloegbbl/api';
 import { PrismaService } from './prisma.service';
 import { TrophyService } from './trophy.service';
 import { CompetitionService } from './competition.service';

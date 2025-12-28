@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CombineDataService } from './combine-data.service';
-import { PlayerType, PlayerTypeReference } from '../dtos';
+import { PlayerType, PlayerTypeReference } from '@tloegbbl/api';
 import { PlayerTypeService } from '../persistence/player-type.service';
 import { ImportService } from './import.service';
 

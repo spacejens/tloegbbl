@@ -6,7 +6,7 @@ import {
   MatchEventActionType,
   MatchEventConsequenceType,
   MatchEventReference,
-} from '../dtos';
+} from '@tloegbbl/api';
 import { PrismaService } from './prisma.service';
 import { MatchService } from './match.service';
 import { PlayerService } from './player.service';

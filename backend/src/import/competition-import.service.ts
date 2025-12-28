@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ImportService } from './import.service';
-import { Competition, CompetitionReference } from '../dtos';
+import { Competition, CompetitionReference } from '@tloegbbl/api';
 import { CompetitionService } from '../persistence/competition.service';
 import { CombineDataService } from './combine-data.service';
 

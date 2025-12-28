@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ExternallyIdentifiablePersistenceService } from './externally-identifiable-persistence.service';
-import { ExternalId, Player, PlayerReference } from '../dtos';
+import { ExternalId, Player, PlayerReference } from '@tloegbbl/api';
 import { PrismaService } from './prisma.service';
 import { TeamService } from './team.service';
 import { PlayerTypeService } from './player-type.service';

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
-import { Advancement } from '../dtos';
+import { Advancement } from '@tloegbbl/api';
 
 @Injectable()
 export class AdvancementsService {

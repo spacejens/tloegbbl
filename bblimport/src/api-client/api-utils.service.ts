@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ExternallyIdentifiable } from '../dtos';
+import { ExternallyIdentifiable } from '@tloegbbl/api';
 
 @Injectable()
 export class ApiUtilsService {

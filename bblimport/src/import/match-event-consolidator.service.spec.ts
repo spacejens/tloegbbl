@@ -6,7 +6,7 @@ import {
   MatchReference,
   PlayerReference,
   TeamReference,
-} from '../dtos';
+} from '@tloegbbl/api';
 import { mock } from 'jest-mock-extended';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 

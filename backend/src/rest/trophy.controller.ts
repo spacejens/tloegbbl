@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
 import { TrophyService } from '../persistence/trophy.service';
 import { TrophyImportService } from '../import/trophy-import.service';
-import { Trophy } from '../dtos';
+import { Trophy } from '@tloegbbl/api';
 import { TrophyPipe } from './trophy.pipe';
 
 @Controller('trophy')

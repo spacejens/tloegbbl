@@ -4,7 +4,7 @@ import {
   MatchEvent,
   MatchEventActionType,
   MatchEventConsequenceType,
-} from '../dtos';
+} from '@tloegbbl/api';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 @Injectable()

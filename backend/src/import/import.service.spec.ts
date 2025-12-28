@@ -4,7 +4,7 @@ import { ImportService } from './import.service';
 import { Injectable } from '@nestjs/common';
 import { CombineDataService } from './combine-data.service';
 import { mock } from 'jest-mock-extended';
-import { ExternallyIdentifiable } from '../dtos';
+import { ExternallyIdentifiable } from '@tloegbbl/api';
 
 class TestReference extends ExternallyIdentifiable {}
 

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AdvancementService } from '../persistence/advancement.service';
 import { AdvancementImportService } from '../import/advancement-import.service';
-import { Advancement } from '../dtos';
+import { Advancement } from '@tloegbbl/api';
 
 @Controller('advancement')
 export class AdvancementController {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CombineDataService } from './combine-data.service';
-import { TeamType, TeamTypeReference } from '../dtos';
+import { TeamType, TeamTypeReference } from '@tloegbbl/api';
 import { TeamTypeService } from '../persistence/team-type.service';
 import { ImportService } from './import.service';
 

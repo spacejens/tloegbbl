@@ -3,7 +3,7 @@ import { ApiClientService } from '../api-client/api-client.service';
 import { FileReaderService } from './filereader.service';
 import { AdvancementsService } from './advancements.service';
 import { TeamTypesService } from './team-types.service';
-import { Advancement, PlayerType, TeamType } from '../dtos';
+import { Advancement, PlayerType, TeamType } from '@tloegbbl/api';
 import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type PlayerTypeImportData = {

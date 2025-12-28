@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ExternallyIdentifiablePersistenceService } from './externally-identifiable-persistence.service';
-import { ExternallyIdentifiable } from '../dtos';
+import { ExternallyIdentifiable } from '@tloegbbl/api';
 
 class TestReference extends ExternallyIdentifiable {}
 

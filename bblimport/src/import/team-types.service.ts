@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ApiClientService } from '../api-client/api-client.service';
-import { TeamType } from '../dtos';
+import { TeamType } from '@tloegbbl/api';
 
 @Injectable()
 export class TeamTypesService {

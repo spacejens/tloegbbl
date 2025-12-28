@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ImportService } from './import.service';
-import { PlayerTypeInTeamType, PlayerTypeInTeamTypeReference } from '../dtos';
+import { PlayerTypeInTeamType, PlayerTypeInTeamTypeReference } from '@tloegbbl/api';
 import { CombineDataService } from './combine-data.service';
 import { PlayerTypeInTeamTypeService } from '../persistence/player-type-in-team-type.service';
 

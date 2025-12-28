@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ImportService } from './import.service';
-import { Advancement, AdvancementReference } from '../dtos';
+import { Advancement, AdvancementReference } from '@tloegbbl/api';
 import { CombineDataService } from './combine-data.service';
 import { AdvancementService } from '../persistence/advancement.service';
 

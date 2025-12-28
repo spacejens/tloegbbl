@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { TeamInCompetitionService } from '../persistence/team-in-competition.service';
 import { TeamInCompetitionImportService } from '../import/team-in-competition-import.service';
-import { TeamInCompetition } from '../dtos';
+import { TeamInCompetition } from '@tloegbbl/api';
 
 @Controller('team-in-competition')
 export class TeamInCompetitionController {

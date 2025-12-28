@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IdentifiablePersistenceService } from './identifiable-persistence.service';
-import { TeamInMatch, TeamInMatchReference } from '../dtos';
+import { TeamInMatch, TeamInMatchReference } from '@tloegbbl/api';
 import { PrismaService } from './prisma.service';
 import { TeamService } from './team.service';
 import { MatchService } from './match.service';

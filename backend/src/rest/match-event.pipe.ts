@@ -3,7 +3,7 @@ import {
   MatchEvent,
   MatchEventActionType,
   MatchEventConsequenceType,
-} from '../dtos';
+} from '@tloegbbl/api';
 
 @Injectable()
 export class MatchEventPipe implements PipeTransform {

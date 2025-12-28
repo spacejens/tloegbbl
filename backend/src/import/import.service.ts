@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IdentifiablePersistenceService } from '../persistence/identifiable-persistence.service';
 import { CombineDataService } from './combine-data.service';
-import { Identifiable } from '../dtos';
+import { Identifiable } from '@tloegbbl/api';
 
 @Injectable()
 export abstract class ImportService<R extends Identifiable, E extends R> {
