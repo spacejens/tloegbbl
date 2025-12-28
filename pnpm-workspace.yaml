@@ -9,3 +9,4 @@ onlyBuiltDependencies:
   - '@prisma/engines'
   - prisma
   - puppeteer
+  - unrs-resolver
