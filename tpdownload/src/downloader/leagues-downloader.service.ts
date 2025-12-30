@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import puppeteer from 'puppeteer';
 import { ApiResponseRecordingPageViewerService } from './api-response-recording-page-viewer.service';
 
 @Injectable()
