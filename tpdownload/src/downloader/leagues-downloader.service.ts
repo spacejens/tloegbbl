@@ -19,6 +19,9 @@ export class LeaguesDownloaderService {
     leaguePageResult.apiResponses.forEach(async (response, requestUrl) => {
       console.log(`${requestUrl} : ${JSON.stringify(response)}`);
     });
+    if (leaguePageResult.hasErrorsOrWarnings) {
+      console.log('Something went wrong!');
+    }
   }
 
   private async downloadLeagueProofOfConcept(url: string): Promise<void> {
