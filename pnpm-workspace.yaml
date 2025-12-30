@@ -2,6 +2,7 @@ packages:
   - api
   - backend
   - bblimport
+  - tpdownload
 
 onlyBuiltDependencies:
   - '@nestjs/core'
