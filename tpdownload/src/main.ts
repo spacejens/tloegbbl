@@ -5,6 +5,6 @@ import { LeaguesDownloaderService } from './downloader/leagues-downloader.servic
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
   const leagueDownloaderService = app.get(LeaguesDownloaderService);
-  await leagueDownloaderService.importAllLeagues();
+  await leagueDownloaderService.downloadAllLeagues();
 }
 bootstrap();
