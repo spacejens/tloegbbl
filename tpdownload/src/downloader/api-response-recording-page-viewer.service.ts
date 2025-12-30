@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import puppeteer from 'puppeteer';
+import { ConfigService } from '@nestjs/config';
 
 export type ApiResponseRecordingPageViewerResult = {
   apiResponses: Map<string, any>;
@@ -12,6 +13,10 @@ export type ApiResponseRecordingPageViewerResult = {
 @Injectable()
 export class ApiResponseRecordingPageViewerService {
 
+  constructor(
+    private readonly configService: ConfigService,
+  ) {}
+
   async viewPage(pageUrl: string): Promise<ApiResponseRecordingPageViewerResult> {
     const responses: Map<string, any> = new Map();
     const consoleErrors: Array<string> = new Array();
@@ -20,7 +25,7 @@ export class ApiResponseRecordingPageViewerService {
 
     // Pretend to be a normal browser
     const browser = await puppeteer.launch({
-      headless: false, // TODO Configurable if browser should be visible or not
+      headless: this.configService.get('HIDE_BROWSER_UI') === 'true',
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -36,10 +41,10 @@ export class ApiResponseRecordingPageViewerService {
     });
 
     // Set up response recording
+    const apiUrl: string = this.configService.get('TP_BACKEND_API_URL');
     page.on('requestfinished', async request => {
       const requestUrl = request.url();
-      // TODO Refine which requests to record responses for (configurable?)
-      if (requestUrl.includes('/api/')) {
+      if (requestUrl.startsWith(apiUrl)) {
         responses.set(requestUrl, await request.response().json());
       }
     });
