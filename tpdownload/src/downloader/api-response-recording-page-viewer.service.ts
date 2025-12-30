@@ -3,8 +3,9 @@ import puppeteer from 'puppeteer';
 
 export type ApiResponseRecordingPageViewerResult = {
   apiResponses: Map<string, any>;
-  // TODO Also return console logging (errors, warnings)
-  // TODO Also return page errors
+  consoleErrors: Array<string>;
+  consoleWarnings: Array<string>;
+  pageErrors: Array<string>;
 };
 
 @Injectable()
@@ -12,6 +13,9 @@ export class ApiResponseRecordingPageViewerService {
 
   async viewPage(pageUrl: string): Promise<ApiResponseRecordingPageViewerResult> {
     const responses: Map<string, any> = new Map();
+    const consoleErrors: Array<string> = new Array();
+    const consoleWarnings: Array<string> = new Array();
+    const pageErrors: Array<string> = new Array();
 
     // Pretend to be a normal browser
     const browser = await puppeteer.launch({
@@ -23,7 +27,7 @@ export class ApiResponseRecordingPageViewerService {
       ]
     });
     const page = await browser.newPage();
-    await page.setUserAgent({ userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' });
+    await page.setUserAgent({ userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' });
     await page.evaluateOnNewDocument(() => {
       Object.defineProperty(navigator, 'webdriver', {
         get: () => undefined
@@ -39,6 +43,22 @@ export class ApiResponseRecordingPageViewerService {
       }
     });
 
+    // Set up console recording
+    page.on('console', msg => {
+      const type = msg.type();
+      const text = msg.text();
+      if (type === 'error') {
+        consoleErrors.push(text);
+      } else if (type === 'warn') {
+        consoleWarnings.push(text);
+      }
+    });
+
+    // Set up page error recording
+    page.on('pageerror', (error: Error) => {
+      pageErrors.push(error.message);
+    });
+
     // Visit the page
     await page.goto(pageUrl, { waitUntil: 'networkidle0' });
     await page.setViewport({width: 1080, height: 1024});
@@ -48,6 +68,9 @@ export class ApiResponseRecordingPageViewerService {
     // Return the collected responses
     return {
       apiResponses: responses,
+      consoleErrors: consoleErrors,
+      consoleWarnings: consoleWarnings,
+      pageErrors: pageErrors,
     };
   }
 }
