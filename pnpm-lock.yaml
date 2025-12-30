@@ -10,6 +10,9 @@ importers:
 
   api:
     devDependencies:
+      '@nestjs/cli':
+        specifier: ^11.0.14
+        version: 11.0.14(@types/node@22.10.2)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
