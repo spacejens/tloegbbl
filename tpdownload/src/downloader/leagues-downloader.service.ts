@@ -25,6 +25,9 @@ export class LeaguesDownloaderService {
     });
     if (leaguePageResult.hasErrorsOrWarnings) {
       console.log('Something went wrong!');
+      console.log(`Console errors: ${JSON.stringify(leaguePageResult.consoleErrors)}`);
+      console.log(`Console warnings: ${JSON.stringify(leaguePageResult.consoleWarnings)}`);
+      console.log(`Page errors: ${JSON.stringify(leaguePageResult.pageErrors)}`);
     }
   }
 }
