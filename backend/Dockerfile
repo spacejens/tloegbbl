@@ -8,25 +8,23 @@ RUN npm install -g pnpm
 FROM base as dependencies
 
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --shamefully-hoist=true
+COPY . .
+RUN pnpm install --frozen-lockfile
+# TODO Filter install?
 
-FROM base AS build
+FROM dependencies AS build
 
 WORKDIR /app
-COPY . .
-COPY --from=dependencies /app/node_modules ./node_modules
-RUN npx prisma generate --generator client
-RUN pnpm build
-RUN pnpm prune --prod
+RUN pnpm --filter backend... build
+RUN pnpm --filter backend --legacy deploy /app/pruned
+RUN cd /app/pruned && pnpm prisma generate
 
 FROM base as deploy
 
 ENV NODE_ENV=production
 
 WORKDIR /app
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/pruned .
 
 USER 1000
 EXPOSE ${PORT}
