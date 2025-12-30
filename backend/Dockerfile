@@ -9,8 +9,7 @@ FROM base as dependencies
 
 WORKDIR /app
 COPY . .
-RUN pnpm install --frozen-lockfile
-# TODO Filter install?
+RUN pnpm --filter backend... install --frozen-lockfile
 
 FROM dependencies AS build
 
