@@ -16,18 +16,16 @@ export class LeaguesDownloaderService {
     const frontendUrl: string = this.configService.get('TP_FRONTEND_URL');
     const tournaments: string = this.configService.get('TOURNAMENTS');
     for (var tournamentName of tournaments.split(',')) {
-      this.fileSystemService.mkdir(`tournaments/${tournamentName}`);
-      await this.downloadLeague(frontendUrl + tournamentName + '/scores');
+      const dirName = `tournaments/${tournamentName}`;
+      this.fileSystemService.mkdir(dirName);
+      await this.downloadLeague(frontendUrl + tournamentName + '/scores', dirName);
     }
   }
 
-  private async downloadLeague(url: string): Promise<void> {
+  private async downloadLeague(url: string, dirName: string): Promise<void> {
     // TODO Get league base URL as argument, visit various sub-pages here
-    const leaguePageResult = await this.pageViewerService.viewPage(url);
+    const leaguePageResult = await this.pageViewerService.viewPage(url, dirName);
     // TODO For the match list sub-page, also visit match pages
     // TODO For the participants list sub-page, also visit each team
-    leaguePageResult.forEach(async (response, requestUrl) => {
-      console.log(`${requestUrl} : ${JSON.stringify(response)}`);
-    });
   }
 }

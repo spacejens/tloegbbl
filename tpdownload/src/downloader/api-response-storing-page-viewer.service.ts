@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ApiResponseRecordingPageViewerService } from './api-response-recording-page-viewer.service';
+import { FileSystemService } from './file-system.service';
 
 @Injectable()
 export class ApiResponseStoringPageViewerService {
 
   constructor(
     private readonly apiResponseRecordingPageViewerService: ApiResponseRecordingPageViewerService,
+    private readonly fileSystemService: FileSystemService,
   ) {}
 
-  async viewPage(pageUrl: string): Promise<Map<string, any>> {
+  async viewPage(pageUrl: string, dirName: string): Promise<Map<string, any>> {
     const pageResult = await this.apiResponseRecordingPageViewerService.viewPage(pageUrl);
     // Terminate if something unexpected occurred
     if (pageResult.hasErrorsOrWarnings) {
@@ -19,7 +21,9 @@ export class ApiResponseStoringPageViewerService {
       throw new Error(`Failed to view ${pageUrl}`);
     }
     // Store the responses in files
-    // TODO Store each response in its own file, subfolder from config
+    pageResult.apiResponses.forEach((response, requestUrl) => {
+      this.fileSystemService.writeJsonFile(dirName, requestUrl, response);
+    });
     // Return the responses
     return pageResult.apiResponses;
   }
