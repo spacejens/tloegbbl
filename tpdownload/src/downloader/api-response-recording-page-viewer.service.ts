@@ -45,7 +45,7 @@ export class ApiResponseRecordingPageViewerService {
     page.on('requestfinished', async request => {
       const requestUrl = request.url();
       if (requestUrl.startsWith(apiUrl)) {
-        responses.set(requestUrl, await request.response().json());
+        responses.set(requestUrl.substring(apiUrl.length), await request.response().json());
       }
     });
 
