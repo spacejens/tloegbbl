@@ -25,7 +25,7 @@ export class LeaguesDownloaderService {
   private async downloadLeague(tournamentUrl: string, dirName: string): Promise<void> {
     await this.pageViewerService.viewPage(tournamentUrl + '/news', dirName);
     const fixturesPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/scores', dirName);
-    // TODO For the fixtures sub-page, also visit each match page
+    await this.downloadMatches(fixturesPageResult, tournamentUrl, dirName);
     await this.pageViewerService.viewPage(tournamentUrl + '/classifications', dirName);
     const honoursPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/honours', dirName);
     // TOOD For the honours page, need to click team/player/coach
@@ -33,5 +33,32 @@ export class LeaguesDownloaderService {
     const participantsPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/players', dirName);
     // TODO For the participants list sub-page, also visit each team
     await this.pageViewerService.viewPage(tournamentUrl + '/awards', dirName);
+  }
+
+  private async downloadMatches(fixturesPageResult: Map<string, any>, tournamentUrl: string, dirName: string): Promise<void> {
+    const matchListResponse = this.findResponse('phases?type=COACH', fixturesPageResult);
+    for (var topLevelProperty of Object.values(matchListResponse)) {
+      const topLevelProp: any = topLevelProperty;
+      for (var round of topLevelProp.rounds) {
+        for (var group of round.groups) {
+          for (var match of group.matches) {
+            await this.pageViewerService.viewPage(tournamentUrl + '/match/' + match.matchId, dirName);
+          }
+        }
+      }
+    }
+  }
+
+  private findResponse(urlSuffix: string, pageResult: Map<string, any>) {
+    let foundResponse: any;
+    pageResult.forEach((response, requestUrl) => {
+      if (requestUrl.endsWith(urlSuffix)) {
+        foundResponse = response;
+      }
+    });
+    if (foundResponse) {
+      return foundResponse;
+    }
+    throw new Error(`Did not find expected response with URL suffix ${urlSuffix}`);
   }
 }
