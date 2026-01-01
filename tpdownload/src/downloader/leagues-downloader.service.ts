@@ -18,11 +18,11 @@ export class LeaguesDownloaderService {
     for (var tournamentName of tournaments.split(',')) {
       const dirName = `tournaments/${tournamentName}`;
       this.fileSystemService.mkdir(dirName);
-      await this.downloadLeague(frontendUrl + tournamentName, dirName);
+      await this.downloadLeague(frontendUrl + tournamentName, frontendUrl, dirName);
     }
   }
 
-  private async downloadLeague(tournamentUrl: string, dirName: string): Promise<void> {
+  private async downloadLeague(tournamentUrl: string, frontendUrl: string, dirName: string): Promise<void> {
     await this.pageViewerService.viewPage(tournamentUrl + '/news', dirName);
     const fixturesPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/scores', dirName);
     await this.downloadMatches(fixturesPageResult, tournamentUrl, dirName);
@@ -31,7 +31,7 @@ export class LeaguesDownloaderService {
     // TOOD For the honours page, need to click team/player/coach
     await this.pageViewerService.viewPage(tournamentUrl + '/statistics', dirName);
     const participantsPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/players', dirName);
-    // TODO For the participants list sub-page, also visit each team
+    await this.downloadParticipants(participantsPageResult, frontendUrl, dirName);
     await this.pageViewerService.viewPage(tournamentUrl + '/awards', dirName);
   }
 
@@ -45,6 +45,16 @@ export class LeaguesDownloaderService {
             await this.pageViewerService.viewPage(tournamentUrl + '/match/' + match.matchId, dirName);
           }
         }
+      }
+    }
+  }
+
+  private async downloadParticipants(participantsPageResult: Map<string, any>, frontendUrl: string, dirName: string): Promise<void> {
+    const participantsListResponse = this.findResponse('inscriptions', participantsPageResult);
+    for (var topLevelProperty of Object.values(participantsListResponse)) {
+      const topLevelProp: any = topLevelProperty;
+      for (var inscription of topLevelProp) {
+        await this.pageViewerService.viewPage(frontendUrl + 'roster/' + inscription.roster.id, dirName);
       }
     }
   }
