@@ -18,16 +18,20 @@ export class LeaguesDownloaderService {
     for (var tournamentName of tournaments.split(',')) {
       const dirName = `tournaments/${tournamentName}`;
       this.fileSystemService.mkdir(dirName);
-      await this.downloadLeague(frontendUrl + tournamentName + '/scores', dirName);
+      await this.downloadLeague(frontendUrl + tournamentName, dirName);
     }
   }
 
-  private async downloadLeague(url: string, dirName: string): Promise<void> {
-    // TODO Get league base URL as argument, visit various sub-pages here
-    const leaguePageResult = await this.pageViewerService.viewPage(url, dirName);
-    // TODO For the match list sub-page, also visit match pages
+  private async downloadLeague(tournamentUrl: string, dirName: string): Promise<void> {
+    await this.pageViewerService.viewPage(tournamentUrl + '/news', dirName);
+    const fixturesPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/scores', dirName);
+    // TODO For the fixtures sub-page, also visit each match page
+    await this.pageViewerService.viewPage(tournamentUrl + '/classifications', dirName);
+    const honoursPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/honours', dirName);
+    // TOOD For the honours page, need to click team/player/coach
+    await this.pageViewerService.viewPage(tournamentUrl + '/statistics', dirName);
+    const participantsPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/players', dirName);
     // TODO For the participants list sub-page, also visit each team
-    // TOOD For the honors page, need to click team/player/coach
-    // TODO View remaining pages
+    await this.pageViewerService.viewPage(tournamentUrl + '/awards', dirName);
   }
 }
