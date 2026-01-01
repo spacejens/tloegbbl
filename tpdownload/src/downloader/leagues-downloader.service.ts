@@ -27,5 +27,7 @@ export class LeaguesDownloaderService {
     const leaguePageResult = await this.pageViewerService.viewPage(url, dirName);
     // TODO For the match list sub-page, also visit match pages
     // TODO For the participants list sub-page, also visit each team
+    // TOOD For the honors page, need to click team/player/coach
+    // TODO View remaining pages
   }
 }
