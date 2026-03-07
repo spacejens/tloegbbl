@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ApiResponseRecordingPageViewerService } from './api-response-recording-page-viewer.service';
+import { ApiResponseRecordingPageViewerClickableElement, ApiResponseRecordingPageViewerService } from './api-response-recording-page-viewer.service';
 import { FileSystemService } from './file-system.service';
 
 @Injectable()
@@ -10,8 +10,12 @@ export class ApiResponseStoringPageViewerService {
     private readonly fileSystemService: FileSystemService,
   ) {}
 
-  async viewPage(pageUrl: string, dirName: string): Promise<Map<string, any>> {
-    const pageResult = await this.apiResponseRecordingPageViewerService.viewPage(pageUrl);
+  async viewPage(
+    pageUrl: string,
+    dirName: string,
+    clickableElements?: ApiResponseRecordingPageViewerClickableElement[]
+  ): Promise<Map<string, any>> {
+    const pageResult = await this.apiResponseRecordingPageViewerService.viewPage(pageUrl, clickableElements);
     // Terminate if something unexpected occurred
     if (pageResult.hasErrorsOrWarnings) {
       console.error('Something went wrong!');

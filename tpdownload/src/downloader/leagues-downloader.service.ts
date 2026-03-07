@@ -27,8 +27,24 @@ export class LeaguesDownloaderService {
     const fixturesPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/scores', dirName);
     await this.downloadMatches(fixturesPageResult, tournamentUrl, dirName);
     await this.pageViewerService.viewPage(tournamentUrl + '/classifications', dirName);
-    const honoursPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/honours', dirName);
-    // TOOD For the honours page, need to click team/player/coach
+    await this.pageViewerService.viewPage(
+      tournamentUrl + '/honours',
+      dirName,
+      [
+        {
+          selector: '.mat-button-toggle-button',
+          textContent: 'Team',
+        },
+        {
+          selector: '.mat-button-toggle-button',
+          textContent: 'Player',
+        },
+        {
+          selector: '.mat-button-toggle-button',
+          textContent: 'Coach',
+        },
+      ],
+    );
     await this.pageViewerService.viewPage(tournamentUrl + '/statistics', dirName);
     const participantsPageResult = await this.pageViewerService.viewPage(tournamentUrl + '/players', dirName);
     await this.downloadParticipants(participantsPageResult, frontendUrl, dirName);

@@ -2,6 +2,11 @@ import { Injectable } from '@nestjs/common';
 import puppeteer from 'puppeteer';
 import { ConfigService } from '@nestjs/config';
 
+export type ApiResponseRecordingPageViewerClickableElement = {
+  selector: string;
+  textContent: string;
+};
+
 export type ApiResponseRecordingPageViewerResult = {
   apiResponses: Map<string, any>;
   hasErrorsOrWarnings: boolean;
@@ -17,7 +22,10 @@ export class ApiResponseRecordingPageViewerService {
     private readonly configService: ConfigService,
   ) {}
 
-  async viewPage(pageUrl: string): Promise<ApiResponseRecordingPageViewerResult> {
+  async viewPage(
+    pageUrl: string,
+    clickableElements: ApiResponseRecordingPageViewerClickableElement[] = []
+  ): Promise<ApiResponseRecordingPageViewerResult> {
     const responses: Map<string, any> = new Map();
     const consoleErrors: Array<string> = new Array();
     const consoleWarnings: Array<string> = new Array();
@@ -62,6 +70,7 @@ export class ApiResponseRecordingPageViewerService {
 
     // Set up page error recording
     page.on('pageerror', (error: Error) => {
+      console.error(error.stack);
       pageErrors.push(error.message);
     });
 
@@ -69,6 +78,37 @@ export class ApiResponseRecordingPageViewerService {
     await page.goto(pageUrl, { waitUntil: 'networkidle0' });
     await page.setViewport({width: 1080, height: 1024});
     await page.waitForNetworkIdle({ idleTime: 1000, timeout: 30000 });
+
+    // Click any clickable elements specified
+    for (const clickableElement of clickableElements) {
+      console.log(`Clicking element: ${JSON.stringify(clickableElement)}`);
+      await page.evaluate(
+        (selector: string, expectedText: string) => {
+          const hasNodeWithTextContent = (elem: Element, textContent: string): boolean => {
+            if (elem.textContent === textContent) return true;
+            for (let i = 0; i < elem.childElementCount; i++) {
+              const child = elem.children.item(i);
+              if (child && hasNodeWithTextContent(child, textContent)) return true;
+            }
+            return false;
+          };
+          const candidates = document.querySelectorAll(selector);
+          for (let i = 0; i < candidates.length; i++) {
+            const el = candidates[i];
+            if (hasNodeWithTextContent(el, expectedText)) {
+              (el as HTMLElement).click();
+              return;
+            }
+          }
+          throw new Error(`No element found for selector "${selector}" with text "${expectedText}"`);
+        },
+        clickableElement.selector,
+        clickableElement.textContent
+      );
+      await page.waitForNetworkIdle({ idleTime: 1000, timeout: 30000 });
+    }
+
+    // Clean up the browser session
     await browser.close();
 
     // Return the collected responses
