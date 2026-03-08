@@ -9,7 +9,6 @@ export type ApiResponseRecordingPageViewerClickableElement = {
 
 export type ApiResponseRecordingPageViewerResult = {
   apiResponses: Map<string, any>;
-  hasErrorsOrWarnings: boolean;
   consoleErrors: Array<string>;
   consoleWarnings: Array<string>;
   pageErrors: Array<string>;
@@ -114,7 +113,6 @@ export class ApiResponseRecordingPageViewerService {
     // Return the collected responses
     return {
       apiResponses: responses,
-      hasErrorsOrWarnings: consoleErrors.length > 0 || consoleWarnings.length > 0 || pageErrors.length > 0,
       consoleErrors: consoleErrors,
       consoleWarnings: consoleWarnings,
       pageErrors: pageErrors,
