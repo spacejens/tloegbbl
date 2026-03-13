@@ -3,6 +3,7 @@ packages:
   - backend
   - bblimport
   - tpdownload
+  - tpimport
 
 onlyBuiltDependencies:
   - '@nestjs/core'
