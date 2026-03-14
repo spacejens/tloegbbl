@@ -8,15 +8,6 @@ importers:
 
   .: {}
 
-  api:
-    devDependencies:
-      '@nestjs/cli':
-        specifier: ^11.0.14
-        version: 11.0.14(@types/node@22.10.2)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
   backend:
     dependencies:
       '@nestjs/common':
@@ -36,7 +27,7 @@ importers:
         version: 6.19.1(prisma@6.19.1(typescript@5.9.3))(typescript@5.9.3)
       '@tloegbbl/api':
         specifier: workspace:*
-        version: link:../api
+        version: link:../packages/api
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -133,7 +124,7 @@ importers:
         version: 11.1.10(@nestjs/common@11.1.10(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)
       '@tloegbbl/api':
         specifier: workspace:*
-        version: link:../api
+        version: link:../packages/api
       axios:
         specifier: ^1.7.9
         version: 1.13.2
@@ -210,6 +201,15 @@ importers:
       tsconfig-paths:
         specifier: 4.2.0
         version: 4.2.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/api:
+    devDependencies:
+      '@nestjs/cli':
+        specifier: ^11.0.14
+        version: 11.0.14(@types/node@22.10.2)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -330,7 +330,7 @@ importers:
         version: 11.1.10(@nestjs/common@11.1.10(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)
       '@tloegbbl/api':
         specifier: workspace:*
-        version: link:../api
+        version: link:../packages/api
       axios:
         specifier: ^1.7.9
         version: 1.13.2
