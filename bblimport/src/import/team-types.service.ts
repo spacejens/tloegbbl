@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ApiClientService } from '../api-client/api-client.service';
+import { ApiClientService } from '@tloegbbl/api-client';
 import { TeamType } from '@tloegbbl/api';
 
 @Injectable()

@@ -1,17 +1,17 @@
 {
-  "name": "@tloegbbl/bblimport",
+  "name": "@tloegbbl/api-client",
   "version": "0.0.1",
-  "description": "",
+  "description": "TLOEGBBL API client",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -23,22 +23,15 @@
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.1.10",
     "@nestjs/config": "^4.0.2",
-    "@nestjs/core": "^11.1.10",
-    "@nestjs/platform-express": "^11.1.10",
     "@tloegbbl/api": "workspace:*",
-    "@tloegbbl/api-client": "workspace:*",
     "axios": "^1.7.9",
-    "node-html-parser": "^6.1.13",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.14",
-    "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.10",
-    "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "22.10.2",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
@@ -51,9 +44,6 @@
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.4.6",
-    "ts-loader": "^9.5.1",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "4.2.0",
     "typescript": "^5.9.3"
   },
   "jest": {

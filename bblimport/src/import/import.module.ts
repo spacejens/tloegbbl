@@ -5,7 +5,7 @@ import { CoachesService } from './coaches.service';
 import { TeamsService } from './teams.service';
 import { TeamTypesService } from './team-types.service';
 import { CompetitionsService } from './competitions.service';
-import { ApiClientModule } from '../api-client/api-client.module';
+import { ApiClientModule } from '@tloegbbl/api-client';
 import { MatchesService } from './matches.service';
 import { PlayersService } from './players.service';
 import { PlayerTypesService } from './player-types.service';

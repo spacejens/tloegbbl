@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ApiClientService } from '../api-client/api-client.service';
+import { ApiClientService, ApiUtilsService } from '@tloegbbl/api-client';
 import { FileReaderService } from './filereader.service';
 import { HTMLElement } from 'node-html-parser';
 import { MatchEventConsolidatorService } from './match-event-consolidator.service';
@@ -11,7 +11,6 @@ import {
   MatchEventConsequenceType,
   TeamReference,
 } from '@tloegbbl/api';
-import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type MatchImportData = {
   match: Match;

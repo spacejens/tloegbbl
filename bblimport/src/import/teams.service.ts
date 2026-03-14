@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { FileReaderService } from './filereader.service';
 import { CoachesService } from './coaches.service';
 import { TeamTypesService } from './team-types.service';
-import { ApiClientService } from '../api-client/api-client.service';
+import { ApiClientService, ApiUtilsService } from '@tloegbbl/api-client';
 import { Coach, ExternalId, Team, TeamType } from '@tloegbbl/api';
-import { ApiUtilsService } from '../api-client/api-utils.service';
 
 export type TeamImportData = {
   team: Team;

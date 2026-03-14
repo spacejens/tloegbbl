@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { ConfigService } from '@nestjs/config';
 
+// TODO Are these three types even needed anymore? If not, delete them
 export type ReturnedFields = ReturnedField[];
 
 export type ReturnedField = string | ReturnedSubfield;

@@ -5,7 +5,7 @@ import {
   MatchEventActionType,
   MatchEventConsequenceType,
 } from '@tloegbbl/api';
-import { ApiUtilsService } from '../api-client/api-utils.service';
+import { ApiUtilsService } from '@tloegbbl/api-client';
 
 @Injectable()
 export class MatchEventConsolidatorService {
