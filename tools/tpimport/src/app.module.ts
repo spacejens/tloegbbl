@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ImportModule } from './import/import.module';
 
 @Module({
   imports: [
@@ -7,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
       ignoreEnvFile: false,
       isGlobal: true,
     }),
+    ImportModule,
   ],
 })
 export class AppModule {}

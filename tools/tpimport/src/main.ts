@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ImportService } from './import/import.service';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
-  // TODO Call the import service to import the data
+  const importService = app.get(ImportService);
+  await importService.importEverything();
 }
 bootstrap();

@@ -407,6 +407,9 @@ importers:
       '@tloegbbl/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@tloegbbl/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
       axios:
         specifier: ^1.7.9
         version: 1.13.2
