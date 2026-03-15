@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AdvancementsService } from './advancements.service';
 import { mock } from 'jest-mock-extended';
-import { ApiClientService } from '../api-client/api-client.service';
+import { ApiClientService } from '@tloegbbl/api-client';
 
 describe('AdvancementsService', () => {
   let service: AdvancementsService;

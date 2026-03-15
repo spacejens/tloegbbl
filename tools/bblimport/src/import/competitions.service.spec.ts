@@ -1,9 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompetitionsService } from './competitions.service';
-import { ApiClientService } from '../api-client/api-client.service';
+import { ApiClientService, ApiUtilsService } from '@tloegbbl/api-client';
 import { mock } from 'jest-mock-extended';
 import { FileReaderService } from './filereader.service';
-import { ApiUtilsService } from '../api-client/api-utils.service';
 
 describe('CompetitionsService', () => {
   let service: CompetitionsService;

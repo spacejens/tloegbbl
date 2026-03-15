@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TeamTypesService } from './team-types.service';
 import { mock } from 'jest-mock-extended';
-import { ApiClientService } from '../api-client/api-client.service';
+import { ApiClientService } from '@tloegbbl/api-client';
 
 describe('TeamTypesService', () => {
   let service: TeamTypesService;

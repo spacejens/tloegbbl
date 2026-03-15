@@ -8,7 +8,7 @@ import {
   TeamReference,
 } from '@tloegbbl/api';
 import { mock } from 'jest-mock-extended';
-import { ApiUtilsService } from '../api-client/api-utils.service';
+import { ApiUtilsService } from '@tloegbbl/api-client';
 
 describe('MatchEventConsolidatorService', () => {
   let service: MatchEventConsolidatorService;

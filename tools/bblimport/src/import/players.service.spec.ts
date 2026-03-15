@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PlayersService } from './players.service';
-import { ApiClientService } from '../api-client/api-client.service';
+import { ApiClientService, ApiUtilsService } from '@tloegbbl/api-client';
 import { mock } from 'jest-mock-extended';
 import { FileReaderService } from './filereader.service';
 import { AdvancementsService } from './advancements.service';
-import { ApiUtilsService } from '../api-client/api-utils.service';
 
 describe('PlayersService', () => {
   let service: PlayersService;
