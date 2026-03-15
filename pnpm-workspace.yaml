@@ -1,9 +1,9 @@
 packages:
   - services/*
   - packages/*
-  - bblimport
-  - tpdownload
-  - tpimport
+  - tools/bblimport
+  - tools/tpdownload
+  - tools/tpimport
 
 onlyBuiltDependencies:
   - '@nestjs/core'
