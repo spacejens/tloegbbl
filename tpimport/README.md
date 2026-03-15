@@ -1,6 +1,6 @@
 ## Description
 
-This module transforms data downloaded by [tpdownload](../tpdownload) and imports it into the [backend](../backend).
+This module transforms data downloaded by [tpdownload](../tpdownload) and imports it into the [backend](../services/backend).
 
 Since this was a one-time operation and this module operates by parsing undocumented JSON files, it might no longer perform as expected if used on a fresh download at a future date.
 

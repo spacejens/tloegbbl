@@ -11,7 +11,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://test:test@postgres-database:5432/tloegbbl?schema=tloegbbl
     build:
-      dockerfile: backend/Dockerfile
+      dockerfile: services/backend/Dockerfile
       context: .
       target: deploy
       args:

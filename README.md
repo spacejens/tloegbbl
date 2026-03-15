@@ -48,7 +48,7 @@ $ PGOPTIONS="--search-path=tloegbbl" psql -h localhost -p 3001 -U test tloegbbl
 ## Database development with Prisma
 
 All data model and database structure changes are driven through [Prisma](https://www.prisma.io/docs), using the following steps:
-- Edit the [schema.prisma](backend/prisma/schema.prisma) file to modify the model.
+- Edit the [schema.prisma](services/backend/prisma/schema.prisma) file to modify the model.
 - Update the generated source code using `pnpm prisma generate`
 - Develop and unit test functionality as normal
 - To generate SQL changes and update the database, use `pnpm prisma migrate dev --name <name of the change>`

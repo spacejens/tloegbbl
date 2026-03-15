@@ -1,6 +1,6 @@
 packages:
+  - services/*
   - packages/*
-  - backend
   - bblimport
   - tpdownload
   - tpimport
