@@ -5,6 +5,14 @@ packages:
   - tools/tpdownload
   - tools/tpimport
 
+allowBuilds:
+  '@nestjs/core': true
+  '@prisma/client': true
+  '@prisma/engines': true
+  prisma: true
+  puppeteer: true
+  unrs-resolver: true
+
 onlyBuiltDependencies:
   - '@nestjs/core'
   - '@prisma/client'
