@@ -52,7 +52,9 @@ export class LeaguesDownloaderService {
   }
 
   private async downloadMatches(fixturesPageResult: Map<string, any>, tournamentUrl: string, dirName: string): Promise<void> {
-    const matchListResponse = this.findResponse('phases?type=COACH', fixturesPageResult);
+    const matchListResponse = this.findResponse(/phases\?(?:[^&]*&)*type=COACH(?:&[^&]*)*$/, fixturesPageResult);
+    // TODO Support getting multiple match list responses (one per phase), iterating over each one of them in turn
+    // TODO Does this replace the previous structure of rounds or groups?
     for (var topLevelProperty of Object.values(matchListResponse)) {
       const topLevelProp: any = topLevelProperty;
       for (var round of topLevelProp.rounds) {
@@ -66,7 +68,7 @@ export class LeaguesDownloaderService {
   }
 
   private async downloadParticipants(participantsPageResult: Map<string, any>, frontendUrl: string, dirName: string): Promise<void> {
-    const participantsListResponse = this.findResponse('inscriptions', participantsPageResult);
+    const participantsListResponse = this.findResponse(/inscriptions$/, participantsPageResult);
     for (var topLevelProperty of Object.values(participantsListResponse)) {
       const topLevelProp: any = topLevelProperty;
       for (var inscription of topLevelProp) {
@@ -75,10 +77,10 @@ export class LeaguesDownloaderService {
     }
   }
 
-  private findResponse(urlSuffix: string, pageResult: Map<string, any>) {
+  private findResponse(urlSuffix: RegExp, pageResult: Map<string, any>) {
     let foundResponse: any;
     pageResult.forEach((response, requestUrl) => {
-      if (requestUrl.endsWith(urlSuffix)) {
+      if (requestUrl.match(urlSuffix)) {
         foundResponse = response;
       }
     });
